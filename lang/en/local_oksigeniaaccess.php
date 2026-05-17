@@ -44,7 +44,7 @@ $string['hide_on_admin_desc']      = 'When enabled, the panel is not injected in
 $string['excluded_course_ids']     = 'Excluded course IDs';
 $string['excluded_course_ids_desc'] = 'Comma- or space-separated list of course IDs where the panel should NOT be injected (e.g. <code>12, 34, 78</code>). Useful for specific courses with their own accessibility scaffolding or third-party tooling. Leave empty to inject in every course.';
 $string['trigger_zindex']          = 'Trigger z-index';
-$string['trigger_zindex_desc']     = 'CSS z-index for the floating trigger button. Raise it if the trigger gets covered by another floating widget (theme scrolltop, chat bubble, cookie banner...). Default is 9999999. Backed by the web component\'s <code>--oks-z</code> CSS variable since v0.3.0 — deterministic across browsers.';
+$string['trigger_zindex_desc']     = 'CSS z-index for the floating trigger button. Leave empty to use the web component\'s built-in default (<code>9999999</code>). Set a positive integer to override — raise it if the trigger gets covered by another floating widget (theme scrolltop, chat bubble, cookie banner...). Backed by the web component\'s <code>--oks-z</code> CSS variable since v0.3.0 — deterministic across browsers.';
 
 // Trigger appearance (since v0.3.0) — empty value = inherit the bundled defaults
 // (black bg / white icon, swap on hover) so the plugin still works out of the box.

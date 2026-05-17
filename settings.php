@@ -93,8 +93,8 @@ $settings->add(new admin_setting_configtext(
     'local_oksigeniaaccess/trigger_zindex',
     new lang_string('trigger_zindex', 'local_oksigeniaaccess'),
     new lang_string('trigger_zindex_desc', 'local_oksigeniaaccess'),
-    '9999999',
-    PARAM_INT
+    '',
+    PARAM_RAW_TRIMMED
 ));
 
 // --- Trigger appearance ---

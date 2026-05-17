@@ -165,9 +165,9 @@ class hook_callbacks {
     private static function build_css_vars(\stdClass $config): array {
         $vars = [];
 
-        $z = (int) ($config->trigger_zindex ?? 9999999);
-        if ($z >= 1) {
-            $vars['--oks-z'] = (string) $z;
+        $zraw = trim((string) ($config->trigger_zindex ?? ''));
+        if ($zraw !== '' && ctype_digit($zraw) && (int) $zraw >= 1) {
+            $vars['--oks-z'] = $zraw;
         }
 
         $size = self::sanitise_css_size((string) ($config->btn_size ?? ''));

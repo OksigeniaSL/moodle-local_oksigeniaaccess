@@ -59,7 +59,7 @@ Then visit *Site administration → Notifications* in Moodle to finish the insta
 | Page scope | All pages | Or "All pages except login/signup". |
 | Hide on admin pages | On | Skips injection on URLs under `/admin/`. Admins use their own a11y tooling. |
 | Excluded course IDs | *(empty)* | Comma- or space-separated list of course IDs to skip, e.g. `12, 34, 78`. |
-| Trigger z-index | `9999999` | Raise it if another floating widget covers the trigger. Backed by the web component's `--oks-z` CSS variable since v0.3.0 (deterministic across browsers). |
+| Trigger z-index | *(empty)* | Empty = `9999999` (web component default). Raise it if another floating widget covers the trigger. Backed by the web component's `--oks-z` CSS variable since v0.3.0 (deterministic across browsers). |
 | Button size | *(empty)* | CSS length with unit (e.g. `60px`). Empty = `55px` default. |
 | Idle background | *(empty)* | Color of the trigger button at rest. Empty = `#000` default. |
 | Idle icon color | *(empty)* | Color of the icon at rest. Empty = `#fff` default. |

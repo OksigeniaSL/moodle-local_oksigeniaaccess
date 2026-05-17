@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-05-18
+
+### Changed
+- `Trigger z-index` accepts an empty value to mean "use the web component's built-in default" (matches the behaviour of the other Trigger appearance fields added in v0.3.0). Previously typed as `PARAM_INT`, which forced `0` for "no override" — confusing UX. The setting is now `PARAM_RAW_TRIMMED` and the PHP hook validates with `ctype_digit` before injecting `--oks-z`.
+
 ## [0.3.0] - 2026-05-18
 
 ### Added
