@@ -1,0 +1,9 @@
+.DS_Store
+.idea/
+.vscode/
+*.log
+*.swp
+*.swo
+*.bak
+node_modules/
+.phpunit.result.cache
