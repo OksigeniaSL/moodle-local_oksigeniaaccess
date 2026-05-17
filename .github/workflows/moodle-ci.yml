@@ -89,7 +89,7 @@ jobs:
             --db-host=127.0.0.1 \
             --db-user=postgres \
             --db-pass='' \
-            --db-name=postgres \
+            --db-name=moodle \
             --db-type=${{ matrix.database }} \
             --branch=${{ matrix.moodle-branch }}
         env:
