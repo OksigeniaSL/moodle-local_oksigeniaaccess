@@ -38,6 +38,21 @@ $string['position_mobile_desc']    = 'Optional override for viewports up to 768 
 $string['trigger_icon']            = 'Trigger icon';
 $string['trigger_icon_desc']       = 'Icon shown on the floating trigger button.';
 
+$string['settings_scope']          = 'Visibility & scope';
+$string['hide_on_admin']           = 'Hide on admin pages';
+$string['hide_on_admin_desc']      = 'When enabled, the panel is not injected into Site administration URLs (/admin/...). Recommended ON: admins use their own accessibility tooling and the panel may overlap settings UI.';
+$string['excluded_course_ids']     = 'Excluded course IDs';
+$string['excluded_course_ids_desc'] = 'Comma- or space-separated list of course IDs where the panel should NOT be injected (e.g. <code>12, 34, 78</code>). Useful for specific courses with their own accessibility scaffolding or third-party tooling. Leave empty to inject in every course.';
+$string['trigger_zindex']          = 'Trigger z-index';
+$string['trigger_zindex_desc']     = 'CSS z-index for the floating trigger button. Raise it if the trigger gets covered by another floating widget (theme scrolltop, chat bubble, cookie banner...). Default is 99999.';
+
+// Capability label (shown in Site admin → Users → Permissions → Define roles).
+$string['oksigeniaaccess:view']    = 'See the accessibility panel';
+
+// Compliance disclaimer rendered at the top of the settings page.
+$string['disclaimer_heading']      = 'Compliance notice';
+$string['disclaimer_html']         = '<p>Oksigenia Access gives the visitor 15 controls to adapt the site to their needs: text size, contrast, dyslexia font, color-blind modes, reading guide, big cursor, pause animations, and others. Preferences are stored only in the visitor\'s browser, never on the server.</p><p><strong>This plugin does not audit or auto-fix the content of your Moodle.</strong> Complying with WCAG 2.1, EU Directive 2016/2102, the European Accessibility Act 2025 or Spain\'s RD 1112/2018 requires editorial work on your courses: alt text on images, video transcripts, color contrast, correct HTML semantics, labelled forms, keyboard navigation, and so on. None of that is fixed by a floating widget.</p><p>For signed documentary evidence in an official audit, we offer a separate professional audit + certificate service at <a href="https://sponsor.oksigenia.com" target="_blank" rel="noopener noreferrer">sponsor.oksigenia.com</a>.</p>';
+
 $string['settings_behaviour']      = 'Behaviour';
 $string['locale_mode']             = 'Locale source';
 $string['locale_mode_desc']        = 'Auto follows Moodle\'s current language; Force ignores Moodle and uses the locale you pick.';
@@ -45,8 +60,8 @@ $string['locale_mode_auto']        = 'Auto (follow Moodle language)';
 $string['locale_mode_force']       = 'Force a specific locale';
 $string['locale_override']         = 'Forced locale';
 $string['locale_override_desc']    = 'Used only when "Locale source" is set to "Force".';
-$string['scope']                   = 'Show on';
-$string['scope_desc']              = 'Where to inject the panel.';
+$string['scope']                   = 'Page scope';
+$string['scope_desc']              = 'Broad rule for where to inject the panel.';
 $string['scope_all']               = 'All pages';
 $string['scope_no_login']          = 'All pages except login/signup';
 

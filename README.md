@@ -56,7 +56,10 @@ Then visit *Site administration → Notifications* in Moodle to finish the insta
 | Setting | Default | Notes |
 |---|---|---|
 | Enable accessibility panel | On | Master toggle. |
-| Show on | All pages | Or "All pages except login/signup". |
+| Page scope | All pages | Or "All pages except login/signup". |
+| Hide on admin pages | On | Skips injection on URLs under `/admin/`. Admins use their own a11y tooling. |
+| Excluded course IDs | *(empty)* | Comma- or space-separated list of course IDs to skip, e.g. `12, 34, 78`. |
+| Trigger z-index | `99999` | Raise it if another floating widget covers the trigger. |
 | Trigger position (desktop) | Middle left | 6 positions. |
 | Trigger position (mobile) | Inherit | Optional override for ≤768 px viewports. |
 | Trigger icon | Vitruvian man | 4 icons (Vitruvian, Wheelchair, Eye, Universal access). |
@@ -67,6 +70,15 @@ The panel UI itself is in 8 locales: `es`, `en`, `gn` (Guaraní), `fr`, `it`,
 `de`, `nl`, `sv`. Regional variants like `es-PY` or `pt-BR` are normalised to
 the base language (and fall back to English if unsupported).
 
+### Role-based visibility
+
+Visibility of the panel is gated by the capability
+`local/oksigeniaaccess:view`. Default policy is permissive — every role
+(`guest`, `user`, `student`, `teacher`, `editingteacher`, `coursecreator`,
+`manager`) sees the panel. To restrict it (for example, hide the panel from
+`guest`, or only show it to a specific cohort), override the capability under
+*Site administration → Users → Permissions → Define roles*.
+
 ## Privacy
 
 The plugin does not store or transmit any personal data. Visitor preferences
@@ -75,6 +87,33 @@ browser's `localStorage` under the `oksiacSettings` key and never reach the
 server. The plugin does not phone home and does not load anything from CDNs
 or third-party origins — the web component bundle is vendored under
 `js/web-component.js` and served from your Moodle.
+
+**Cookie banners and consent**: storing user preferences in `localStorage`
+for the very feature the user is asking for ("make this page readable for
+me") falls under "strictly necessary" processing per ePrivacy / GDPR
+guidance from European data-protection authorities. No consent banner is
+required for the plugin itself. If your Moodle uses a cookie-management
+plugin, you can safely leave Oksigenia Access outside of it.
+
+A formal Moodle Privacy provider statement is implemented under
+`classes/privacy/provider.php` (`null_provider` — no personal data
+collected). It shows up at *Site administration → Users → Privacy and
+policies → Data registry* and is what auditors typically check.
+
+## Limitations
+
+- **Moodle Mobile App**: the official Ionic-based mobile app does not use
+  the theme web layer — it renders natively. The panel is therefore not
+  available inside the app. Visitors who need accessibility adjustments on
+  mobile should rely on the operating-system-level tools (iOS
+  Accessibility, Android Accessibility Suite, GrapheneOS hardening, etc.).
+- **Custom themes that disable footer hooks**: the plugin attaches to
+  `\core\hook\output\before_footer_html_generation`. A theme that bypasses
+  the standard footer pipeline may also bypass this hook. Stick to themes
+  that respect Moodle's rendering contract (Boost, Boost Union and most
+  community themes do).
+- **Z-index conflicts**: see the *Trigger z-index* setting. Some plugins
+  use very high z-indexes; raise the value if the trigger gets covered.
 
 ## Theming the trigger button
 
@@ -103,22 +142,47 @@ The bundled web component under `js/web-component.js` is MIT-licensed; see
 `LICENSE.web-component.MIT` and upstream at
 <https://github.com/OksigeniaSL/oksigenia-web-libs>.
 
-## Sponsorship
+## Sponsorship & professional audit
 
-This plugin is FOSS and will stay FOSS without crippleware. If your institution
-relies on it for accessibility compliance (EAA 2025, EU Directive 2016/2102,
-Spanish RD 1112/2018, etc.), consider sponsoring its development:
-<https://oksigenia.com/sponsor>.
+This plugin is FOSS and will stay FOSS without crippleware. If your
+institution relies on it for accessibility compliance (EAA 2025, EU
+Directive 2016/2102, Spanish RD 1112/2018, etc.), consider sponsoring its
+development at <https://sponsor.oksigenia.com>.
 
-A separate, contractable service is available for institutions that need a
-signed accessibility audit and certificate for their Moodle (one-off, not a
-subscription) — see the sponsor page for details.
+### What sponsorship gets you
+
+- Logo and link in the README and on `sponsor.oksigenia.com`.
+- Priority in issue triage.
+- Weight in the roadmap (the plugin stays general, but feature requests
+  from sponsors are evaluated first).
+- (Gold tier) a semi-annual 1:1 with the maintainer.
+
+### Compliance certificate (separate, contractable)
+
+For institutions that need **signed documentary evidence** for an official
+audit, we offer a one-off professional review of your Moodle: WCAG 2.1 AA
+manual checks, written findings + remediation priorities, and a PDF
+certificate digitally signed by Oksigenia SL valid for 12 months. Suitable
+for EAA 2025, Directive (EU) 2016/2102 and RD 1112/2018 audit dossiers. Not
+a subscription, no auto-renewal. See the sponsor page for the request
+form.
+
+### What this plugin does NOT do
+
+Installing this plugin does NOT make your Moodle WCAG / EAA compliant on
+its own. The panel is a user adaptation tool. Real compliance requires
+editorial work on your courses: alt text on images, video transcripts,
+correct semantics, keyboard navigability, color contrast, labelled forms.
+Anyone telling you otherwise (looking at you, paid overlay vendors) is
+selling false reassurance.
 
 ## Support and contributions
 
 Issues and PRs welcome at the
 [GitHub repo](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess).
-Please open an issue before sending a PR for non-trivial changes.
+Please open an issue before sending a PR for non-trivial changes. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for the small handbook — code style,
+translation policy and roadmap.
 
 ## Credits
 

@@ -34,6 +34,13 @@ $settings = new admin_settingpage(
 );
 $ADMIN->add('localplugins', $settings);
 
+// --- Compliance disclaimer (always at the top) ---
+$settings->add(new admin_setting_heading(
+    'local_oksigeniaaccess/disclaimer',
+    new lang_string('disclaimer_heading', 'local_oksigeniaaccess'),
+    new lang_string('disclaimer_html', 'local_oksigeniaaccess')
+));
+
 // --- General ---
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_general',
@@ -48,6 +55,13 @@ $settings->add(new admin_setting_configcheckbox(
     1
 ));
 
+// --- Visibility & scope ---
+$settings->add(new admin_setting_heading(
+    'local_oksigeniaaccess/heading_scope',
+    new lang_string('settings_scope', 'local_oksigeniaaccess'),
+    ''
+));
+
 $scopeoptions = [
     'all'      => new lang_string('scope_all', 'local_oksigeniaaccess'),
     'no_login' => new lang_string('scope_no_login', 'local_oksigeniaaccess'),
@@ -58,6 +72,29 @@ $settings->add(new admin_setting_configselect(
     new lang_string('scope_desc', 'local_oksigeniaaccess'),
     'all',
     $scopeoptions
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'local_oksigeniaaccess/hide_on_admin',
+    new lang_string('hide_on_admin', 'local_oksigeniaaccess'),
+    new lang_string('hide_on_admin_desc', 'local_oksigeniaaccess'),
+    1
+));
+
+$settings->add(new admin_setting_configtext(
+    'local_oksigeniaaccess/excluded_course_ids',
+    new lang_string('excluded_course_ids', 'local_oksigeniaaccess'),
+    new lang_string('excluded_course_ids_desc', 'local_oksigeniaaccess'),
+    '',
+    PARAM_RAW_TRIMMED
+));
+
+$settings->add(new admin_setting_configtext(
+    'local_oksigeniaaccess/trigger_zindex',
+    new lang_string('trigger_zindex', 'local_oksigeniaaccess'),
+    new lang_string('trigger_zindex_desc', 'local_oksigeniaaccess'),
+    '99999',
+    PARAM_INT
 ));
 
 // --- Appearance ---

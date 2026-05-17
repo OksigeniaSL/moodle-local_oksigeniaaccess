@@ -15,17 +15,27 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Version metadata for local_oksigeniaaccess.
+ * Privacy provider — null implementation.
+ *
+ * The plugin does not store any personal data on the server. Visitor
+ * preferences for the accessibility panel are persisted in the browser's
+ * localStorage only and never transmitted.
  *
  * @package    local_oksigeniaaccess
- * @copyright  2026 Oksigenia SL <dev@oksigenia.com>
+ * @copyright  2026 Oksigenia <dev@oksigenia.cc>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace local_oksigeniaaccess\privacy;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_oksigeniaaccess';
-$plugin->version   = 2026051800;
-$plugin->release   = '0.2.0';
-$plugin->maturity  = MATURITY_ALPHA;
-$plugin->requires  = 2024100700; // Moodle 4.5 LTS.
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's name.
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}
