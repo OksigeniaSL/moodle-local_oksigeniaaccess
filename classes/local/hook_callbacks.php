@@ -26,12 +26,14 @@ use core\hook\output\before_footer_html_generation;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hook_callbacks {
-
-    /** Locales supported by the bundled web component. */
+    /** @var string[] Locales supported by the bundled web component. */
     private const SUPPORTED_LOCALES = ['es', 'en', 'gn', 'fr', 'it', 'de', 'nl', 'sv'];
 
     /**
      * Append the panel markup just before the footer is generated.
+     *
+     * @param before_footer_html_generation $hook Hook instance carrying the buffer.
+     * @return void
      */
     public static function before_footer_html_generation(before_footer_html_generation $hook): void {
         global $CFG, $PAGE;
@@ -78,8 +80,11 @@ class hook_callbacks {
 
     /**
      * Check the capability against the current user at system context.
+     *
      * Admins running CLI without a user fall back to true (defensive default
      * for cron / scheduled tasks rendering pages on behalf of the system).
+     *
+     * @return bool True if the current user is allowed to see the panel.
      */
     private static function current_user_can_view(): bool {
         if (!function_exists('has_capability')) {
@@ -92,6 +97,13 @@ class hook_callbacks {
         }
     }
 
+    /**
+     * Decide whether the page falls under the "exclude login" scope rule.
+     *
+     * @param \stdClass     $config Plugin config from get_config().
+     * @param \moodle_page  $page   Current Moodle page being rendered.
+     * @return bool True if the panel must be skipped on this page.
+     */
     private static function should_skip_for_scope(\stdClass $config, \moodle_page $page): bool {
         if (($config->scope ?? 'all') !== 'no_login') {
             return false;
@@ -101,6 +113,13 @@ class hook_callbacks {
         return str_starts_with($url, '/login/');
     }
 
+    /**
+     * Decide whether the page is under /admin/ and the hide-on-admin toggle is on.
+     *
+     * @param \stdClass     $config Plugin config from get_config().
+     * @param \moodle_page  $page   Current Moodle page being rendered.
+     * @return bool True if the panel must be skipped on this page.
+     */
     private static function should_skip_for_admin(\stdClass $config, \moodle_page $page): bool {
         if (empty($config->hide_on_admin)) {
             return false;
@@ -111,6 +130,13 @@ class hook_callbacks {
         return str_starts_with($url, '/admin/');
     }
 
+    /**
+     * Decide whether the current course is in the configured exclusion list.
+     *
+     * @param \stdClass     $config Plugin config from get_config().
+     * @param \moodle_page  $page   Current Moodle page being rendered.
+     * @return bool True if the panel must be skipped on this page.
+     */
     private static function should_skip_for_course(\stdClass $config, \moodle_page $page): bool {
         $excluded = self::parse_course_ids($config->excluded_course_ids ?? '');
         if (empty($excluded)) {
@@ -126,6 +152,9 @@ class hook_callbacks {
 
     /**
      * Parse a comma/space/newline-separated list of course IDs into ints.
+     *
+     * @param string $raw Raw textarea value from the plugin setting.
+     * @return int[] Unique positive course IDs (skips 0 and 1 which are not real courses).
      */
     private static function parse_course_ids(string $raw): array {
         if ($raw === '') {
@@ -142,6 +171,16 @@ class hook_callbacks {
         return array_values(array_unique($ids));
     }
 
+    /**
+     * Resolve which locale code (one of SUPPORTED_LOCALES) to pass to the web component.
+     *
+     * Auto mode reads Moodle's current language and normalises regional variants
+     * (e.g. `es_mx` → `es`). Force mode uses the admin-picked locale, falling
+     * back to English if the override is somehow invalid.
+     *
+     * @param \stdClass $config Plugin config from get_config().
+     * @return string A locale code supported by the bundled web component.
+     */
     private static function resolve_locale(\stdClass $config): string {
         if (($config->locale_mode ?? 'auto') === 'force') {
             $forced = $config->locale_override ?? 'es';
@@ -161,6 +200,9 @@ class hook_callbacks {
      * defaults (black / white / 55px / 9999999). Values are sanitised here
      * even though Moodle's settings already validate them — admin context
      * is trusted but defence in depth is cheap.
+     *
+     * @param \stdClass $config Plugin config from get_config().
+     * @return array Map of CSS variable name to value, ready to render.
      */
     private static function build_css_vars(\stdClass $config): array {
         $vars = [];
@@ -193,6 +235,9 @@ class hook_callbacks {
 
     /**
      * Accept hex / rgb[a] / hsl[a] / named CSS colors. Reject anything else.
+     *
+     * @param string $raw Raw color string from the plugin setting.
+     * @return string The sanitised color or '' if the input is not a valid CSS color.
      */
     private static function sanitise_css_color(string $raw): string {
         $raw = trim($raw);
@@ -216,6 +261,9 @@ class hook_callbacks {
 
     /**
      * Accept a positive number with a CSS unit (px/em/rem/vw/vh/%). Reject the rest.
+     *
+     * @param string $raw Raw size string from the plugin setting.
+     * @return string The sanitised size or '' if the input is not a valid CSS length.
      */
     private static function sanitise_css_size(string $raw): string {
         $raw = trim($raw);
@@ -236,6 +284,11 @@ class hook_callbacks {
      * exposes --oks-z, --oks-btn-size, --oks-bg, --oks-icon, --oks-h-bg and
      * --oks-h-icon, these propagate through the Shadow DOM boundary and
      * change the trigger's z-index, size and colors deterministically.
+     *
+     * @param string $scripturl Absolute URL of the vendored web component script.
+     * @param array  $attrs     Attributes (name => value) to render on <oksigenia-access-panel>.
+     * @param array  $cssvars   CSS variables (--name => value) to set on the host element.
+     * @return string The HTML fragment to inject before the footer.
      */
     private static function render(string $scripturl, array $attrs, array $cssvars): string {
         $attrhtml = '';

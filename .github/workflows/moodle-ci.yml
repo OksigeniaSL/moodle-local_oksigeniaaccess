@@ -1,0 +1,129 @@
+# Moodle Plugin CI — runs the same suite that moodle.org/plugins reviewers
+# expect (validate, lint, codechecker, phpdoc, savepoints, mustache, grunt)
+# across the currently supported Moodle branches.
+#
+# Behat and PHPUnit are not enabled yet because the plugin has no tests of
+# its own; add them as separate steps when the test files exist.
+#
+# Reference template: https://github.com/moodlehq/moodle-plugin-ci
+name: Moodle Plugin CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: 'postgres'
+          POSTGRES_HOST_AUTH_METHOD: 'trust'
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 8
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - moodle-branch: MOODLE_405_STABLE
+            php: '8.1'
+            database: pgsql
+            node: '20'
+          - moodle-branch: MOODLE_500_STABLE
+            php: '8.2'
+            database: pgsql
+            node: '20'
+          - moodle-branch: MOODLE_501_STABLE
+            php: '8.3'
+            database: pgsql
+            node: '22'
+          - moodle-branch: MOODLE_502_STABLE
+            php: '8.3'
+            database: pgsql
+            node: '22'
+
+    steps:
+      - name: Check out plugin code
+        uses: actions/checkout@v4
+        with:
+          path: plugin
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pgsql, zip, gd, soap, xmlrpc, mbstring, intl
+          ini-values: max_input_vars=5000
+          coverage: none
+
+      - name: Set up Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install moodle-plugin-ci
+        run: |
+          composer create-project -n --no-dev --prefer-dist \
+            moodlehq/moodle-plugin-ci ci ^4
+          # Put the CI binary on the PATH.
+          echo "$(pwd)/ci/bin"    >> "$GITHUB_PATH"
+          echo "$(pwd)/ci/vendor/bin" >> "$GITHUB_PATH"
+          # Composer cache for nicer logs.
+          sudo locale-gen en_AU.UTF-8
+
+      - name: Install Moodle (${{ matrix.moodle-branch }})
+        run: |
+          moodle-plugin-ci install \
+            --plugin=$(pwd)/plugin \
+            --db-host=127.0.0.1 \
+            --db-user=postgres \
+            --db-pass='' \
+            --db-name=postgres \
+            --db-type=${{ matrix.database }} \
+            --branch=${{ matrix.moodle-branch }}
+        env:
+          DB: ${{ matrix.database }}
+          MOODLE_BRANCH: ${{ matrix.moodle-branch }}
+
+      - name: validate
+        if: always()
+        run: moodle-plugin-ci validate
+
+      - name: phplint
+        if: always()
+        run: moodle-plugin-ci phplint
+
+      - name: phpmd
+        if: always()
+        run: moodle-plugin-ci phpmd
+
+      - name: codechecker
+        if: always()
+        run: moodle-plugin-ci codechecker
+
+      - name: phpdoc
+        if: always()
+        run: moodle-plugin-ci phpdoc
+
+      - name: savepoints
+        if: always()
+        run: moodle-plugin-ci savepoints
+
+      - name: mustache
+        if: always()
+        run: moodle-plugin-ci mustache
+
+      - name: grunt
+        if: always()
+        run: moodle-plugin-ci grunt --max-lint-warnings 0

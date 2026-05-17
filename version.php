@@ -18,14 +18,14 @@
  * Version metadata for local_oksigeniaaccess.
  *
  * @package    local_oksigeniaaccess
- * @copyright  2026 Oksigenia SL <dev@oksigenia.com>
+ * @copyright  2026 Oksigenia <dev@oksigenia.cc>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_oksigeniaaccess';
-$plugin->version   = 2026051901;
-$plugin->release   = '0.3.1';
+$plugin->version   = 2026051902;
+$plugin->release   = '0.3.2';
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->requires  = 2024100700; // Moodle 4.5 LTS.

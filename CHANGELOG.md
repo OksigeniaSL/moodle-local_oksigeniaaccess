@@ -5,6 +5,21 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-05-18
+
+### Added
+- **GitHub Actions CI** (`.github/workflows/moodle-ci.yml`) running `moodle-plugin-ci` on every push and PR across the four currently supported Moodle branches: 4.5 LTS, 5.0, 5.1, 5.2. Pairs each branch with the matching PHP and Node version. Steps: validate, phplint, phpmd, codechecker, phpdoc, savepoints, mustache, grunt. No PHPUnit/Behat yet (the plugin has no tests of its own).
+
+### Fixed
+- **Lang files**: keys reordered alphabetically as required by Moodle's `LangFilesOrdering` sniff. Comments between strings removed; logical grouping is documented in the settings page via `admin_setting_heading` entries instead.
+- **Missing docblocks** added to the `provider` class and four methods of `hook_callbacks` (`should_skip_for_scope`, `should_skip_for_admin`, `should_skip_for_course`, `resolve_locale`) flagged by `moodle.Commenting.MissingDocblock`.
+- **Empty line after class opening brace** removed in `provider.php` and `hook_callbacks.php` per `PSR12.Classes.OpeningBraceSpace`.
+- **PHPDoc generic-array syntax** (`array<string,string>`) replaced with plain `array` so Moodle's PHPDoc Checker counts parameters correctly. Description in the docblock retains the structure information.
+- Copyright header in `version.php` aligned with the `OksigeniaSL/*` convention (`Oksigenia <dev@oksigenia.cc>`).
+
+### Validated
+- `moodle-plugin-ci install + validate + phplint + phpmd + codechecker + phpdoc + savepoints + mustache + grunt` PASS on **MOODLE_405_STABLE**, **MOODLE_500_STABLE**, **MOODLE_501_STABLE** and **MOODLE_502_STABLE** via the local docker runner on the Oksigenia VPS.
+
 ## [0.3.1] - 2026-05-18
 
 ### Changed

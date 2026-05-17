@@ -30,10 +30,14 @@ namespace local_oksigeniaaccess\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Privacy null provider for local_oksigeniaaccess.
+ */
 class provider implements \core_privacy\local\metadata\null_provider {
-
     /**
-     * Get the language string identifier with the component's name.
+     * Return the language string explaining why this plugin stores no personal data.
+     *
+     * @return string The lang string identifier.
      */
     public static function get_reason(): string {
         return 'privacy:metadata';
