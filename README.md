@@ -4,6 +4,9 @@
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3+-blue.svg)](LICENSE)
 ![Moodle](https://img.shields.io/badge/Moodle-4.5%20LTS%20%7C%205.x-orange)
 ![Status](https://img.shields.io/badge/status-alpha-yellow)
+[![Bundled web component](https://img.shields.io/npm/v/@oksigenia/access-panel?label=%40oksigenia%2Faccess-panel&color=6d4aff)](https://www.npmjs.com/package/@oksigenia/access-panel)
+[![Sponsor](https://img.shields.io/badge/sponsor-Oksigenia-00d4ff)](https://sponsor.oksigenia.com)
+[![Roadmap](https://img.shields.io/badge/roadmap-public-00f5d4)](https://github.com/orgs/OksigeniaSL/projects/4)
 
 A privacy-first accessibility panel for Moodle. Floating button with 15 user-side
 controls — text size, line height, dyslexia font, contrast, colorblind filters,
@@ -184,11 +187,12 @@ selling false reassurance.
 
 ## Support and contributions
 
-Issues and PRs welcome at the
-[GitHub repo](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess).
-Please open an issue before sending a PR for non-trivial changes. See
-[`CONTRIBUTING.md`](CONTRIBUTING.md) for the small handbook — code style,
-translation policy and roadmap.
+- **Bugs and features**: [Issues](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/issues/new/choose) with templates for bug reports and feature requests.
+- **How-to questions, theming help, general feedback**: [Discussions](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/discussions).
+- **Security vulnerabilities**: report privately — see [`SECURITY.md`](SECURITY.md).
+- **Roadmap**: public board at [github.com/orgs/OksigeniaSL/projects/4](https://github.com/orgs/OksigeniaSL/projects/4). Sponsors influence the order; see the project readme for how.
+- **Code contributions**: read [`CONTRIBUTING.md`](CONTRIBUTING.md) for code style, translation policy and PR conventions. The CI workflow at [`.github/workflows/moodle-ci.yml`](.github/workflows/moodle-ci.yml) runs `moodle-plugin-ci` across Moodle 4.5 LTS / 5.0 / 5.1 / 5.2 on every push and PR, so contributors get the same feedback as the maintainer.
+- **Code of Conduct**: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) (Contributor Covenant 2.1).
 
 ## Credits
 

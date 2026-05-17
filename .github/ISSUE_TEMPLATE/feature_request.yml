@@ -1,0 +1,52 @@
+name: Feature request
+description: Suggest a new setting, control, integration, or behaviour.
+labels: ["enhancement", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We keep the plugin small and focused on visitor-side accessibility adaptations. Feature requests that fit that scope move faster.
+
+        Note: if the request is about the accessibility controls themselves (new control, new locale, new theming knob on the trigger), the right place is usually the upstream web component at <https://github.com/OksigeniaSL/oksigenia-web-libs>. Tell us anyway and we'll route it.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem you are trying to solve
+      description: What use case are you covering? Who benefits?
+      placeholder: e.g. As a Moodle admin for a Catalan university, I need the panel UI in Catalan.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed solution
+      placeholder: e.g. Add a Catalan locale to the web component dictionary and a `ca` value to the locale_override select.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where does this live?
+      options:
+        - This Moodle plugin (PHP shell, settings, hook callback)
+        - Upstream web component (@oksigenia/access-panel)
+        - Both
+        - Not sure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: sponsor
+    attributes:
+      label: Sponsorship
+      description: If your institution depends on this and the request is large, sponsorship moves it up the priority list. Optional.
+      options:
+        - label: We are a sponsor or considering sponsoring (see https://sponsor.oksigenia.com)

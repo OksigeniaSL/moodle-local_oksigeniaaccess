@@ -1,0 +1,97 @@
+name: Bug report
+description: Something in the plugin is misbehaving (panel not appearing, settings not respected, console error, visual collision, etc.)
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please give us the minimum context we need to reproduce it.
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Find it in *Site administration → Plugins → Plugins overview → Local plugins* or in `version.php` (`$plugin->release`).
+      placeholder: e.g. 0.3.2
+    validations:
+      required: true
+
+  - type: input
+    id: moodle-version
+    attributes:
+      label: Moodle version
+      description: e.g. 4.5.3, 5.1.1
+      placeholder: e.g. 5.1.1
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: e.g. 8.3.7
+    validations:
+      required: true
+
+  - type: input
+    id: theme
+    attributes:
+      label: Active Moodle theme
+      placeholder: e.g. Boost, Boost Union, Snap, custom
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & OS
+      placeholder: e.g. Firefox 142 on Ubuntu 24.04, Safari 18 on iOS 18
+
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens
+      description: Describe the buggy behaviour.
+      placeholder: e.g. The panel button does not show up on course pages but shows on the dashboard.
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-expected
+    attributes:
+      label: What you expected
+      placeholder: e.g. The panel should appear consistently across all pages where the scope setting allows it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Install the plugin v0.3.2.
+        2. Go to *Site admin → Local plugins → Oksigenia Access* and leave defaults.
+        3. Visit any course page.
+        4. The trigger button is missing.
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors (if any)
+      description: Open DevTools → Console and paste any JS errors you see.
+      render: shell
+
+  - type: textarea
+    id: php-errors
+    attributes:
+      label: PHP debug output (if any)
+      description: Enable *Site admin → Development → Debugging → DEVELOPER + Display debug messages*, reload, and paste any messages you see related to `local_oksigeniaaccess`.
+      render: shell
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshots
+      description: Drag-and-drop here if relevant.

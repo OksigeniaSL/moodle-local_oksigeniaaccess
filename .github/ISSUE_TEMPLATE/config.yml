@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: General question or discussion
+    url: https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/discussions
+    about: For how-to questions, theming help, or general feedback. Keep issues for actionable bugs or feature requests.
+  - name: Security vulnerability
+    url: https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/security/advisories/new
+    about: Report security issues privately — please do not open a public issue. See SECURITY.md for details.
+  - name: Sponsor the project
+    url: https://sponsor.oksigenia.com
+    about: If your institution depends on this plugin for accessibility compliance, support its development. Sponsors get prioritised triage and a vote in the roadmap.
