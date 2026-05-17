@@ -71,9 +71,9 @@ class hook_callbacks {
             $attrs['position-mobile'] = $config->position_mobile;
         }
 
-        $zindex = self::resolve_zindex($config);
+        $cssvars = self::build_css_vars($config);
 
-        $hook->add_html(self::render($script, $attrs, $zindex));
+        $hook->add_html(self::render($script, $attrs, $cssvars));
     }
 
     /**
@@ -154,30 +154,105 @@ class hook_callbacks {
         return in_array($base, self::SUPPORTED_LOCALES, true) ? $base : 'en';
     }
 
-    private static function resolve_zindex(\stdClass $config): int {
-        $z = (int) ($config->trigger_zindex ?? 99999);
-        if ($z < 1) {
-            $z = 99999;
+    /**
+     * Build the map of CSS custom properties to apply on the host element.
+     *
+     * Empty values fall through so the web component uses its built-in
+     * defaults (black / white / 55px / 9999999). Values are sanitised here
+     * even though Moodle's settings already validate them — admin context
+     * is trusted but defence in depth is cheap.
+     */
+    private static function build_css_vars(\stdClass $config): array {
+        $vars = [];
+
+        $z = (int) ($config->trigger_zindex ?? 9999999);
+        if ($z >= 1) {
+            $vars['--oks-z'] = (string) $z;
         }
-        return $z;
+
+        $size = self::sanitise_css_size((string) ($config->btn_size ?? ''));
+        if ($size !== '') {
+            $vars['--oks-btn-size'] = $size;
+        }
+
+        $colormap = [
+            'btn_bg'     => '--oks-bg',
+            'btn_icon'   => '--oks-icon',
+            'btn_h_bg'   => '--oks-h-bg',
+            'btn_h_icon' => '--oks-h-icon',
+        ];
+        foreach ($colormap as $key => $cssvar) {
+            $color = self::sanitise_css_color((string) ($config->$key ?? ''));
+            if ($color !== '') {
+                $vars[$cssvar] = $color;
+            }
+        }
+
+        return $vars;
+    }
+
+    /**
+     * Accept hex / rgb[a] / hsl[a] / named CSS colors. Reject anything else.
+     */
+    private static function sanitise_css_color(string $raw): string {
+        $raw = trim($raw);
+        if ($raw === '') {
+            return '';
+        }
+        if (preg_match('/^#[0-9a-f]{3,8}$/i', $raw)) {
+            return $raw;
+        }
+        if (preg_match('/^rgba?\(\s*\d{1,3}(\s*,\s*\d{1,3}){2,3}\s*\)$/i', $raw)) {
+            return $raw;
+        }
+        if (preg_match('/^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*[\d\.]+)?\s*\)$/i', $raw)) {
+            return $raw;
+        }
+        if (preg_match('/^[a-z]{3,20}$/i', $raw)) {
+            return strtolower($raw);
+        }
+        return '';
+    }
+
+    /**
+     * Accept a positive number with a CSS unit (px/em/rem/vw/vh/%). Reject the rest.
+     */
+    private static function sanitise_css_size(string $raw): string {
+        $raw = trim($raw);
+        if ($raw === '') {
+            return '';
+        }
+        if (preg_match('/^[0-9]+(\.[0-9]+)?(px|em|rem|vw|vh|%)$/i', $raw)) {
+            return strtolower($raw);
+        }
+        return '';
     }
 
     /**
      * Build the markup injected before the closing body tag.
      *
-     * The z-index is applied via an inline <style> on the host custom
-     * element. Browsers inherit the stacking context, and since the bundled
-     * web component renders its trigger as `position: fixed` inside its
-     * Shadow DOM, the host's z-index governs where it stacks relative to
-     * other floating widgets in the host page.
+     * CSS custom properties are applied via an inline <style> on the host
+     * custom element. Since the bundled @oksigenia/access-panel v0.3.0+
+     * exposes --oks-z, --oks-btn-size, --oks-bg, --oks-icon, --oks-h-bg and
+     * --oks-h-icon, these propagate through the Shadow DOM boundary and
+     * change the trigger's z-index, size and colors deterministically.
      */
-    private static function render(string $scripturl, array $attrs, int $zindex): string {
+    private static function render(string $scripturl, array $attrs, array $cssvars): string {
         $attrhtml = '';
         foreach ($attrs as $name => $value) {
             $attrhtml .= ' ' . $name . '="' . s($value) . '"';
         }
 
-        $style = '<style id="oks-access-zindex">oksigenia-access-panel{position:relative;z-index:' . $zindex . ';}</style>';
+        $style = '';
+        if (!empty($cssvars)) {
+            $decls = '';
+            foreach ($cssvars as $name => $value) {
+                // Names are hardcoded; values are pre-sanitised. s() escapes
+                // for HTML context (no quotes break <style>).
+                $decls .= $name . ':' . $value . ';';
+            }
+            $style = '<style id="oks-access-vars">oksigenia-access-panel{' . $decls . '}</style>';
+        }
 
         return "\n" . $style
              . "\n<script type=\"module\" src=\"" . s($scripturl) . "\"></script>"

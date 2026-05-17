@@ -44,7 +44,22 @@ $string['hide_on_admin_desc']      = 'When enabled, the panel is not injected in
 $string['excluded_course_ids']     = 'Excluded course IDs';
 $string['excluded_course_ids_desc'] = 'Comma- or space-separated list of course IDs where the panel should NOT be injected (e.g. <code>12, 34, 78</code>). Useful for specific courses with their own accessibility scaffolding or third-party tooling. Leave empty to inject in every course.';
 $string['trigger_zindex']          = 'Trigger z-index';
-$string['trigger_zindex_desc']     = 'CSS z-index for the floating trigger button. Raise it if the trigger gets covered by another floating widget (theme scrolltop, chat bubble, cookie banner...). Default is 99999.';
+$string['trigger_zindex_desc']     = 'CSS z-index for the floating trigger button. Raise it if the trigger gets covered by another floating widget (theme scrolltop, chat bubble, cookie banner...). Default is 9999999. Backed by the web component\'s <code>--oks-z</code> CSS variable since v0.3.0 — deterministic across browsers.';
+
+// Trigger appearance (since v0.3.0) — empty value = inherit the bundled defaults
+// (black bg / white icon, swap on hover) so the plugin still works out of the box.
+$string['settings_colors']         = 'Trigger appearance';
+$string['settings_colors_desc']    = 'Customise the floating trigger button to blend with your Moodle theme. Leave any field empty to use the default value baked into the web component. Colors are CSS color values: hex (<code>#00d4ff</code>), <code>rgb()</code>, <code>hsl()</code> or a named color.';
+$string['btn_size']                = 'Button size';
+$string['btn_size_desc']           = 'CSS size (with unit, e.g. <code>60px</code>) of the floating button. Default <code>55px</code>. Leave empty to use the default.';
+$string['btn_bg']                  = 'Idle background';
+$string['btn_bg_desc']             = 'Background color of the trigger button at rest. Default <code>#000</code>.';
+$string['btn_icon']                = 'Idle icon color';
+$string['btn_icon_desc']           = 'Color of the icon inside the trigger button at rest. Default <code>#fff</code>.';
+$string['btn_h_bg']                = 'Hover background';
+$string['btn_h_bg_desc']           = 'Background color of the trigger button on hover. Default <code>#fff</code>.';
+$string['btn_h_icon']              = 'Hover icon color';
+$string['btn_h_icon_desc']         = 'Color of the icon inside the trigger button on hover. Default <code>#000</code>.';
 
 // Capability label (shown in Site admin → Users → Permissions → Define roles).
 $string['oksigeniaaccess:view']    = 'See the accessibility panel';

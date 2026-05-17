@@ -93,8 +93,51 @@ $settings->add(new admin_setting_configtext(
     'local_oksigeniaaccess/trigger_zindex',
     new lang_string('trigger_zindex', 'local_oksigeniaaccess'),
     new lang_string('trigger_zindex_desc', 'local_oksigeniaaccess'),
-    '99999',
+    '9999999',
     PARAM_INT
+));
+
+// --- Trigger appearance ---
+$settings->add(new admin_setting_heading(
+    'local_oksigeniaaccess/heading_colors',
+    new lang_string('settings_colors', 'local_oksigeniaaccess'),
+    new lang_string('settings_colors_desc', 'local_oksigeniaaccess')
+));
+
+$settings->add(new admin_setting_configtext(
+    'local_oksigeniaaccess/btn_size',
+    new lang_string('btn_size', 'local_oksigeniaaccess'),
+    new lang_string('btn_size_desc', 'local_oksigeniaaccess'),
+    '',
+    PARAM_RAW_TRIMMED
+));
+
+$settings->add(new admin_setting_configcolourpicker(
+    'local_oksigeniaaccess/btn_bg',
+    new lang_string('btn_bg', 'local_oksigeniaaccess'),
+    new lang_string('btn_bg_desc', 'local_oksigeniaaccess'),
+    ''
+));
+
+$settings->add(new admin_setting_configcolourpicker(
+    'local_oksigeniaaccess/btn_icon',
+    new lang_string('btn_icon', 'local_oksigeniaaccess'),
+    new lang_string('btn_icon_desc', 'local_oksigeniaaccess'),
+    ''
+));
+
+$settings->add(new admin_setting_configcolourpicker(
+    'local_oksigeniaaccess/btn_h_bg',
+    new lang_string('btn_h_bg', 'local_oksigeniaaccess'),
+    new lang_string('btn_h_bg_desc', 'local_oksigeniaaccess'),
+    ''
+));
+
+$settings->add(new admin_setting_configcolourpicker(
+    'local_oksigeniaaccess/btn_h_icon',
+    new lang_string('btn_h_icon', 'local_oksigeniaaccess'),
+    new lang_string('btn_h_icon_desc', 'local_oksigeniaaccess'),
+    ''
 ));
 
 // --- Appearance ---

@@ -5,6 +5,19 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-18
+
+### Added
+- **Trigger appearance settings** — five new fields under *Visibility & scope → Trigger appearance*: button size, idle background, idle icon color, hover background and hover icon color. All are optional; leaving a field empty falls back to the bundled web component default. Colors use Moodle's native `admin_setting_configcolourpicker`; size accepts any CSS length with unit.
+- Backed by [`@oksigenia/access-panel@0.3.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.3.0), bundled fresh under `js/web-component.js`. The new upstream exposes `--oks-z` as a CSS custom property, which makes the **Trigger z-index** setting deterministic across browsers (previously it relied on stacking-context inheritance through the Shadow DOM and was best-effort).
+
+### Changed
+- `Trigger z-index` default raised from `99999` to `9999999` to match the web component's internal default. Existing custom values are kept; only fresh installs get the new default.
+- Hook callback rewrites the inline `<style>` from a single `z-index` rule to a multi-property block on the host element. Values are sanitised in PHP (hex / rgb / hsl / named for colors; CSS length with unit for size) — defence in depth on top of Moodle's own settings validation.
+
+### Upstream
+- This release pairs with `@oksigenia/access-panel@0.3.0` (npm). The web component change is a pure addition (`--oks-z` defaults to `9999999`, matching prior behaviour) and is fully compatible with previous consumers.
+
 ## [0.2.0] - 2026-05-18
 
 ### Added

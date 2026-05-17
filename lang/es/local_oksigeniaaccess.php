@@ -44,7 +44,23 @@ $string['hide_on_admin_desc']      = 'Si está activo, el panel NO se inyecta en
 $string['excluded_course_ids']     = 'IDs de cursos excluidos';
 $string['excluded_course_ids_desc'] = 'Lista de IDs de curso separados por coma o espacio donde el panel NO debe inyectarse (p. ej. <code>12, 34, 78</code>). Útil para cursos con sus propias herramientas de accesibilidad o de terceros. Vacío = inyectar en todos los cursos.';
 $string['trigger_zindex']          = 'z-index del botón flotante';
-$string['trigger_zindex_desc']     = 'Valor CSS z-index del botón flotante. Súbelo si el botón queda tapado por otro widget flotante (botón scrolltop del theme, burbuja de chat, banner de cookies...). Por defecto 99999.';
+$string['trigger_zindex_desc']     = 'Valor CSS z-index del botón flotante. Súbelo si el botón queda tapado por otro widget flotante (botón scrolltop del theme, burbuja de chat, banner de cookies...). Por defecto 9999999. Desde la v0.3.0 usa la variable CSS <code>--oks-z</code> del web component — determinista en todos los navegadores.';
+
+// Personalización del botón (desde v0.3.0) — valor vacío = usar los defaults
+// del componente (fondo negro / icono blanco, invertido en hover) para que el
+// plugin funcione tal cual recién instalado.
+$string['settings_colors']         = 'Personalización del botón';
+$string['settings_colors_desc']    = 'Personaliza el botón flotante para que combine con el tema de tu Moodle. Deja vacío cualquier campo para usar el valor por defecto del web component. Los colores son valores CSS: hex (<code>#00d4ff</code>), <code>rgb()</code>, <code>hsl()</code> o un color con nombre.';
+$string['btn_size']                = 'Tamaño del botón';
+$string['btn_size_desc']           = 'Tamaño CSS (con unidad, p. ej. <code>60px</code>) del botón flotante. Por defecto <code>55px</code>. Déjalo vacío para usar el default.';
+$string['btn_bg']                  = 'Fondo en reposo';
+$string['btn_bg_desc']             = 'Color de fondo del botón en reposo. Por defecto <code>#000</code>.';
+$string['btn_icon']                = 'Color del icono en reposo';
+$string['btn_icon_desc']           = 'Color del icono dentro del botón en reposo. Por defecto <code>#fff</code>.';
+$string['btn_h_bg']                = 'Fondo en hover';
+$string['btn_h_bg_desc']           = 'Color de fondo del botón al pasar el ratón. Por defecto <code>#fff</code>.';
+$string['btn_h_icon']              = 'Color del icono en hover';
+$string['btn_h_icon_desc']         = 'Color del icono dentro del botón al pasar el ratón. Por defecto <code>#000</code>.';
 
 // Etiqueta de la capability (visible en Admin del sitio → Usuarios → Permisos → Definir roles).
 $string['oksigeniaaccess:view']    = 'Ver el panel de accesibilidad';
