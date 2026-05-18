@@ -5,6 +5,13 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-05-18
+
+### Fixed
+- **Reading Guide + High Contrast collision**: re-vendors [`@oksigenia/access-panel@0.3.1`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.3.1), which fixes a bug where the reading guide painted a solid black band over the text when High Contrast was also active. The wildcard `body.oks-a11y-contrast *` selector in the web component was catching `.oks-reading-guide` and overriding its translucent yellow with opaque black. Upstream fix preserves the overlay's intended look in high-contrast mode.
+
+No other functional changes in the plugin shell. Existing settings are preserved on upgrade.
+
 ## [0.3.2] - 2026-05-18
 
 ### Added
