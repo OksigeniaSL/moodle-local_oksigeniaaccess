@@ -5,6 +5,13 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-05-18
+
+### Fixed
+- **Text-size levels (1-4) blew up the layout exponentially**: re-vendors [`@oksigenia/access-panel@0.3.3`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.3.3). The previous `oks-zoom-*` rules in the bundled web component applied `font-size: 1.20em !important` to every descendant of `<body>` via the universal selector. Since `em` is parent-relative, the factor compounded at each nesting level — a heading three levels deep ended up at `1.20³ = 1.73×` its intended size, which blew up the layout at level 3 and made the page unusable at level 4. New rules target `<body>` only with percentage values (10 / 20 / 35 / 50%), so `em`/`rem` descendants scale exactly once.
+
+No plugin shell changes, no new settings.
+
 ## [0.3.3] - 2026-05-18
 
 ### Fixed
