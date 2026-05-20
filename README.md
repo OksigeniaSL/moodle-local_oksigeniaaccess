@@ -184,12 +184,10 @@ See the sponsor page for details.
 
 ### What this plugin does NOT do
 
-Installing this plugin does NOT make your Moodle WCAG / EAA compliant on
-its own. The panel is a user adaptation tool. Real compliance requires
-editorial work on your courses: alt text on images, video transcripts,
-correct semantics, keyboard navigability, color contrast, labelled forms.
-Anyone telling you otherwise (looking at you, paid overlay vendors) is
-selling false reassurance.
+The panel is a user adaptation tool. WCAG / EAA compliance is achieved
+with editorial work on your courses: alt text on images, video
+transcripts, correct semantics, keyboard navigability, color contrast,
+labelled forms.
 
 ## Support and contributions
 
