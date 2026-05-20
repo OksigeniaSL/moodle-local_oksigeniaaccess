@@ -166,15 +166,23 @@ development at <https://sponsor.oksigenia.com>.
   from sponsors are evaluated first).
 - (Gold tier) a semi-annual 1:1 with the maintainer.
 
-### Compliance certificate (separate, contractable)
+### Technical accessibility evaluation (separate, contractable)
 
-For institutions that need **signed documentary evidence** for an official
-audit, we offer a one-off professional review of your Moodle: WCAG 2.1 AA
-manual checks, written findings + remediation priorities, and a PDF
-certificate digitally signed by Oksigenia SL valid for 12 months. Suitable
-for EAA 2025, Directive (EU) 2016/2102 and RD 1112/2018 audit dossiers. Not
-a subscription, no auto-renewal. See the sponsor page for the request
-form.
+For Moodle installations that want a first technical screening of their
+accessibility status, we offer a one-off evaluation: automated checks
+(axe-core, Lighthouse, WAVE) plus manual review of the typical pain points
+(text alternatives, heading structure, contrast, keyboard navigation,
+forms), and a written report with findings prioritised by impact and a
+concrete remediation plan. Delivered as PDF signed by Oksigenia SL.
+
+This evaluation is **not** an accredited audit nor a conformity
+certification. It is a technical engineering report by a consultant
+familiar with WCAG 2.2 / EN 301 549. Useful as an initial diagnostic and
+roadmap. Institutions that need an accredited audit for EAA 2025 / RD
+1112/2018 inspection dossiers should commission an ENAC-accredited body
+(AENOR, BSI, TÜV, etc.); we can recommend partners.
+
+See the sponsor page for details.
 
 ### What this plugin does NOT do
 
