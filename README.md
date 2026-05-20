@@ -175,12 +175,10 @@ accessibility status, we offer a one-off evaluation: automated checks
 forms), and a written report with findings prioritised by impact and a
 concrete remediation plan. Delivered as PDF signed by Oksigenia SL.
 
-This evaluation is **not** an accredited audit nor a conformity
-certification. It is a technical engineering report by a consultant
-familiar with WCAG 2.2 / EN 301 549. Useful as an initial diagnostic and
-roadmap. Institutions that need an accredited audit for EAA 2025 / RD
-1112/2018 inspection dossiers should commission an ENAC-accredited body
-(AENOR, BSI, TÜV, etc.); we can recommend partners.
+This service covers the technical operational layer: detect,
+prioritise, remediate. Formal accreditation for inspection dossiers
+under EAA 2025 / RD 1112/2018 is handled separately by ENAC-accredited
+bodies.
 
 See the sponsor page for details.
 
