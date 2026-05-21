@@ -110,7 +110,8 @@ function positionRules(position) {
 }
 function positionCss(position, mobile) {
   const d = positionRules(position);
-  let css = `.oks-access-wrapper { ${d.wrap} } .oks-access-panel { ${d.panel} }`;
+  let css = `.oks-access-wrapper { ${d.wrap} }`;
+  css += `@media (min-width: 769px) { .oks-access-panel { ${d.panel} } }`;
   if (mobile && mobile !== position) {
     const m = positionRules(mobile);
     css += `@media (max-width: 768px) { .oks-access-wrapper { top: auto; right: auto; bottom: auto; left: auto; transform: none; ${m.wrap} } }`;
@@ -485,7 +486,7 @@ var PANEL_CSS = `
   text-transform: uppercase;
   color: #888;
 }
-.oks-access-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.oks-access-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .oks-access-opt {
   background: #f9f9f9;
   border: 2px solid #eee;
@@ -496,6 +497,7 @@ var PANEL_CSS = `
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  min-width: 0;
   min-height: 70px;
   color: #333;
   transition: 0.2s;
@@ -516,6 +518,8 @@ var PANEL_CSS = `
   text-transform: uppercase;
   text-align: center;
   line-height: 1.2;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .oks-levels { display: flex; gap: 3px; height: 5px; width: 50%; margin-top: 5px; }
 .oks-levels span { flex: 1; background: #ddd; border-radius: 3px; }
@@ -550,12 +554,16 @@ var PANEL_CSS = `
     top: 0; left: 0; right: 0; bottom: 0;
     border-radius: 0;
   }
-  .oks-access-opt { min-height: 88px; padding: 14px 8px; }
-  .oks-icon svg { width: 30px; height: 30px; }
-  .oks-label { font-size: 12px; line-height: 1.3; }
-  .oks-access-grid { gap: 10px; }
-  .oks-access-content { padding: 0 16px 24px; }
-  .oks-access-title { font-size: 12px; margin: 14px 0 6px; }
+  .oks-access-opt { min-height: 72px; padding: 10px 8px; }
+  .oks-icon svg { width: 26px; height: 26px; }
+  .oks-label { font-size: 12px; line-height: 1.25; }
+  .oks-access-grid { gap: 8px; }
+  .oks-access-content { padding: 0 14px 20px; }
+  .oks-access-title { font-size: 11px; margin: 10px 0 4px; }
+  /* Cursor grande no aplica en t\xE1ctil: oculto y dejo el \xFAltimo bot\xF3n
+     de la secci\xF3n ocupando 2 columnas para no romper la grilla par. */
+  .oks-access-opt[data-class="oks-big-cursor"] { display: none; }
+  .oks-access-opt[data-class="oks-a11y-focus"] { grid-column: span 2; }
   .oks-access-reset { padding: 14px; font-size: 14px; }
 }
 `;
@@ -565,16 +573,20 @@ html.oks-colorblind-2 { filter: url('#oks-filter-deuteranopia'); }
 html.oks-colorblind-3 { filter: url('#oks-filter-tritanopia'); }
 
 /* Text-size levels.
-   Applied on <body> only \u2014 never on descendants with the universal selector.
-   font-size inherits, and applying a relative em factor to every descendant
-   compounds it at each nesting level (1.20em on a nested heading three
-   levels deep ends up at 1.20^3 = 1.73x the intended size), which blew the
-   layout up at level 3-4. Percent values scale the root font-size in one
-   place; modern descendants that use em/rem inherit the new base cleanly. */
-body.oks-zoom-1 { font-size: 110% !important; }
-body.oks-zoom-2 { font-size: 120% !important; }
-body.oks-zoom-3 { font-size: 135% !important; }
-body.oks-zoom-4 { font-size: 150% !important; }
+   Applied to <html> via :has(), not to <body>. rem is anchored to the root
+   element, so a site whose CSS sizes things in rem (most modern Astro / Tailwind
+   builds) needs the root font-size to change for the scale to take effect.
+   A previous version applied this to body with %, which only moved descendants
+   that inherited font-size from body \u2014 anything sized in rem stayed locked to
+   the 16px default of <html>. An even earlier version used the universal
+   selector with em and compounded the factor at every nesting level.
+   :has(body.oks-zoom-N) is the right anchor: one change at the root, rem
+   descendants scale exactly once. Hard-coded px is intentionally left alone;
+   browser zoom covers that case. */
+html:has(body.oks-zoom-1) { font-size: 110% !important; }
+html:has(body.oks-zoom-2) { font-size: 120% !important; }
+html:has(body.oks-zoom-3) { font-size: 135% !important; }
+html:has(body.oks-zoom-4) { font-size: 150% !important; }
 
 body.oks-lh-1 * { line-height: 1.6 !important; }
 body.oks-lh-2 * { line-height: 1.9 !important; }

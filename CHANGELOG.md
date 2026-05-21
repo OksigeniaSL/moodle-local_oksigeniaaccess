@@ -5,6 +5,17 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-05-21
+
+### Fixed
+- **Mobile panel anchored off-screen**: re-vendors [`@oksigenia/access-panel@0.3.8`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.3.8). The bundled web component injected dynamic position rules (`top: 50%; left: 90px; transform: translateY(-50%)` for `mid-left`, etc.) **after** the mobile `@media (max-width: 768px)` block that puts the panel fullscreen. Same specificity, later in the stylesheet, so on mobile the dynamic rules overrode `top`/`left`/`transform` and the panel ended up `width: 100%` anchored at `left: 90px` — clipping its right side by 90 px on narrow viewports. Upstream wraps the panel position rules in `@media (min-width: 769px)` so they only apply on desktop.
+
+### Changed
+- **"Big cursor" option hidden on touch devices**: `[data-class="oks-big-cursor"] { display: none }` inside `(max-width: 768px)`. The option is useless without a mouse and was eating one grid row on every phone. The orientation section's last option (`oks-a11y-focus`) spans both columns so the grid stays even.
+- **Compact mobile layout**: option `min-height` 88 → 72 px (still above WCAG 2.5.5's 44×44 minimum), tighter paddings and icons. All 14 controls now fit a typical mobile screen (~640–844 px) without scrolling.
+
+No plugin shell changes, no new settings.
+
 ## [0.3.4] - 2026-05-18
 
 ### Fixed
