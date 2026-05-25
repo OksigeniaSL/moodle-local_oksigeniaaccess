@@ -5,6 +5,20 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-05-25
+
+### Added
+- **Reading Mask** (Orientation): re-vendors [`@oksigenia/access-panel@0.4.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.4.0). A dark overlay with a lit reading band that follows the cursor — more restrictive than the existing Reading Guide when the surroundings are visually noisy. Implemented with `clip-path` and a CSS variable updated on `mousemove` / `touchmove`.
+- **Big Targets** (Orientation): bumps interactive hit-areas (links, buttons, form controls) to 44×44 minimum (WCAG 2.5.5 / 2.5.8). Adjusts `padding` and `min-*` only, never `display`, so host themes that rely on inline flow or grid placement keep working.
+- **4 profile presets** at the top of the panel: Low Vision, Dyslexia, Motor, No Distractions. Each one applies a bundle of related toggles in one click. Additive — pressing several unions their flags. A 250 ms flash gives click feedback without a persistent "active preset" state, because users can adjust individual toggles afterwards and a sticky indicator would lie about the current configuration.
+
+### Fixed
+- **Shadow DOM event-target bug**: the document-level "click outside the panel" handler used `panel.contains(e.target)`, which returns false for any click inside the Shadow DOM because the target is retargeted to the host element when the event crosses the shadow boundary. The panel would close on its own button clicks under certain timings. Replaced with `e.composedPath()`, which is shadow-aware.
+
+### Notes
+- 17 atomic controls + 4 presets. 7 new translation keys (mask, targets, presets, pLow, pDys, pMot, pCalm) across the 8 locales bundled in the web component.
+- No plugin shell changes, no new admin settings, no `db/upgrade.php` migration needed (the bundle change is the entire delta).
+
 ## [0.3.5] - 2026-05-21
 
 ### Fixed

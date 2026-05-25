@@ -8,9 +8,11 @@
 [![Sponsor](https://img.shields.io/badge/sponsor-Oksigenia-00d4ff)](https://sponsor.oksigenia.com)
 [![Roadmap](https://img.shields.io/badge/roadmap-public-00f5d4)](https://github.com/orgs/OksigeniaSL/projects/4)
 
-A privacy-first accessibility panel for Moodle. Floating button with 15 user-side
+A privacy-first accessibility panel for Moodle. Floating button with 17 atomic
 controls — text size, line height, dyslexia font, contrast, colorblind filters,
-reading guide, big cursor, pause animations and more. 8 locales including Guaraní.
+reading guide, reading mask, big cursor, big targets (44×44 WCAG 2.5.5), pause
+animations and more — plus 4 profile presets (Low Vision, Dyslexia, Motor, No
+Distractions) that bundle related toggles in one click. 8 locales including Guaraní.
 
 Local plugin (`local_oksigeniaaccess`) — works with any theme. Powered by the
 [`@oksigenia/access-panel`](https://www.npmjs.com/package/@oksigenia/access-panel)
@@ -20,9 +22,10 @@ self-contained: no Node, no build step, no CDN.
 ## What this is and isn't
 
 This panel does **not** "fix" your Moodle automatically. There is no auto-rewrite
-of alt text, no opaque overlay claiming WCAG compliance. It gives the visitor 15
-real controls to adapt the page to their needs, and persists their choice in
-their own browser. Real a11y still requires real work on your content.
+of alt text, no opaque overlay claiming WCAG compliance. It gives the visitor 17
+real controls (plus 4 profile presets) to adapt the page to their needs, and
+persists their choice in their own browser. Real a11y still requires real work on
+your content.
 
 The same product also ships as:
 - a [WordPress plugin](https://wordpress.org/plugins/oksigenia-access/) (GPLv2+);
