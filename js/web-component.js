@@ -47,7 +47,7 @@ function buildPanelHtml(opts) {
   </button>
   <span class="oks-active-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></span>
 </div>
-<div class="oks-access-panel" id="oks-panel" role="dialog" aria-modal="true" aria-labelledby="oks-panel-title" aria-hidden="true">
+<div class="oks-access-panel" id="oks-panel" role="dialog" aria-modal="true" aria-labelledby="oks-panel-title" inert>
   <div class="oks-access-header">
     <h3 id="oks-panel-title">${escapeHtml(t.title)}</h3>
     <button class="oks-access-close" id="oks-close" aria-label="${escapeAttr(t.close)}" type="button">${ICON_CLOSE}</button>
@@ -327,14 +327,14 @@ function bindPanelBehavior(root, opts = {}) {
   };
   const openPanel = () => {
     panel.classList.add("is-open");
-    panel.setAttribute("aria-hidden", "false");
+    panel.removeAttribute("inert");
     trigger.setAttribute("aria-expanded", "true");
     const first = panel.querySelector("button:not([disabled])");
     first?.focus();
   };
   const closePanel = () => {
     panel.classList.remove("is-open");
-    panel.setAttribute("aria-hidden", "true");
+    panel.setAttribute("inert", "");
     trigger.setAttribute("aria-expanded", "false");
     trigger.focus();
   };

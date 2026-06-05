@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-06-05
+
+### Fixed
+- **`aria-hidden-focus` (accessibility)**: re-vendors [`@oksigenia/access-panel@0.4.2`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.4.2). While closed, the panel kept `aria-hidden="true"` but still held focusable controls — axe and Lighthouse flag this as `aria-hidden-focus` (serious), since a keyboard or screen-reader user could reach controls inside something hidden from assistive tech, and it contradicted `aria-modal`. The closed state now uses the `inert` attribute instead, removing the panel from both the tab order and the accessibility tree. No change when the panel is open; the focus trap, Escape-to-close and focus return were already in place.
+
 ## [0.4.0] - 2026-05-25
 
 ### Added
