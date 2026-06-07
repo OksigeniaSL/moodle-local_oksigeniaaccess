@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-06-07
+
+### Added
+- `thirdpartylibs.xml` documenting the bundled `@oksigenia/access-panel` web component (`js/web-component.js`, MIT), as required by the Moodle plugins directory review (CONTRIB-10542). No functional change to the plugin or the bundled component.
+
 ## [0.4.2] - 2026-06-05
 
 ### Fixed
