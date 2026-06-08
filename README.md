@@ -1,6 +1,7 @@
 # Oksigenia Access for Moodle
 
 [![Moodle Plugin CI](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/actions/workflows/moodle-ci.yml)
+[![Moodle Plugins directory](https://img.shields.io/badge/Moodle-Plugins_directory-orange?logo=moodle&logoColor=white)](https://moodle.org/plugins/local_oksigeniaaccess)
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3+-blue.svg)](LICENSE)
 ![Moodle](https://img.shields.io/badge/Moodle-4.5%20LTS%20%7C%205.x-orange)
 ![Status](https://img.shields.io/badge/status-alpha-yellow)
