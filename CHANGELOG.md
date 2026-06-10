@@ -5,6 +5,13 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-06-10
+
+### Fixed
+- Re-vendors [`@oksigenia/access-panel@0.4.3`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.4.3) with two fixes:
+  - **Body class cleanup**: the panel cleans its `oks-*` classes off `<body>` token by token via `classList`. The previous regex split two-hyphen classes (`oks-a11y-font` → a stray `-font` token), leaving junk piling up on the body `class` attribute with every click while such an effect was active.
+  - **Focus trap covers the footer link**: the branding link is now part of the Tab cycle inside the open panel. Before, the trap only cycled `button` elements, so keyboard users could never reach the link — and if it got focus by pointer, Tab escaped the panel.
+
 ## [0.4.3] - 2026-06-07
 
 ### Added

@@ -232,7 +232,9 @@ function bindPanelBehavior(root, opts = {}) {
   function applyState() {
     const body = document.body;
     const root2 = document.documentElement;
-    body.className = body.className.replace(/\boks-\w+(?:-\d+)?\b/g, "").trim();
+    for (const cls of Array.from(body.classList)) {
+      if (cls.startsWith("oks-")) body.classList.remove(cls);
+    }
     [1, 2, 3].forEach((l) => root2.classList.remove(`oks-colorblind-${l}`));
     if (state.zoom > 0) body.classList.add(`oks-zoom-${state.zoom}`);
     if (state.lh > 0) body.classList.add(`oks-lh-${state.lh}`);
@@ -356,7 +358,7 @@ function bindPanelBehavior(root, opts = {}) {
       return;
     }
     if (e.key !== "Tab") return;
-    const focusable = Array.from(panel.querySelectorAll("button:not([disabled])"));
+    const focusable = Array.from(panel.querySelectorAll("button:not([disabled]), a[href]"));
     if (focusable.length === 0) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
