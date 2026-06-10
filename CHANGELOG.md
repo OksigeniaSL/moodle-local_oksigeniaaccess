@@ -5,6 +5,12 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-06-10
+
+### Changed
+- The compliance notice on the settings page (`disclaimer_html`, en/es) is now purely informative: it describes what the panel does and what real compliance work involves, without promoting external services in-app — in line with the Moodle Marketplace Provider Terms (clause 2.3). The accessibility evaluation service remains documented in the README and the plugin directory listing.
+- Updated control counts everywhere: the notice and the directory description said "15 controls"; since 0.4.0 the panel ships 17 atomic controls plus 4 profile presets.
+
 ## [0.4.4] - 2026-06-10
 
 ### Fixed
