@@ -4,7 +4,7 @@
         <location>js/web-component.js</location>
         <name>@oksigenia/access-panel</name>
         <description>Framework-agnostic accessibility panel, bundled as a zero-dependency web component from the @oksigenia/access-panel npm package. Built distribution file, vendored into the plugin. License text in LICENSE.web-component.MIT.</description>
-        <version>0.4.3</version>
+        <version>0.4.4</version>
         <license>MIT</license>
         <licenseversion></licenseversion>
     </library>

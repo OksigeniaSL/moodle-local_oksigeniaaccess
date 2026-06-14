@@ -5,6 +5,13 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.6] - 2026-06-14
+
+### Accessibility
+- Re-vendors [`@oksigenia/access-panel@0.4.4`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.4.4):
+  - Multi-step controls (text size, line height, alignment, letter spacing, color-blind) now announce their current level to screen readers via a localized aria-label ("Size, level 2 of 4") instead of only an on/off state.
+  - The panel's own transitions and hover transforms are disabled under `prefers-reduced-motion`.
+
 ## [0.4.5] - 2026-06-10
 
 ### Changed
