@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.4.7] - 2026-06-14
+
+### Changed
+- Maturity promoted from Alpha to **Beta**: the plugin is feature-complete (17 atomic controls + 4 profile presets, 8 locales), runs in production on a live Moodle, and has had no critical issues reported.
+
 ## [0.4.6] - 2026-06-14
 
 ### Accessibility
