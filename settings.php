@@ -148,12 +148,15 @@ $settings->add(new admin_setting_heading(
 ));
 
 $positionoptions = [
-    'top-left'     => new lang_string('pos_top_left', 'local_oksigeniaaccess'),
-    'top-right'    => new lang_string('pos_top_right', 'local_oksigeniaaccess'),
-    'mid-left'     => new lang_string('pos_mid_left', 'local_oksigeniaaccess'),
-    'mid-right'    => new lang_string('pos_mid_right', 'local_oksigeniaaccess'),
-    'bottom-left'  => new lang_string('pos_bottom_left', 'local_oksigeniaaccess'),
-    'bottom-right' => new lang_string('pos_bottom_right', 'local_oksigeniaaccess'),
+    'top-left'      => new lang_string('pos_top_left', 'local_oksigeniaaccess'),
+    'top-center'    => new lang_string('pos_top_center', 'local_oksigeniaaccess'),
+    'top-right'     => new lang_string('pos_top_right', 'local_oksigeniaaccess'),
+    'mid-left'      => new lang_string('pos_mid_left', 'local_oksigeniaaccess'),
+    'mid-center'    => new lang_string('pos_mid_center', 'local_oksigeniaaccess'),
+    'mid-right'     => new lang_string('pos_mid_right', 'local_oksigeniaaccess'),
+    'bottom-left'   => new lang_string('pos_bottom_left', 'local_oksigeniaaccess'),
+    'bottom-center' => new lang_string('pos_bottom_center', 'local_oksigeniaaccess'),
+    'bottom-right'  => new lang_string('pos_bottom_right', 'local_oksigeniaaccess'),
 ];
 $settings->add(new admin_setting_configselect(
     'local_oksigeniaaccess/position',
@@ -177,6 +180,7 @@ $iconoptions = [
     'wheelchair' => new lang_string('icon_wheelchair', 'local_oksigeniaaccess'),
     'eye'        => new lang_string('icon_eye', 'local_oksigeniaaccess'),
     'universal'  => new lang_string('icon_universal', 'local_oksigeniaaccess'),
+    'porthole'   => new lang_string('icon_porthole', 'local_oksigeniaaccess'),
 ];
 $settings->add(new admin_setting_configselect(
     'local_oksigeniaaccess/trigger_icon',
@@ -184,6 +188,62 @@ $settings->add(new admin_setting_configselect(
     new lang_string('trigger_icon_desc', 'local_oksigeniaaccess'),
     'vitruvian',
     $iconoptions
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'local_oksigeniaaccess/allow_nudge',
+    new lang_string('allow_nudge', 'local_oksigeniaaccess'),
+    new lang_string('allow_nudge_desc', 'local_oksigeniaaccess'),
+    0
+));
+
+// --- Controls & profiles ---
+$settings->add(new admin_setting_heading(
+    'local_oksigeniaaccess/heading_controls',
+    new lang_string('settings_controls', 'local_oksigeniaaccess'),
+    new lang_string('settings_controls_desc', 'local_oksigeniaaccess')
+));
+
+// One checkbox per atomic control. The key is the control id the web component
+// understands (controls="..."); unticking a control hides it for visitors.
+$controllangkeys = [
+    'text-size'       => 'ctrl_text_size',
+    'line-height'     => 'ctrl_line_height',
+    'text-align'      => 'ctrl_text_align',
+    'readable-font'   => 'ctrl_readable_font',
+    'dyslexia-font'   => 'ctrl_dyslexia_font',
+    'letter-spacing'  => 'ctrl_letter_spacing',
+    'contrast'        => 'ctrl_contrast',
+    'grayscale'       => 'ctrl_grayscale',
+    'hide-images'     => 'ctrl_hide_images',
+    'highlight-links' => 'ctrl_highlight_links',
+    'colorblind'      => 'ctrl_colorblind',
+    'reading-guide'   => 'ctrl_reading_guide',
+    'reading-mask'    => 'ctrl_reading_mask',
+    'big-cursor'      => 'ctrl_big_cursor',
+    'big-targets'     => 'ctrl_big_targets',
+    'pause-anim'      => 'ctrl_pause_anim',
+    'focus'           => 'ctrl_focus',
+];
+$controlchoices = [];
+$controldefaults = [];
+foreach ($controllangkeys as $id => $langkey) {
+    $controlchoices[$id] = new lang_string($langkey, 'local_oksigeniaaccess');
+    $controldefaults[$id] = 1;
+}
+$settings->add(new admin_setting_configmulticheckbox(
+    'local_oksigeniaaccess/controls',
+    new lang_string('controls', 'local_oksigeniaaccess'),
+    new lang_string('controls_desc', 'local_oksigeniaaccess'),
+    $controldefaults,
+    $controlchoices
+));
+
+$settings->add(new admin_setting_configcheckbox(
+    'local_oksigeniaaccess/show_presets',
+    new lang_string('show_presets', 'local_oksigeniaaccess'),
+    new lang_string('show_presets_desc', 'local_oksigeniaaccess'),
+    1
 ));
 
 // --- Behaviour ---

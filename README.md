@@ -73,9 +73,12 @@ Then visit *Site administration → Notifications* in Moodle to finish the insta
 | Idle icon color | *(empty)* | Color of the icon at rest. Empty = `#fff` default. |
 | Hover background | *(empty)* | Color of the trigger button on hover. Empty = `#fff` default. |
 | Hover icon color | *(empty)* | Color of the icon on hover. Empty = `#000` default. |
-| Trigger position (desktop) | Middle left | 6 positions. |
+| Trigger position (desktop) | Middle left | 9 positions (3×3 grid, including the three centers). |
 | Trigger position (mobile) | Inherit | Optional override for ≤768 px viewports. |
-| Trigger icon | Vitruvian man | 4 icons (Vitruvian, Wheelchair, Eye, Universal access). |
+| Trigger icon | Vitruvian man | 5 icons (Vitruvian, Wheelchair, Eye, Universal access, Porthole). |
+| Let visitors move the button | Off | When on, visitors reposition the trigger within bounds (drag or arrow keys), persisted in their browser, never lost off-screen. |
+| Controls shown to visitors | All 17 | Tick which controls the panel offers. Unticked controls are hidden; unticking all resets to all. |
+| Show profile shortcuts | On | Hides the one-tap profile row. A profile also self-hides if curation leaves it with fewer than two of its controls. |
 | Locale source | Auto | Auto follows Moodle's current language; Force lets you pin one. |
 | Forced locale | Spanish | Only used when Locale source = Force. |
 

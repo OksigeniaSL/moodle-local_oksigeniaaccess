@@ -5,6 +5,18 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-21
+
+### Added
+- **Control curation**: a new "Controls & profiles" section in the settings page lets admins tick exactly which of the 17 controls the panel offers visitors (all on by default). Unticked controls are hidden; a section heading collapses when all its controls are gone.
+- **Profiles toggle**: "Show profile shortcuts" hides the one-tap profile row. A profile also self-hides when curation leaves it with fewer than two of its controls.
+- **Reposition the trigger**: "Let visitors move the button" enables a bounded nudge — visitors drag the trigger or move it with the arrow keys while it is focused; the position persists in their browser and can never be lost off-screen.
+- **Three more trigger positions**: top-center, middle-center and bottom-center complete the 3×3 placement grid.
+- **Porthole trigger icon**: frames the standard accessibility glyph in a ring without replacing it.
+
+### Changed
+- Re-vendors [`@oksigenia/access-panel@0.5.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.5.0). Everything new is opt-in: an existing install with default settings renders exactly as before.
+
 ## [0.4.7] - 2026-06-14
 
 ### Changed

@@ -1,3 +1,76 @@
+// src/controls.ts
+var ALL_CONTROLS = [
+  "text-size",
+  "line-height",
+  "text-align",
+  "readable-font",
+  "dyslexia-font",
+  "letter-spacing",
+  "contrast",
+  "grayscale",
+  "hide-images",
+  "highlight-links",
+  "colorblind",
+  "reading-guide",
+  "reading-mask",
+  "big-cursor",
+  "big-targets",
+  "pause-anim",
+  "focus"
+];
+var CONTROL_STATE_KEY = {
+  "text-size": "zoom",
+  "line-height": "lh",
+  "text-align": "align",
+  "readable-font": "font",
+  "dyslexia-font": "dyslexia",
+  "letter-spacing": "ls",
+  "contrast": "contrast",
+  "grayscale": "grayOverlay",
+  "hide-images": "hideImages",
+  "highlight-links": "highlightLinks",
+  "colorblind": "colorblind",
+  "reading-guide": "readingGuide",
+  "reading-mask": "readingMask",
+  "big-cursor": "bigCursor",
+  "big-targets": "bigTargets",
+  "pause-anim": "pauseAnim",
+  "focus": "focusOutline"
+};
+var STATE_KEY_CONTROL = Object.fromEntries(
+  Object.entries(CONTROL_STATE_KEY).map(([control, key]) => [key, control])
+);
+var PRESETS = {
+  lowvision: { zoom: 2, contrast: true, highlightLinks: true, bigCursor: true, focusOutline: true },
+  dyslexia: { dyslexia: true, lh: 2, ls: 2, readingGuide: true },
+  motor: { bigCursor: true, bigTargets: true, focusOutline: true },
+  calm: { hideImages: true, pauseAnim: true }
+};
+var PRESET_IDS = ["lowvision", "dyslexia", "motor", "calm"];
+function presetControlIds(id) {
+  return Object.keys(PRESETS[id]).map((k) => STATE_KEY_CONTROL[k]);
+}
+function resolveEnabledControls(controlsAttr, excludeAttr) {
+  const valid = new Set(ALL_CONTROLS);
+  const parse = (raw) => (raw ?? "").split(",").map((s) => s.trim().toLowerCase()).filter((s) => valid.has(s));
+  const whitelist = controlsAttr != null ? parse(controlsAttr) : null;
+  let enabled = whitelist && whitelist.length > 0 ? new Set(whitelist) : new Set(ALL_CONTROLS);
+  if (excludeAttr != null) {
+    for (const id of parse(excludeAttr)) enabled.delete(id);
+  }
+  return enabled;
+}
+function filterPresetForEnabled(id, enabled) {
+  const out = {};
+  for (const [k, v] of Object.entries(PRESETS[id])) {
+    if (enabled.has(STATE_KEY_CONTROL[k])) out[k] = v;
+  }
+  return out;
+}
+function presetIsAvailable(id, enabled) {
+  return presetControlIds(id).filter((c) => enabled.has(c)).length >= 2;
+}
+
 // src/icons.ts
 var ICON_TXT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.5,4v3h5v12h3V7h5V4H2.5z M21.5,9h-9v3h3v7h3v-7h3V9z"/></svg>';
 var ICON_LH = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6,7h2.5L5,3.5L1.5,7H4v10H1.5L5,20.5L8.5,17H6V7z M10,5v2h12V5H10z M10,19h12v-2H10V19z M10,13h12v-2H10V13z"/></svg>';
@@ -16,75 +89,100 @@ var ICON_COLORBLIND = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12
 var ICON_FOCUS = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 7V3h4v2H5v2H3zm14-4h4v4h-2V5h-2V3zm4 14v4h-4v-2h2v-2h2zM7 21H3v-4h2v2h2v2z"/></svg>';
 var ICON_MASK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 4h20v6H2zm0 10h20v6H2zm2-9v4h16V5zm0 10v4h16v-4z" opacity=".55"/><rect x="2" y="10" width="20" height="4"/></svg>';
 var ICON_TARGETS = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h4v2H5v2H3zm14 0h4v4h-2V5h-2zm0 18v-2h2v-2h2v4zM3 21v-4h2v2h2v2zM12 8a4 4 0 100 8 4 4 0 000-8zm0 2a2 2 0 110 4 2 2 0 010-4z"/></svg>';
+var UNIVERSAL_GLYPH = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>';
 var TRIGGER_ICONS = {
   vitruvian: '<svg viewBox="0 0 122.88 122.88" fill="currentColor"><path d="M61.44,0A61.46,61.46,0,1,1,18,18,61.21,61.21,0,0,1,61.44,0Zm-.39,74.18L52.1,98.91a4.94,4.94,0,0,1-2.58,2.83A5,5,0,0,1,42.7,95.5l6.24-17.28a26.3,26.3,0,0,0,1.17-4,40.64,40.64,0,0,0,.54-4.18c.24-2.53.41-5.27.54-7.9s.22-5.18.29-7.29c.09-2.63-.62-2.8-2.73-3.3l-.44-.1-18-3.39A5,5,0,0,1,27.08,46a5,5,0,0,1,5.05-7.74l19.34,3.63c.77.07,1.52.16,2.31.25a57.64,57.64,0,0,0,7.18.53A81.13,81.13,0,0,0,69.9,42c.9-.1,1.75-.21,2.6-.29l18.25-3.42A5,5,0,0,1,94.5,39a5,5,0,0,1,1.3,7,5,5,0,0,1-3.21,2.09L75.15,51.37c-.58.13-1.1.22-1.56.29-1.82.31-2.72.47-2.61,3.06.08,1.89.31,4.15.61,6.51.35,2.77.81,5.71,1.29,8.4.31,1.77.6,3.19,1,4.55s.79,2.75,1.39,4.42l6.11,16.9a5,5,0,0,1-6.82,6.24,4.94,4.94,0,0,1-2.58-2.83L63,74.23,62,72.4l-1,1.78Zm.39-53.52a8.83,8.83,0,1,1-6.24,2.59,8.79,8.79,0,0,1,6.24-2.59Zm36.35,4.43a51.42,51.42,0,1,0,15,36.35,51.27,51.27,0,0,0-15-36.35Z"/></svg>',
   wheelchair: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13v-2c-1.54.02-3.09-.75-4.07-1.83l-1.29-1.43c-.17-.19-.38-.34-.61-.45-.01 0-.01-.01-.02-.01H13c-.35-.2-.75-.3-1.19-.26C10.76 7.11 10 8.04 10 9.09V15c0 1.1.9 2 2 2h5v5h2v-5.5c0-1.1-.9-2-2-2h-3v-3.45c1.29 1.07 3.25 1.94 5 1.95zm-6.17 5c-.41 1.16-1.52 2-2.83 2-1.66 0-3-1.34-3-3 0-1.31.84-2.41 2-2.83V12.1c-2.28.46-4 2.48-4 4.9 0 2.76 2.24 5 5 5 2.42 0 4.44-1.72 4.9-4h-2.07zM12 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>',
-  universal: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>'
+  universal: UNIVERSAL_GLYPH,
+  porthole: UNIVERSAL_GLYPH
 };
 var ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 var COLORBLIND_FILTERS_SVG = '<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true"><defs><filter id="oks-filter-protanopia"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0"/></filter><filter id="oks-filter-deuteranopia"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0"/></filter><filter id="oks-filter-tritanopia"><feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0"/></filter></defs></svg>';
 
 // src/render.ts
+var PRESET_ICON = {
+  lowvision: ICON_CONTRAST,
+  dyslexia: ICON_DYSLEXIA,
+  motor: ICON_CURSOR,
+  calm: ICON_HIDE
+};
 function buildPanelHtml(opts) {
   const { t, triggerIcon } = opts;
+  const enabled = opts.enabled ?? new Set(ALL_CONTROLS);
+  const showTrigger = opts.showTrigger ?? true;
+  const showPresets = opts.showPresets ?? true;
   const trig = TRIGGER_ICONS[triggerIcon];
-  const grid = (rows) => `<div class="oks-access-grid">${rows.join("")}</div>`;
-  const multi = (action, prefix, levels, label, icon, full = false) => {
+  const multi = (id, prefix, levels, label, icon, full = false) => {
+    if (!enabled.has(id)) return "";
+    const action = id === "colorblind" ? "colorblind" : "multi";
     const fullClass = full ? " full-width" : "";
     const dots = Array.from({ length: levels }, () => "<span></span>").join("");
-    return `<button class="oks-access-opt multi-step${fullClass}" data-action="${action}" data-prefix="${prefix}" data-levels="${levels}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span><div class="oks-levels">${dots}</div></button>`;
+    return `<button class="oks-access-opt multi-step${fullClass}" data-control="${id}" data-action="${action}" data-prefix="${prefix}" data-levels="${levels}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span><div class="oks-levels">${dots}</div></button>`;
   };
-  const toggle = (klass, label, icon) => `<button class="oks-access-opt" data-action="toggle" data-class="${klass}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
-  const overlay = (id, label, icon) => `<button class="oks-access-opt" data-action="overlay" data-target="${id}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
-  const guide = (label, icon) => `<button class="oks-access-opt" data-action="guide" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
-  const mask = (label, icon) => `<button class="oks-access-opt" data-action="mask" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
-  const preset = (id, label, icon) => `<button class="oks-preset" data-action="preset" data-preset="${id}" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
-  return `
+  const toggle = (id, klass, label, icon) => {
+    if (!enabled.has(id)) return "";
+    return `<button class="oks-access-opt" data-control="${id}" data-action="toggle" data-class="${klass}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
+  };
+  const overlay = (id, target, label, icon) => {
+    if (!enabled.has(id)) return "";
+    return `<button class="oks-access-opt" data-control="${id}" data-action="overlay" data-target="${target}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
+  };
+  const simple = (id, action, label, icon) => {
+    if (!enabled.has(id)) return "";
+    return `<button class="oks-access-opt" data-control="${id}" data-action="${action}" aria-pressed="false" type="button"><span class="oks-icon">${icon}</span><span class="oks-label">${label}</span></button>`;
+  };
+  const preset = (id, label) => `<button class="oks-preset" data-action="preset" data-preset="${id}" type="button"><span class="oks-icon">${PRESET_ICON[id]}</span><span class="oks-label">${label}</span></button>`;
+  const section = (title, rows) => {
+    const kept = rows.filter(Boolean);
+    if (kept.length === 0) return "";
+    return `<h4 class="oks-access-title">${escapeHtml(title)}</h4><div class="oks-access-grid">${kept.join("")}</div>`;
+  };
+  const presetLabels = {
+    lowvision: t.pLow,
+    dyslexia: t.pDys,
+    motor: t.pMot,
+    calm: t.pCalm
+  };
+  const presetButtons = showPresets ? PRESET_IDS.filter((id) => presetIsAvailable(id, enabled)).map((id) => preset(id, presetLabels[id])) : [];
+  const presetsBlock = presetButtons.length ? `<h4 class="oks-access-title">${escapeHtml(t.presets)}</h4><div class="oks-access-presets">${presetButtons.join("")}</div>` : "";
+  const triggerBlock = showTrigger ? `
 <div class="oks-access-wrapper" id="oks-wrapper" data-position="${opts.position}">
-  <button class="oks-access-btn" id="oks-trigger" aria-label="${escapeAttr(t.title)}" aria-expanded="false" aria-controls="oks-panel" type="button">
+  <button class="oks-access-btn" id="oks-trigger" part="trigger" data-trigger-icon="${triggerIcon}" aria-label="${escapeAttr(t.title)}" aria-expanded="false" aria-controls="oks-panel" type="button">
     ${trig}
   </button>
   <span class="oks-active-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></span>
-</div>
+</div>` : "";
+  return `${triggerBlock}
 <div class="oks-access-panel" id="oks-panel" role="dialog" aria-modal="true" aria-labelledby="oks-panel-title" inert>
   <div class="oks-access-header">
     <h3 id="oks-panel-title">${escapeHtml(t.title)}</h3>
     <button class="oks-access-close" id="oks-close" aria-label="${escapeAttr(t.close)}" type="button">${ICON_CLOSE}</button>
   </div>
   <div class="oks-access-content">
-    <h4 class="oks-access-title">${escapeHtml(t.presets)}</h4>
-    <div class="oks-access-presets">
-      ${preset("lowvision", t.pLow, ICON_CONTRAST)}
-      ${preset("dyslexia", t.pDys, ICON_DYSLEXIA)}
-      ${preset("motor", t.pMot, ICON_CURSOR)}
-      ${preset("calm", t.pCalm, ICON_HIDE)}
-    </div>
-    <h4 class="oks-access-title">${escapeHtml(t.txt)}</h4>
-    ${grid([
-    multi("multi", "oks-zoom", 4, t.size, ICON_TXT),
-    multi("multi", "oks-lh", 3, t.lh, ICON_LH),
-    multi("multi", "oks-align", 3, t.align, ICON_ALIGN),
-    toggle("oks-a11y-font", t.font, ICON_FONT),
-    toggle("oks-dyslexia", t.dyslexia, ICON_DYSLEXIA),
-    multi("multi", "oks-ls", 3, t.ls, ICON_LS)
+    ${presetsBlock}
+    ${section(t.txt, [
+    multi("text-size", "oks-zoom", 4, t.size, ICON_TXT),
+    multi("line-height", "oks-lh", 3, t.lh, ICON_LH),
+    multi("text-align", "oks-align", 3, t.align, ICON_ALIGN),
+    toggle("readable-font", "oks-a11y-font", t.font, ICON_FONT),
+    toggle("dyslexia-font", "oks-dyslexia", t.dyslexia, ICON_DYSLEXIA),
+    multi("letter-spacing", "oks-ls", 3, t.ls, ICON_LS)
   ])}
-    <h4 class="oks-access-title">${escapeHtml(t.vis)}</h4>
-    ${grid([
-    toggle("oks-a11y-contrast", t.contrast, ICON_CONTRAST),
-    overlay("oks-overlay-gray", t.gray, ICON_GRAY),
-    toggle("oks-a11y-hide", t.hide, ICON_HIDE),
-    toggle("oks-a11y-links", t.links, ICON_LINK),
+    ${section(t.vis, [
+    toggle("contrast", "oks-a11y-contrast", t.contrast, ICON_CONTRAST),
+    overlay("grayscale", "oks-overlay-gray", t.gray, ICON_GRAY),
+    toggle("hide-images", "oks-a11y-hide", t.hide, ICON_HIDE),
+    toggle("highlight-links", "oks-a11y-links", t.links, ICON_LINK),
     multi("colorblind", "oks-colorblind", 3, t.cb, ICON_COLORBLIND, true)
   ])}
-    <h4 class="oks-access-title">${escapeHtml(t.ori)}</h4>
-    ${grid([
-    guide(t.guide, ICON_GUIDE),
-    mask(t.mask, ICON_MASK),
-    toggle("oks-big-cursor", t.cursor, ICON_CURSOR),
-    toggle("oks-a11y-bigtargets", t.targets, ICON_TARGETS),
-    toggle("oks-a11y-pause", t.pause, ICON_PAUSE),
-    toggle("oks-a11y-focus", t.focus, ICON_FOCUS)
+    ${section(t.ori, [
+    simple("reading-guide", "guide", t.guide, ICON_GUIDE),
+    simple("reading-mask", "mask", t.mask, ICON_MASK),
+    toggle("big-cursor", "oks-big-cursor", t.cursor, ICON_CURSOR),
+    toggle("big-targets", "oks-a11y-bigtargets", t.targets, ICON_TARGETS),
+    toggle("pause-anim", "oks-a11y-pause", t.pause, ICON_PAUSE),
+    toggle("focus", "oks-a11y-focus", t.focus, ICON_FOCUS)
   ])}
   </div>
   <div class="oks-access-footer">
@@ -109,14 +207,20 @@ function positionRules(position) {
   switch (position) {
     case "top-left":
       return { wrap: "top: 20px; left: 20px;", panel: "top: 80px; left: 20px;" };
+    case "top-center":
+      return { wrap: "top: 20px; left: 50%; transform: translateX(-50%);", panel: "top: 80px; left: 50%; transform: translateX(-50%);" };
     case "top-right":
       return { wrap: "top: 20px; right: 20px;", panel: "top: 80px; right: 20px;" };
     case "mid-left":
       return { wrap: "top: 50%; left: 20px; transform: translateY(-50%);", panel: "top: 50%; left: 90px; transform: translateY(-50%);" };
+    case "mid-center":
+      return { wrap: "top: 50%; left: 50%; transform: translate(-50%, -50%);", panel: "top: 50%; left: 50%; transform: translate(-50%, -50%);" };
     case "mid-right":
       return { wrap: "top: 50%; right: 20px; transform: translateY(-50%);", panel: "top: 50%; right: 90px; transform: translateY(-50%);" };
     case "bottom-left":
       return { wrap: "bottom: 20px; left: 20px;", panel: "bottom: 100px; left: 20px;" };
+    case "bottom-center":
+      return { wrap: "bottom: 20px; left: 50%; transform: translateX(-50%);", panel: "bottom: 100px; left: 50%; transform: translateX(-50%);" };
     case "bottom-right":
       return { wrap: "bottom: 20px; right: 20px;", panel: "bottom: 100px; right: 20px;" };
   }
@@ -228,38 +332,45 @@ var TOGGLE_KEYS = {
   "oks-a11y-focus": "focusOutline",
   "oks-a11y-bigtargets": "bigTargets"
 };
-var PRESETS = {
-  lowvision: { zoom: 2, contrast: true, highlightLinks: true, bigCursor: true, focusOutline: true },
-  dyslexia: { dyslexia: true, lh: 2, ls: 2, readingGuide: true },
-  motor: { bigCursor: true, bigTargets: true, focusOutline: true },
-  calm: { hideImages: true, pauseAnim: true }
-};
+function noopController() {
+  return Object.assign(() => {
+  }, { open() {
+  }, close() {
+  }, toggle() {
+  } });
+}
+function deepActiveElement() {
+  let a = document.activeElement;
+  while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+  return a;
+}
 function bindPanelBehavior(root, opts = {}) {
   const storageKey = opts.storageKey ?? "oksiacSettings";
   const t = getTranslation(opts.locale ?? "en");
+  const enabled = opts.enabled ?? new Set(ALL_CONTROLS);
+  const nudgeMax = Math.max(0, opts.nudgeMax ?? 0);
   const trigger = root.getElementById("oks-trigger");
   const panel = root.getElementById("oks-panel");
   const closeBtn = root.getElementById("oks-close");
   const resetBtn = root.getElementById("oks-reset");
   const wrapper = root.getElementById("oks-wrapper");
   const opts$ = Array.from(root.querySelectorAll(".oks-access-opt, .oks-preset"));
-  if (!trigger || !panel || !closeBtn || !resetBtn || !wrapper) {
-    return () => {
-    };
+  if (!panel || !closeBtn || !resetBtn) {
+    return noopController();
   }
   let state = loadState(storageKey);
   function applyState() {
     const body = document.body;
-    const root2 = document.documentElement;
+    const rootEl = document.documentElement;
     for (const cls of Array.from(body.classList)) {
       if (cls.startsWith("oks-")) body.classList.remove(cls);
     }
-    [1, 2, 3].forEach((l) => root2.classList.remove(`oks-colorblind-${l}`));
+    [1, 2, 3].forEach((l) => rootEl.classList.remove(`oks-colorblind-${l}`));
     if (state.zoom > 0) body.classList.add(`oks-zoom-${state.zoom}`);
     if (state.lh > 0) body.classList.add(`oks-lh-${state.lh}`);
     if (state.align > 0) body.classList.add(`oks-align-${state.align}`);
     if (state.ls > 0) body.classList.add(`oks-ls-${state.ls}`);
-    if (state.colorblind > 0) root2.classList.add(`oks-colorblind-${state.colorblind}`);
+    if (state.colorblind > 0) rootEl.classList.add(`oks-colorblind-${state.colorblind}`);
     if (state.font) body.classList.add("oks-a11y-font");
     if (state.dyslexia) body.classList.add("oks-dyslexia");
     if (state.contrast) body.classList.add("oks-a11y-contrast");
@@ -336,9 +447,8 @@ function bindPanelBehavior(root, opts = {}) {
     } else if (action === "mask") {
       state.readingMask = !state.readingMask;
     } else if (action === "preset") {
-      const id = btn.getAttribute("data-preset") ?? "";
-      const preset = PRESETS[id];
-      if (preset) Object.assign(state, preset);
+      const id = btn.getAttribute("data-preset");
+      if (id && PRESETS[id]) Object.assign(state, filterPresetForEnabled(id, enabled));
       btn.classList.add("is-flashing");
       setTimeout(() => btn.classList.remove("is-flashing"), 250);
     }
@@ -350,28 +460,50 @@ function bindPanelBehavior(root, opts = {}) {
     applyState();
     saveState(storageKey, state);
   };
+  let opener = null;
+  let ignoreDocClose = false;
   const openPanel = () => {
+    if (panel.classList.contains("is-open")) return;
+    opener = deepActiveElement();
     panel.classList.add("is-open");
     panel.removeAttribute("inert");
-    trigger.setAttribute("aria-expanded", "true");
+    trigger?.setAttribute("aria-expanded", "true");
+    ignoreDocClose = true;
+    setTimeout(() => {
+      ignoreDocClose = false;
+    }, 0);
     const first = panel.querySelector("button:not([disabled])");
     first?.focus();
   };
   const closePanel = () => {
+    if (!panel.classList.contains("is-open")) return;
     panel.classList.remove("is-open");
     panel.setAttribute("inert", "");
-    trigger.setAttribute("aria-expanded", "false");
-    trigger.focus();
+    trigger?.setAttribute("aria-expanded", "false");
+    if (trigger) trigger.focus();
+    else if (opener?.isConnected) opener.focus();
+    opener = null;
   };
-  const onTriggerClick = (e) => {
-    e.stopPropagation();
+  const togglePanel = () => {
     if (panel.classList.contains("is-open")) closePanel();
     else openPanel();
   };
+  let suppressClick = false;
+  const onTriggerClick = (e) => {
+    e.stopPropagation();
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+    togglePanel();
+  };
   const onDocClick = (e) => {
     if (!panel.classList.contains("is-open")) return;
+    if (ignoreDocClose) return;
     const path = e.composedPath();
-    if (path.includes(panel) || path.includes(trigger) || path.includes(wrapper)) return;
+    if (path.includes(panel)) return;
+    if (trigger && path.includes(trigger)) return;
+    if (wrapper && path.includes(wrapper)) return;
     closePanel();
   };
   const onKeyDown = (e) => {
@@ -398,6 +530,88 @@ function bindPanelBehavior(root, opts = {}) {
       }
     }
   };
+  const NUDGE_KEY = `${storageKey}::pos`;
+  const clampMax = (v) => Math.max(-nudgeMax, Math.min(nudgeMax, v));
+  let nudge = { x: 0, y: 0 };
+  const loadNudge = () => {
+    if (nudgeMax <= 0) return;
+    try {
+      const raw = localStorage.getItem(NUDGE_KEY);
+      if (!raw) return;
+      const p = JSON.parse(raw);
+      if (typeof p?.x === "number" && typeof p?.y === "number") {
+        nudge = { x: clampMax(p.x), y: clampMax(p.y) };
+      }
+    } catch {
+    }
+  };
+  const saveNudge = () => {
+    try {
+      if (nudge.x === 0 && nudge.y === 0) localStorage.removeItem(NUDGE_KEY);
+      else localStorage.setItem(NUDGE_KEY, JSON.stringify(nudge));
+    } catch {
+    }
+  };
+  const applyNudge = () => {
+    if (wrapper) wrapper.style.translate = `${nudge.x}px ${nudge.y}px`;
+  };
+  const clampOffset = (x, y) => {
+    x = clampMax(x);
+    y = clampMax(y);
+    if (wrapper) {
+      const r = wrapper.getBoundingClientRect();
+      const pad = 4;
+      const baseLeft = r.left - nudge.x;
+      const baseTop = r.top - nudge.y;
+      const vw = window.innerWidth || 0;
+      const vh = window.innerHeight || 0;
+      if (r.width > 0 && vw > 0) x = Math.max(pad - baseLeft, Math.min(vw - pad - r.width - baseLeft, x));
+      if (r.height > 0 && vh > 0) y = Math.max(pad - baseTop, Math.min(vh - pad - r.height - baseTop, y));
+    }
+    return { x, y };
+  };
+  let dragStart = null;
+  let didDrag = false;
+  const DRAG_THRESHOLD = 4;
+  const onPointerDown = (e) => {
+    if (nudgeMax <= 0 || e.button !== 0) return;
+    dragStart = { px: e.clientX, py: e.clientY, ox: nudge.x, oy: nudge.y };
+    didDrag = false;
+    trigger?.setPointerCapture?.(e.pointerId);
+  };
+  const onPointerMove = (e) => {
+    if (!dragStart) return;
+    const dx = e.clientX - dragStart.px;
+    const dy = e.clientY - dragStart.py;
+    if (!didDrag && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+    didDrag = true;
+    nudge = clampOffset(dragStart.ox + dx, dragStart.oy + dy);
+    applyNudge();
+    e.preventDefault();
+  };
+  const onPointerUp = () => {
+    if (!dragStart) return;
+    dragStart = null;
+    if (didDrag) {
+      saveNudge();
+      suppressClick = true;
+    }
+  };
+  const onTriggerKey = (e) => {
+    if (nudgeMax <= 0) return;
+    const step = e.shiftKey ? 1 : 10;
+    let dx = 0;
+    let dy = 0;
+    if (e.key === "ArrowLeft") dx = -step;
+    else if (e.key === "ArrowRight") dx = step;
+    else if (e.key === "ArrowUp") dy = -step;
+    else if (e.key === "ArrowDown") dy = step;
+    else return;
+    e.preventDefault();
+    nudge = clampOffset(nudge.x + dx, nudge.y + dy);
+    applyNudge();
+    saveNudge();
+  };
   const onMove = (e) => {
     if (!state.readingGuide && !state.readingMask) return;
     const y = e.touches?.[0]?.clientY ?? e.clientY;
@@ -411,7 +625,7 @@ function bindPanelBehavior(root, opts = {}) {
       if (mask) mask.style.setProperty("--oks-mask-y", `${y}px`);
     }
   };
-  trigger.addEventListener("click", onTriggerClick);
+  trigger?.addEventListener("click", onTriggerClick);
   closeBtn.addEventListener("click", closePanel);
   resetBtn.addEventListener("click", onReset);
   for (const btn of opts$) btn.addEventListener("click", onOptClick);
@@ -419,9 +633,19 @@ function bindPanelBehavior(root, opts = {}) {
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("mousemove", onMove);
   document.addEventListener("touchmove", onMove, { passive: true });
+  if (nudgeMax > 0 && trigger) {
+    loadNudge();
+    applyNudge();
+    trigger.style.cursor = "grab";
+    trigger.style.touchAction = "none";
+    trigger.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", onPointerUp);
+    trigger.addEventListener("keydown", onTriggerKey);
+  }
   applyState();
-  return () => {
-    trigger.removeEventListener("click", onTriggerClick);
+  const dispose = () => {
+    trigger?.removeEventListener("click", onTriggerClick);
     closeBtn.removeEventListener("click", closePanel);
     resetBtn.removeEventListener("click", onReset);
     for (const btn of opts$) btn.removeEventListener("click", onOptClick);
@@ -429,7 +653,12 @@ function bindPanelBehavior(root, opts = {}) {
     document.removeEventListener("keydown", onKeyDown);
     document.removeEventListener("mousemove", onMove);
     document.removeEventListener("touchmove", onMove);
+    trigger?.removeEventListener("pointerdown", onPointerDown);
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", onPointerUp);
+    trigger?.removeEventListener("keydown", onTriggerKey);
   };
+  return Object.assign(dispose, { open: openPanel, close: closePanel, toggle: togglePanel });
 }
 function ensureOverlay() {
   let el = document.getElementById("oks-overlay-gray");
@@ -483,6 +712,12 @@ var PANEL_CSS = `
   margin: 0 auto;
   width: 60%;
   height: 60%;
+}
+/* Porthole preset: a brushed-metal ring framing the standard glyph. The glyph
+   itself is untouched (discoverability), only the button gets the frame.
+   Hosts wanting a bespoke frame can target ::part(trigger) from light DOM. */
+.oks-access-btn[data-trigger-icon="porthole"] {
+  box-shadow: 0 0 0 4px #b0bec5, 0 0 0 7px #546e7a, 0 6px 18px rgba(0,0,0,0.3);
 }
 .oks-active-badge {
   position: absolute;
@@ -836,7 +1071,19 @@ body.oks-a11y-bigtargets summary:not(oksigenia-access-panel):not(oksigenia-acces
 `;
 
 // src/web-component.ts
-var OBSERVED = ["locale", "position", "position-mobile", "trigger-icon", "storage-key"];
+var OBSERVED = [
+  "locale",
+  "position",
+  "position-mobile",
+  "trigger-icon",
+  "storage-key",
+  "controls",
+  "exclude",
+  "trigger",
+  "effects-exclude",
+  "nudge",
+  "presets"
+];
 var STYLE_ID = "oksigenia-access-effects";
 var FILTERS_ID = "oksigenia-access-filters";
 var GUIDE_ID = "oks-reading-guide";
@@ -871,18 +1118,23 @@ function ensureGlobalStyles() {
 }
 var VALID_POSITIONS = [
   "top-left",
+  "top-center",
   "top-right",
   "mid-left",
+  "mid-center",
   "mid-right",
   "bottom-left",
+  "bottom-center",
   "bottom-right"
 ];
-var VALID_ICONS = ["vitruvian", "wheelchair", "eye", "universal"];
+var VALID_ICONS = ["vitruvian", "wheelchair", "eye", "universal", "porthole"];
+var fxSeq = 0;
 var OksigeniaAccessPanelElement = class extends HTMLElement {
   static get observedAttributes() {
     return OBSERVED;
   }
-  _dispose = null;
+  _controller = null;
+  _fxId = `oks-access-fx-${++fxSeq}`;
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -892,11 +1144,23 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
     this.render();
   }
   disconnectedCallback() {
-    this._dispose?.();
-    this._dispose = null;
+    this._controller?.();
+    this._controller = null;
+    if (typeof document !== "undefined") document.getElementById(this._fxId)?.remove();
   }
   attributeChangedCallback() {
     if (this.isConnected) this.render();
+  }
+  /** Imperative API (#2): open / close / toggle the panel from the host.
+   *  Useful with `trigger="none"`, where the host drives its own button. */
+  open() {
+    this._controller?.open();
+  }
+  close() {
+    this._controller?.close();
+  }
+  toggle() {
+    this._controller?.toggle();
   }
   getPosition() {
     const attr = this.getAttribute("position") ?? "mid-left";
@@ -913,22 +1177,59 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
   getLocale() {
     return this.getAttribute("locale") ?? (typeof navigator !== "undefined" ? navigator.language : "en");
   }
+  /** `nudge` (bare) ⇒ default 80px cap; `nudge="50"` ⇒ 50; absent/invalid ⇒ off. */
+  getNudgeMax() {
+    if (!this.hasAttribute("nudge")) return 0;
+    const raw = this.getAttribute("nudge");
+    if (raw == null || raw.trim() === "") return 80;
+    const n = parseInt(raw, 10);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  }
+  /** Inject the per-instance effects-exclude rule (#4): under high-contrast,
+   *  drop the destructive filter from selectors the host marks as essential
+   *  media (video, canvas, scientific imagery). Grayscale is handled by not
+   *  offering the control (curation), not here. */
+  updateEffectsExclude() {
+    if (typeof document === "undefined") return;
+    const sel = (this.getAttribute("effects-exclude") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    const existing = document.getElementById(this._fxId);
+    if (sel.length === 0) {
+      existing?.remove();
+      return;
+    }
+    const style = existing ?? document.createElement("style");
+    if (!existing) {
+      style.id = this._fxId;
+      document.head.appendChild(style);
+    }
+    const list = sel.join(", ");
+    style.textContent = `body.oks-a11y-contrast :is(${list}), body.oks-a11y-contrast :is(${list}) * { filter: none !important; }`;
+  }
   render() {
     const shadow = this.shadowRoot;
     if (!shadow) return;
-    this._dispose?.();
+    this._controller?.();
     const position = this.getPosition();
     const positionMobile = this.getPositionMobile();
+    const enabled = resolveEnabledControls(this.getAttribute("controls"), this.getAttribute("exclude"));
+    const showTrigger = this.getAttribute("trigger") !== "none";
+    const showPresets = (this.getAttribute("presets") ?? "").trim().toLowerCase() !== "none";
     const html = buildPanelHtml({
       t: getTranslation(this.getLocale()),
       triggerIcon: this.getTriggerIcon(),
-      position
+      position,
+      enabled,
+      showTrigger,
+      showPresets
     });
     shadow.innerHTML = `<style>${PANEL_CSS}${positionCss(position, positionMobile)}</style>${html}`;
-    this._dispose = bindPanelBehavior(shadow, {
+    this._controller = bindPanelBehavior(shadow, {
       storageKey: this.getAttribute("storage-key") ?? void 0,
-      locale: this.getLocale()
+      locale: this.getLocale(),
+      enabled,
+      nudgeMax: this.getNudgeMax()
     });
+    this.updateEffectsExclude();
   }
 };
 if (typeof customElements !== "undefined" && !customElements.get("oksigenia-access-panel")) {

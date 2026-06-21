@@ -29,6 +29,13 @@ class hook_callbacks {
     /** @var string[] Locales supported by the bundled web component. */
     private const SUPPORTED_LOCALES = ['es', 'en', 'gn', 'fr', 'it', 'de', 'nl', 'sv'];
 
+    /** @var string[] Atomic control ids understood by the web component (controls="..."). */
+    private const CONTROL_IDS = [
+        'text-size', 'line-height', 'text-align', 'readable-font', 'dyslexia-font', 'letter-spacing',
+        'contrast', 'grayscale', 'hide-images', 'highlight-links', 'colorblind',
+        'reading-guide', 'reading-mask', 'big-cursor', 'big-targets', 'pause-anim', 'focus',
+    ];
+
     /**
      * Append the panel markup just before the footer is generated.
      *
@@ -71,6 +78,23 @@ class hook_callbacks {
 
         if (!empty($config->position_mobile) && $config->position_mobile !== 'inherit') {
             $attrs['position-mobile'] = $config->position_mobile;
+        }
+
+        // Control curation: emit controls="..." only when the admin curated a
+        // real subset. All/none selected ⇒ omit ⇒ the component shows all 17.
+        $controls = self::resolve_controls($config);
+        if ($controls !== null) {
+            $attrs['controls'] = $controls;
+        }
+
+        // Drop the profile presets row when the admin turned it off.
+        if (isset($config->show_presets) && (int) $config->show_presets === 0) {
+            $attrs['presets'] = 'none';
+        }
+
+        // Let visitors reposition the trigger within bounds (drag / arrow keys).
+        if (!empty($config->allow_nudge)) {
+            $attrs['nudge'] = '';
         }
 
         $cssvars = self::build_css_vars($config);
@@ -191,6 +215,34 @@ class hook_callbacks {
         $current = current_language();
         $base = strtolower(explode('_', $current)[0]);
         return in_array($base, self::SUPPORTED_LOCALES, true) ? $base : 'en';
+    }
+
+    /**
+     * Resolve the controls="..." attribute from the admin multicheckbox.
+     *
+     * The setting stores a comma-separated list of the ticked control ids.
+     * When the admin leaves all (or none) ticked we return null so the
+     * attribute is omitted and the web component falls back to all 17 controls
+     * — a panel with no controls would be pointless, so unticking everything
+     * resets to the full set rather than hiding the lot.
+     *
+     * @param \stdClass $config Plugin config from get_config().
+     * @return string|null The curated controls list, or null to show all.
+     */
+    private static function resolve_controls(\stdClass $config): ?string {
+        $raw = $config->controls ?? '';
+        if (!is_string($raw) || $raw === '') {
+            return null;
+        }
+        $selected = array_values(array_intersect(
+            self::CONTROL_IDS,
+            array_map('trim', explode(',', $raw))
+        ));
+        $count = count($selected);
+        if ($count === 0 || $count === count(self::CONTROL_IDS)) {
+            return null;
+        }
+        return implode(',', $selected);
     }
 
     /**
