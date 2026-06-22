@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-06-22
+
+### Fixed
+- Re-vendors [`@oksigenia/access-panel@0.7.1`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.7.1): the panel now scrolls inside its own height. On short screens or at high text zoom the content used to push the close button and Reset All off-screen, leaving the panel impossible to close; the content area is now a scrollable flex child while the header and footer stay reachable.
+
 ## [0.5.0] - 2026-06-21
 
 ### Added

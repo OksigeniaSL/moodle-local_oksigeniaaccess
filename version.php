@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_oksigeniaaccess';
-$plugin->version   = 2026062100;
-$plugin->release   = '0.5.0';
+$plugin->version   = 2026062200;
+$plugin->release   = '0.5.1';
 $plugin->maturity  = MATURITY_BETA;
 $plugin->requires  = 2024100700; // Moodle 4.5 LTS.

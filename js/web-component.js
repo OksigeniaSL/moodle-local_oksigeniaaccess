@@ -60,6 +60,12 @@ function resolveEnabledControls(controlsAttr, excludeAttr) {
   }
   return enabled;
 }
+var NON_SCOPABLE_CONTROLS = ["grayscale", "colorblind"];
+function scopedControls(enabled) {
+  const out = new Set(enabled);
+  for (const id of NON_SCOPABLE_CONTROLS) out.delete(id);
+  return out;
+}
 function filterPresetForEnabled(id, enabled) {
   const out = {};
   for (const [k, v] of Object.entries(PRESETS[id])) {
@@ -112,6 +118,7 @@ function buildPanelHtml(opts) {
   const enabled = opts.enabled ?? new Set(ALL_CONTROLS);
   const showTrigger = opts.showTrigger ?? true;
   const showPresets = opts.showPresets ?? true;
+  const flatLayout = opts.flatLayout ?? false;
   const trig = TRIGGER_ICONS[triggerIcon];
   const multi = (id, prefix, levels, label, icon, full = false) => {
     if (!enabled.has(id)) return "";
@@ -146,6 +153,45 @@ function buildPanelHtml(opts) {
   };
   const presetButtons = showPresets ? PRESET_IDS.filter((id) => presetIsAvailable(id, enabled)).map((id) => preset(id, presetLabels[id])) : [];
   const presetsBlock = presetButtons.length ? `<h4 class="oks-access-title">${escapeHtml(t.presets)}</h4><div class="oks-access-presets">${presetButtons.join("")}</div>` : "";
+  const textBtns = [
+    multi("text-size", "oks-zoom", 4, t.size, ICON_TXT),
+    multi("line-height", "oks-lh", 3, t.lh, ICON_LH),
+    multi("text-align", "oks-align", 3, t.align, ICON_ALIGN),
+    toggle("readable-font", "oks-a11y-font", t.font, ICON_FONT),
+    toggle("dyslexia-font", "oks-dyslexia", t.dyslexia, ICON_DYSLEXIA),
+    multi("letter-spacing", "oks-ls", 3, t.ls, ICON_LS)
+  ];
+  const visBtns = [
+    toggle("contrast", "oks-a11y-contrast", t.contrast, ICON_CONTRAST),
+    overlay("grayscale", "oks-overlay-gray", t.gray, ICON_GRAY),
+    toggle("hide-images", "oks-a11y-hide", t.hide, ICON_HIDE),
+    toggle("highlight-links", "oks-a11y-links", t.links, ICON_LINK),
+    multi("colorblind", "oks-colorblind", 3, t.cb, ICON_COLORBLIND, !flatLayout)
+  ];
+  const oriBtns = [
+    simple("reading-guide", "guide", t.guide, ICON_GUIDE),
+    simple("reading-mask", "mask", t.mask, ICON_MASK),
+    toggle("big-cursor", "oks-big-cursor", t.cursor, ICON_CURSOR),
+    toggle("big-targets", "oks-a11y-bigtargets", t.targets, ICON_TARGETS),
+    toggle("pause-anim", "oks-a11y-pause", t.pause, ICON_PAUSE),
+    toggle("focus", "oks-a11y-focus", t.focus, ICON_FOCUS)
+  ];
+  const addFullWidth = (btn) => btn.replace('class="oks-access-opt', 'class="oks-access-opt full-width');
+  const flatContent = () => {
+    const groups = [
+      { title: t.txt, items: textBtns.filter(Boolean) },
+      { title: t.vis, items: visBtns.filter(Boolean) },
+      { title: t.ori, items: oriBtns.filter(Boolean) }
+    ].filter((g) => g.items.length > 0);
+    const total = groups.reduce((n, g) => n + g.items.length, 0);
+    if (total % 2 === 1 && groups.length > 0) {
+      const last = groups[groups.length - 1];
+      last.items[last.items.length - 1] = addFullWidth(last.items[last.items.length - 1]);
+    }
+    const inner = groups.map((g) => `<h4 class="oks-access-title oks-sr-only">${escapeHtml(g.title)}</h4>${g.items.join("")}`).join("");
+    return `<div class="oks-access-grid oks-flat">${inner}</div>`;
+  };
+  const controlsHtml = flatLayout ? flatContent() : section(t.txt, textBtns) + section(t.vis, visBtns) + section(t.ori, oriBtns);
   const triggerBlock = showTrigger ? `
 <div class="oks-access-wrapper" id="oks-wrapper" data-position="${opts.position}">
   <button class="oks-access-btn" id="oks-trigger" part="trigger" data-trigger-icon="${triggerIcon}" aria-label="${escapeAttr(t.title)}" aria-expanded="false" aria-controls="oks-panel" type="button">
@@ -161,29 +207,7 @@ function buildPanelHtml(opts) {
   </div>
   <div class="oks-access-content">
     ${presetsBlock}
-    ${section(t.txt, [
-    multi("text-size", "oks-zoom", 4, t.size, ICON_TXT),
-    multi("line-height", "oks-lh", 3, t.lh, ICON_LH),
-    multi("text-align", "oks-align", 3, t.align, ICON_ALIGN),
-    toggle("readable-font", "oks-a11y-font", t.font, ICON_FONT),
-    toggle("dyslexia-font", "oks-dyslexia", t.dyslexia, ICON_DYSLEXIA),
-    multi("letter-spacing", "oks-ls", 3, t.ls, ICON_LS)
-  ])}
-    ${section(t.vis, [
-    toggle("contrast", "oks-a11y-contrast", t.contrast, ICON_CONTRAST),
-    overlay("grayscale", "oks-overlay-gray", t.gray, ICON_GRAY),
-    toggle("hide-images", "oks-a11y-hide", t.hide, ICON_HIDE),
-    toggle("highlight-links", "oks-a11y-links", t.links, ICON_LINK),
-    multi("colorblind", "oks-colorblind", 3, t.cb, ICON_COLORBLIND, true)
-  ])}
-    ${section(t.ori, [
-    simple("reading-guide", "guide", t.guide, ICON_GUIDE),
-    simple("reading-mask", "mask", t.mask, ICON_MASK),
-    toggle("big-cursor", "oks-big-cursor", t.cursor, ICON_CURSOR),
-    toggle("big-targets", "oks-a11y-bigtargets", t.targets, ICON_TARGETS),
-    toggle("pause-anim", "oks-a11y-pause", t.pause, ICON_PAUSE),
-    toggle("focus", "oks-a11y-focus", t.focus, ICON_FOCUS)
-  ])}
+    ${controlsHtml}
   </div>
   <div class="oks-access-footer">
     <button class="oks-access-reset" id="oks-reset" type="button">${escapeHtml(t.reset)}</button>
@@ -359,36 +383,104 @@ function bindPanelBehavior(root, opts = {}) {
     return noopController();
   }
   let state = loadState(storageKey);
-  function applyState() {
-    const body = document.body;
-    const rootEl = document.documentElement;
-    for (const cls of Array.from(body.classList)) {
-      if (cls.startsWith("oks-")) body.classList.remove(cls);
+  const scoped = opts.scopeEl !== void 0;
+  const GLOBAL_KEY = "oksiac::global";
+  const GLOBAL_MAP = [
+    { flag: "bigCursor", cls: "oks-big-cursor", match: (b) => b.getAttribute("data-class") === "oks-big-cursor" },
+    { flag: "readingGuide", cls: "oks-a11y-guide", match: (b) => b.getAttribute("data-action") === "guide" },
+    { flag: "readingMask", cls: "oks-a11y-mask", match: (b) => b.getAttribute("data-action") === "mask" }
+  ];
+  const globalOfferableOf = (b) => GLOBAL_MAP.find((x) => x.match(b));
+  const loadGlobal = () => {
+    try {
+      const r = JSON.parse(localStorage.getItem(GLOBAL_KEY) ?? "{}");
+      return { bigCursor: !!r.bigCursor, readingGuide: !!r.readingGuide, readingMask: !!r.readingMask };
+    } catch {
+      return { bigCursor: false, readingGuide: false, readingMask: false };
     }
-    [1, 2, 3].forEach((l) => rootEl.classList.remove(`oks-colorblind-${l}`));
-    if (state.zoom > 0) body.classList.add(`oks-zoom-${state.zoom}`);
-    if (state.lh > 0) body.classList.add(`oks-lh-${state.lh}`);
-    if (state.align > 0) body.classList.add(`oks-align-${state.align}`);
-    if (state.ls > 0) body.classList.add(`oks-ls-${state.ls}`);
-    if (state.colorblind > 0) rootEl.classList.add(`oks-colorblind-${state.colorblind}`);
-    if (state.font) body.classList.add("oks-a11y-font");
-    if (state.dyslexia) body.classList.add("oks-dyslexia");
-    if (state.contrast) body.classList.add("oks-a11y-contrast");
-    if (state.hideImages) body.classList.add("oks-a11y-hide");
-    if (state.highlightLinks) body.classList.add("oks-a11y-links");
-    if (state.bigCursor) body.classList.add("oks-big-cursor");
-    if (state.pauseAnim) body.classList.add("oks-a11y-pause");
-    if (state.focusOutline) body.classList.add("oks-a11y-focus");
-    if (state.readingGuide) body.classList.add("oks-a11y-guide");
-    if (state.readingMask) body.classList.add("oks-a11y-mask");
-    if (state.bigTargets) body.classList.add("oks-a11y-bigtargets");
-    const overlay = ensureOverlay();
-    overlay.classList.toggle("is-active", state.grayOverlay);
+  };
+  const saveGlobal = (g) => {
+    try {
+      if (g.bigCursor || g.readingGuide || g.readingMask) localStorage.setItem(GLOBAL_KEY, JSON.stringify(g));
+      else localStorage.removeItem(GLOBAL_KEY);
+    } catch {
+    }
+  };
+  const applyGlobal = (g) => {
+    document.body.classList.toggle("oks-big-cursor", g.bigCursor);
+    document.body.classList.toggle("oks-a11y-guide", g.readingGuide);
+    document.body.classList.toggle("oks-a11y-mask", g.readingMask);
+    for (const btn of opts$) {
+      const m = globalOfferableOf(btn);
+      if (!m) continue;
+      btn.classList.toggle("is-active", g[m.flag]);
+      btn.setAttribute("aria-pressed", g[m.flag] ? "true" : "false");
+    }
+  };
+  const refreshGlobal = () => {
+    if (scoped) applyGlobal(loadGlobal());
+  };
+  const syncGlobalFromState = () => {
+    if (!scoped) return;
+    const g = loadGlobal();
+    let changed = false;
+    if (state.bigCursor) {
+      g.bigCursor = true;
+      state.bigCursor = false;
+      changed = true;
+    }
+    if (state.readingGuide) {
+      g.readingGuide = true;
+      state.readingGuide = false;
+      changed = true;
+    }
+    if (state.readingMask) {
+      g.readingMask = true;
+      state.readingMask = false;
+      changed = true;
+    }
+    if (changed) {
+      saveGlobal(g);
+      applyGlobal(g);
+      document.dispatchEvent(new CustomEvent("oksiac:globalchange"));
+    }
+  };
+  function applyState() {
+    const fxRoot = scoped ? opts.scopeEl ?? null : document.body;
+    const rootEl = document.documentElement;
+    if (fxRoot) {
+      for (const cls of Array.from(fxRoot.classList)) {
+        if (cls.startsWith("oks-")) fxRoot.classList.remove(cls);
+      }
+    }
+    if (!scoped) [1, 2, 3].forEach((l) => rootEl.classList.remove(`oks-colorblind-${l}`));
+    if (fxRoot) {
+      if (state.zoom > 0) fxRoot.classList.add(`oks-zoom-${state.zoom}`);
+      if (state.lh > 0) fxRoot.classList.add(`oks-lh-${state.lh}`);
+      if (state.align > 0) fxRoot.classList.add(`oks-align-${state.align}`);
+      if (state.ls > 0) fxRoot.classList.add(`oks-ls-${state.ls}`);
+      if (state.font) fxRoot.classList.add("oks-a11y-font");
+      if (state.dyslexia) fxRoot.classList.add("oks-dyslexia");
+      if (state.contrast) fxRoot.classList.add("oks-a11y-contrast");
+      if (state.hideImages) fxRoot.classList.add("oks-a11y-hide");
+      if (state.highlightLinks) fxRoot.classList.add("oks-a11y-links");
+      if (state.pauseAnim) fxRoot.classList.add("oks-a11y-pause");
+      if (state.focusOutline) fxRoot.classList.add("oks-a11y-focus");
+      if (state.bigTargets) fxRoot.classList.add("oks-a11y-bigtargets");
+    }
+    if (!scoped) {
+      if (state.colorblind > 0) rootEl.classList.add(`oks-colorblind-${state.colorblind}`);
+      if (state.bigCursor) document.body.classList.add("oks-big-cursor");
+      if (state.readingGuide) document.body.classList.add("oks-a11y-guide");
+      if (state.readingMask) document.body.classList.add("oks-a11y-mask");
+      ensureOverlay().classList.toggle("is-active", state.grayOverlay);
+    }
     syncButtonsFromState();
     wrapper?.classList.toggle("has-active", !isStateEmpty(state));
   }
   function syncButtonsFromState() {
     for (const btn of opts$) {
+      if (scoped && globalOfferableOf(btn)) continue;
       const action = btn.getAttribute("data-action");
       if (action === "multi" || action === "colorblind") {
         const prefix = btn.getAttribute("data-prefix") ?? "";
@@ -423,6 +515,17 @@ function bindPanelBehavior(root, opts = {}) {
   }
   const onOptClick = (e) => {
     const btn = e.currentTarget;
+    if (scoped) {
+      const go = globalOfferableOf(btn);
+      if (go) {
+        const g = loadGlobal();
+        g[go.flag] = !g[go.flag];
+        saveGlobal(g);
+        applyGlobal(g);
+        document.dispatchEvent(new CustomEvent("oksiac:globalchange"));
+        return;
+      }
+    }
     const action = btn.getAttribute("data-action");
     if (action === "multi") {
       const prefix = btn.getAttribute("data-prefix") ?? "";
@@ -451,6 +554,7 @@ function bindPanelBehavior(root, opts = {}) {
       if (id && PRESETS[id]) Object.assign(state, filterPresetForEnabled(id, enabled));
       btn.classList.add("is-flashing");
       setTimeout(() => btn.classList.remove("is-flashing"), 250);
+      syncGlobalFromState();
     }
     applyState();
     saveState(storageKey, state);
@@ -459,14 +563,33 @@ function bindPanelBehavior(root, opts = {}) {
     state = { ...DEFAULT_STATE };
     applyState();
     saveState(storageKey, state);
+    if (scoped) {
+      const cleared = { bigCursor: false, readingGuide: false, readingMask: false };
+      saveGlobal(cleared);
+      applyGlobal(cleared);
+      document.dispatchEvent(new CustomEvent("oksiac:globalchange"));
+    }
   };
   let opener = null;
   let ignoreDocClose = false;
+  const positionScopedDialog = () => {
+    const el = opts.scopeEl;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) return;
+    const pad = 8;
+    panel.style.top = `${Math.max(pad, r.top + pad)}px`;
+    panel.style.bottom = "auto";
+    panel.style.left = `${r.left + r.width / 2}px`;
+    panel.style.right = "auto";
+    panel.style.transform = "translateX(-50%)";
+  };
   const openPanel = () => {
     if (panel.classList.contains("is-open")) return;
     opener = deepActiveElement();
     panel.classList.add("is-open");
     panel.removeAttribute("inert");
+    if (opts.scopeEl) positionScopedDialog();
     trigger?.setAttribute("aria-expanded", "true");
     ignoreDocClose = true;
     setTimeout(() => {
@@ -613,14 +736,16 @@ function bindPanelBehavior(root, opts = {}) {
     saveNudge();
   };
   const onMove = (e) => {
-    if (!state.readingGuide && !state.readingMask) return;
+    const guideOn = document.body.classList.contains("oks-a11y-guide");
+    const maskOn = document.body.classList.contains("oks-a11y-mask");
+    if (!guideOn && !maskOn) return;
     const y = e.touches?.[0]?.clientY ?? e.clientY;
     if (typeof y !== "number") return;
-    if (state.readingGuide) {
+    if (guideOn) {
       const guide = document.getElementById("oks-reading-guide");
       if (guide) guide.style.top = `${y}px`;
     }
-    if (state.readingMask) {
+    if (maskOn) {
       const mask = document.getElementById("oks-reading-mask");
       if (mask) mask.style.setProperty("--oks-mask-y", `${y}px`);
     }
@@ -633,6 +758,19 @@ function bindPanelBehavior(root, opts = {}) {
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("mousemove", onMove);
   document.addEventListener("touchmove", onMove, { passive: true });
+  const onReposition = () => {
+    if (opts.scopeEl && panel.classList.contains("is-open")) positionScopedDialog();
+  };
+  const onGlobalChange = () => refreshGlobal();
+  const onStorage = (e) => {
+    if (e.key === GLOBAL_KEY) refreshGlobal();
+  };
+  if (scoped) {
+    window.addEventListener("scroll", onReposition, true);
+    window.addEventListener("resize", onReposition);
+    document.addEventListener("oksiac:globalchange", onGlobalChange);
+    window.addEventListener("storage", onStorage);
+  }
   if (nudgeMax > 0 && trigger) {
     loadNudge();
     applyNudge();
@@ -644,6 +782,7 @@ function bindPanelBehavior(root, opts = {}) {
     trigger.addEventListener("keydown", onTriggerKey);
   }
   applyState();
+  refreshGlobal();
   const dispose = () => {
     trigger?.removeEventListener("click", onTriggerClick);
     closeBtn.removeEventListener("click", closePanel);
@@ -653,6 +792,12 @@ function bindPanelBehavior(root, opts = {}) {
     document.removeEventListener("keydown", onKeyDown);
     document.removeEventListener("mousemove", onMove);
     document.removeEventListener("touchmove", onMove);
+    if (scoped) {
+      window.removeEventListener("scroll", onReposition, true);
+      window.removeEventListener("resize", onReposition);
+      document.removeEventListener("oksiac:globalchange", onGlobalChange);
+      window.removeEventListener("storage", onStorage);
+    }
     trigger?.removeEventListener("pointerdown", onPointerDown);
     document.removeEventListener("pointermove", onPointerMove);
     document.removeEventListener("pointerup", onPointerUp);
@@ -757,6 +902,7 @@ var PANEL_CSS = `
 }
 .oks-access-panel.is-open { opacity: 1; pointer-events: all; }
 .oks-access-header {
+  flex: 0 0 auto;
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   display: flex;
@@ -780,13 +926,30 @@ var PANEL_CSS = `
 }
 .oks-access-close:hover { background: #e0e0e0; border-color: #ccc; }
 .oks-access-close svg { width: 24px; height: 24px; stroke-width: 2.5px; }
-.oks-access-content { padding: 0 20px 20px; overflow-y: auto; }
+/* flex:1 1 auto + min-height:0 lets the content scroll inside the 90vh panel.
+   Without min-height:0 a flex child won't shrink below its content, so the
+   header (\xD7) and footer (Reset) get pushed off-screen on short viewports or at
+   high zoom \u2014 the panel becomes impossible to close. */
+.oks-access-content { flex: 1 1 auto; min-height: 0; padding: 0 20px 20px; overflow-y: auto; }
 .oks-access-title {
   margin: 10px 0 5px;
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   color: #888;
+}
+/* Screen-reader-only: keeps the category headings in the accessibility tree
+   (flat scoped layout) while taking them out of the grid flow so they don't
+   force a visual row break or occupy a cell. */
+.oks-sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: 0; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .oks-access-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .oks-access-presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
@@ -868,6 +1031,7 @@ var PANEL_CSS = `
 .oks-access-opt[data-level="4"] .oks-levels span:nth-child(-n+4) { background: #000; }
 .oks-access-opt:hover .oks-levels span { background: #555; }
 .oks-access-footer {
+  flex: 0 0 auto;
   padding: 12px 20px;
   border-top: 1px solid #eee;
   text-align: center;
@@ -959,18 +1123,22 @@ body.oks-ls-1 * { letter-spacing: 0.05em !important; }
 body.oks-ls-2 * { letter-spacing: 0.10em !important; }
 body.oks-ls-3 * { letter-spacing: 0.16em !important; }
 
+/* Focus highlight colour is themeable via --oks-focus-color (default #005fcc):
+   set it on :root for a dark theme so the highlight stays visible. The
+   persistent "all interactive" dashed derives a 45% tint from it; the glow can
+   be overridden on its own with --oks-focus-glow. */
 body.oks-a11y-focus a:not(oksigenia-access-panel):not(oksigenia-access-panel *),
 body.oks-a11y-focus button:not(oksigenia-access-panel):not(oksigenia-access-panel *),
 body.oks-a11y-focus input,
 body.oks-a11y-focus select,
 body.oks-a11y-focus textarea {
-  outline: 2px dashed rgba(0, 95, 204, 0.45) !important;
+  outline: 2px dashed color-mix(in srgb, var(--oks-focus-color, #005fcc) 45%, transparent) !important;
   outline-offset: 2px !important;
 }
 body.oks-a11y-focus *:focus-visible {
-  outline: 3px solid #005fcc !important;
+  outline: 3px solid var(--oks-focus-color, #005fcc) !important;
   outline-offset: 3px !important;
-  box-shadow: 0 0 0 6px rgba(0, 95, 204, 0.25) !important;
+  box-shadow: 0 0 0 6px var(--oks-focus-glow, color-mix(in srgb, var(--oks-focus-color, #005fcc) 25%, transparent)) !important;
 }
 
 body.oks-a11y-contrast.oks-a11y-focus *:focus,
@@ -1069,6 +1237,82 @@ body.oks-a11y-bigtargets summary:not(oksigenia-access-panel):not(oksigenia-acces
   box-sizing: border-box !important;
 }
 `;
+function scopedEffectCss(s) {
+  const isRoot = s === "body" || s === "html" || s === ":root";
+  const zoom = isRoot ? "" : `
+${s}.oks-zoom-1 { font-size: 110% !important; }
+${s}.oks-zoom-2 { font-size: 120% !important; }
+${s}.oks-zoom-3 { font-size: 135% !important; }
+${s}.oks-zoom-4 { font-size: 150% !important; }
+`;
+  return `${zoom}
+${s}.oks-lh-1 * { line-height: 1.6 !important; }
+${s}.oks-lh-2 * { line-height: 1.9 !important; }
+${s}.oks-lh-3 * { line-height: 2.2 !important; }
+
+${s}.oks-a11y-font, ${s}.oks-a11y-font * { font-family: Arial, sans-serif !important; }
+
+${s}.oks-dyslexia * {
+  font-family: 'Comic Sans MS', 'Verdana', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+  line-height: 1.6 !important;
+}
+
+${s}.oks-a11y-hide img { opacity: 0 !important; visibility: hidden !important; }
+${s}.oks-a11y-links a { text-decoration: underline !important; background: #ff0 !important; color: #000 !important; }
+
+${s}.oks-align-1 * { text-align: left !important; }
+${s}.oks-align-2 * { text-align: center !important; }
+${s}.oks-align-3 * { text-align: right !important; }
+
+${s}.oks-a11y-pause * { animation: none !important; transition: none !important; }
+
+${s}.oks-ls-1 * { letter-spacing: 0.05em !important; }
+${s}.oks-ls-2 * { letter-spacing: 0.10em !important; }
+${s}.oks-ls-3 * { letter-spacing: 0.16em !important; }
+
+${s}.oks-a11y-focus a,
+${s}.oks-a11y-focus button,
+${s}.oks-a11y-focus input,
+${s}.oks-a11y-focus select,
+${s}.oks-a11y-focus textarea {
+  outline: 2px dashed color-mix(in srgb, var(--oks-focus-color, #005fcc) 45%, transparent) !important;
+  outline-offset: 2px !important;
+}
+${s}.oks-a11y-focus *:focus-visible {
+  outline: 3px solid var(--oks-focus-color, #005fcc) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px var(--oks-focus-glow, color-mix(in srgb, var(--oks-focus-color, #005fcc) 25%, transparent)) !important;
+}
+
+${s}.oks-a11y-contrast, ${s}.oks-a11y-contrast * {
+  background-color: #000 !important;
+  color: #ff0 !important;
+  border-color: #ff0 !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+${s}.oks-a11y-contrast img { filter: grayscale(100%) contrast(120%) !important; }
+${s}.oks-a11y-contrast a { color: #0ff !important; text-decoration: underline !important; }
+${s}.oks-a11y-contrast.oks-a11y-focus *:focus-visible {
+  outline-color: #0ff !important;
+  box-shadow: 0 0 0 6px rgba(0, 255, 255, 0.3) !important;
+}
+
+${s}.oks-a11y-bigtargets a,
+${s}.oks-a11y-bigtargets button,
+${s}.oks-a11y-bigtargets [role="button"],
+${s}.oks-a11y-bigtargets input[type="checkbox"],
+${s}.oks-a11y-bigtargets input[type="radio"],
+${s}.oks-a11y-bigtargets summary {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  padding: 8px 12px !important;
+  box-sizing: border-box !important;
+}
+`;
+}
 
 // src/web-component.ts
 var OBSERVED = [
@@ -1082,7 +1326,8 @@ var OBSERVED = [
   "trigger",
   "effects-exclude",
   "nudge",
-  "presets"
+  "presets",
+  "scope"
 ];
 var STYLE_ID = "oksigenia-access-effects";
 var FILTERS_ID = "oksigenia-access-filters";
@@ -1135,6 +1380,7 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
   }
   _controller = null;
   _fxId = `oks-access-fx-${++fxSeq}`;
+  _scopeId = `oks-access-scope-${this._fxId.split("-").pop()}`;
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -1146,7 +1392,10 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
   disconnectedCallback() {
     this._controller?.();
     this._controller = null;
-    if (typeof document !== "undefined") document.getElementById(this._fxId)?.remove();
+    if (typeof document !== "undefined") {
+      document.getElementById(this._fxId)?.remove();
+      document.getElementById(this._scopeId)?.remove();
+    }
   }
   attributeChangedCallback() {
     if (this.isConnected) this.render();
@@ -1189,7 +1438,7 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
    *  drop the destructive filter from selectors the host marks as essential
    *  media (video, canvas, scientific imagery). Grayscale is handled by not
    *  offering the control (curation), not here. */
-  updateEffectsExclude() {
+  updateEffectsExclude(base) {
     if (typeof document === "undefined") return;
     const sel = (this.getAttribute("effects-exclude") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
     const existing = document.getElementById(this._fxId);
@@ -1203,7 +1452,24 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
       document.head.appendChild(style);
     }
     const list = sel.join(", ");
-    style.textContent = `body.oks-a11y-contrast :is(${list}), body.oks-a11y-contrast :is(${list}) * { filter: none !important; }`;
+    style.textContent = `${base}.oks-a11y-contrast :is(${list}), ${base}.oks-a11y-contrast :is(${list}) * { filter: none !important; }`;
+  }
+  /** Inject the per-instance scoped effect CSS (`scope=`): the scopable effects
+   *  anchored to the host's container instead of `body`, so several panels
+   *  regionalise their own zone without clobbering each other. */
+  updateScopeStyle(scope) {
+    if (typeof document === "undefined") return;
+    const existing = document.getElementById(this._scopeId);
+    if (!scope) {
+      existing?.remove();
+      return;
+    }
+    const style = existing ?? document.createElement("style");
+    if (!existing) {
+      style.id = this._scopeId;
+      document.head.appendChild(style);
+    }
+    style.textContent = scopedEffectCss(scope);
   }
   render() {
     const shadow = this.shadowRoot;
@@ -1211,7 +1477,9 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
     this._controller?.();
     const position = this.getPosition();
     const positionMobile = this.getPositionMobile();
-    const enabled = resolveEnabledControls(this.getAttribute("controls"), this.getAttribute("exclude"));
+    const scope = this.getAttribute("scope")?.trim() || null;
+    let enabled = resolveEnabledControls(this.getAttribute("controls"), this.getAttribute("exclude"));
+    if (scope) enabled = scopedControls(enabled);
     const showTrigger = this.getAttribute("trigger") !== "none";
     const showPresets = (this.getAttribute("presets") ?? "").trim().toLowerCase() !== "none";
     const html = buildPanelHtml({
@@ -1220,16 +1488,21 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
       position,
       enabled,
       showTrigger,
-      showPresets
+      showPresets,
+      flatLayout: scope != null
+      // scoped panels use the flat (no-category) layout
     });
     shadow.innerHTML = `<style>${PANEL_CSS}${positionCss(position, positionMobile)}</style>${html}`;
+    const scopeEl = scope ? document.querySelector(scope) : void 0;
     this._controller = bindPanelBehavior(shadow, {
       storageKey: this.getAttribute("storage-key") ?? void 0,
       locale: this.getLocale(),
       enabled,
-      nudgeMax: this.getNudgeMax()
+      nudgeMax: this.getNudgeMax(),
+      scopeEl
     });
-    this.updateEffectsExclude();
+    this.updateScopeStyle(scope);
+    this.updateEffectsExclude(scope ?? "body");
   }
 };
 if (typeof customElements !== "undefined" && !customElements.get("oksigenia-access-panel")) {
