@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-06-22
+
+### Changed
+- Maturity promoted from Beta to **Release Candidate**. The plugin is feature-complete and has run in production on a live Moodle across several releases. (Carries the 0.5.1 panel scroll fix below.)
+
 ## [0.5.1] - 2026-06-22
 
 ### Fixed
