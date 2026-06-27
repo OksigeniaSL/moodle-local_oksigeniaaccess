@@ -5,6 +5,11 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.5.3] - 2026-06-27
+
+### Fixed
+- The accessibility panel was never injected on the login / signup / forgot-password pages. Those pages run before authentication, so the `local/oksigeniaaccess:view` capability was evaluated against the "not logged in" role, which lacks it by default — silently hiding the panel exactly where a visitor needs it to read the form. The capability is now bypassed on the `login` pagelayout; the "Page scope" setting still controls whether the panel appears on login. Thanks to @brendangrave-sys for the report and diagnosis (#2).
+
 ## [0.5.2] - 2026-06-22
 
 ### Changed

@@ -111,6 +111,16 @@ class hook_callbacks {
      * @return bool True if the current user is allowed to see the panel.
      */
     private static function current_user_can_view(): bool {
+        global $PAGE;
+        // Pre-auth pages (login / signup / forgot password all use the 'login'
+        // pagelayout) evaluate the capability against the "not logged in" role,
+        // which lacks it by default — silently hiding the panel exactly where a
+        // visitor needs it to read the form. Bypass the capability there; the
+        // "Page scope" setting (all vs. except-login) still controls whether the
+        // panel shows on login.
+        if (isset($PAGE) && $PAGE->pagelayout === 'login') {
+            return true;
+        }
         if (!function_exists('has_capability')) {
             return true;
         }
