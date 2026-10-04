@@ -2,3 +2,5 @@
 # https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
 custom:
   - https://sponsor.oksigenia.com
+liberapay: Oksigenia
+custom: ['https://www.paypal.com/donate/?business=paypal@oksigenia.cc&currency_code=EUR']
