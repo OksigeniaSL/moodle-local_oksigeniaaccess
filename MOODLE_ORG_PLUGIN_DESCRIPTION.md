@@ -11,7 +11,9 @@
 <li>Scope: all pages, or all pages except login/signup.</li>
 <li>Hide on admin pages toggle (recommended on).</li>
 <li>Excluded course IDs (CSV).</li>
-<li>Trigger z-index, position (desktop and mobile, 6 anchors each), and icon (Vitruvian, Wheelchair, Eye, Universal Access).</li>
+<li>Trigger z-index, position (desktop and mobile, 9 anchors each), and icon (Vitruvian, Wheelchair, Eye, Universal Access, Porthole).</li>
+<li>Which of the 17 controls the panel offers (all by default), and whether to show the profile shortcuts.</li>
+<li>Let visitors move the button within bounds, by dragging it or with the arrow keys.</li>
 <li>Five appearance fields (button size + idle/hover background + idle/hover icon color) for matching your Moodle theme.</li>
 <li>Locale source: auto-follow Moodle's current language, or force a specific locale.</li>
 </ul>
