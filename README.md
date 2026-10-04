@@ -35,6 +35,7 @@ The same product also ships as:
 ## Requirements
 
 - Moodle 4.5 LTS or later (uses the Hook API introduced in 4.4 and stabilised in 4.5).
+- Tested on Moodle 4.5 LTS, 5.0, 5.1, 5.2 and 5.3.
 - PHP 8.1+ (whatever your Moodle requires).
 - Any theme. The panel renders inside Shadow DOM and only injects a single
   scoped `<style id="oksigenia-access-effects">` into the document head for the
@@ -56,6 +57,17 @@ git clone https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess.git oksige
 ```
 
 Then visit *Site administration → Notifications* in Moodle to finish the install.
+
+### With Docker
+
+If you run Moodle in containers, the [`oksigenia/moodle`](https://hub.docker.com/r/oksigenia/moodle) image ([source](https://github.com/OksigeniaSL/docker-moodle), GPL-3.0, also maintained by Oksigenia) ships this plugin ready to use. The image is a drop-in replacement for Bitnami's Moodle image: same environment variables and volumes. The plugin stays off until you turn it on:
+
+```yaml
+    environment:
+      OKSIGENIA_ACCESS: "on"
+```
+
+With `on`, the image installs and enables the plugin and keeps it updated; setting `off` later disables it without removing its settings.
 
 ## Configuration
 
@@ -202,7 +214,7 @@ labelled forms.
 - **How-to questions, theming help, general feedback**: [Discussions](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/discussions).
 - **Security vulnerabilities**: report privately — see [`SECURITY.md`](SECURITY.md).
 - **Roadmap**: public board at [github.com/orgs/OksigeniaSL/projects/4](https://github.com/orgs/OksigeniaSL/projects/4). Sponsors influence the order; see the project readme for how.
-- **Code contributions**: read [`CONTRIBUTING.md`](CONTRIBUTING.md) for code style, translation policy and PR conventions. The CI workflow at [`.github/workflows/moodle-ci.yml`](.github/workflows/moodle-ci.yml) runs `moodle-plugin-ci` across Moodle 4.5 LTS / 5.0 / 5.1 / 5.2 on every push and PR, so contributors get the same feedback as the maintainer.
+- **Code contributions**: read [`CONTRIBUTING.md`](CONTRIBUTING.md) for code style, translation policy and PR conventions. The CI workflow at [`.github/workflows/moodle-ci.yml`](.github/workflows/moodle-ci.yml) runs `moodle-plugin-ci` across Moodle 4.5 LTS / 5.0 / 5.1 / 5.2 / 5.3 on every push and PR, so contributors get the same feedback as the maintainer.
 - **Code of Conduct**: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) (Contributor Covenant 2.1).
 
 ## Credits

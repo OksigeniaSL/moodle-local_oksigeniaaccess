@@ -20,6 +20,8 @@
 <p>Spanish, English, Guaraní, French, Italian, German, Dutch and Swedish out of the box. Regional variants (es-PY, pt-BR…) normalize to their base language with English as a final fallback.</p>
 <h3>Three distributions of the same engine</h3>
 <p>The accessibility panel ships from a shared web component (<code>@oksigenia/access-panel</code>, MIT) so the WordPress plugin (<code>oksigenia-access</code>, GPLv2+), this Moodle plugin (GPLv3+) and any modern site that imports the npm package all share the same UI and locales. Whatever you fix or improve in one variant tends to land in the others.</p>
+<h3>Also in Docker</h3>
+<p>The <a href="https://hub.docker.com/r/oksigenia/moodle">oksigenia/moodle</a> Docker image (<a href="https://github.com/OksigeniaSL/docker-moodle">source</a>, GPL-3.0), a drop-in replacement for Bitnami's Moodle image, ships this plugin ready to use and off by default. Setting <code>OKSIGENIA_ACCESS=on</code> installs and enables it, and the image keeps it updated.</p>
 <h3>Sponsorship</h3>
 <p>The plugin is FOSS and stays FOSS. If your institution depends on it for accessibility, sponsor its development at <a href="https://sponsor.oksigenia.com">sponsor.oksigenia.com</a>. Sponsorship gets you logo placement, priority issue triage and weight in the public roadmap.</p>
 <h3>Accessibility evaluation service</h3>
@@ -28,6 +30,7 @@
 <h3>Requirements</h3>
 <ul>
 <li>Moodle 4.5 LTS or later (uses the Hook API stabilized in 4.5).</li>
+<li>Tested on Moodle 4.5 LTS, 5.0, 5.1, 5.2 and 5.3.</li>
 <li>PHP 8.1+.</li>
 <li>Any modern browser with Custom Elements v1 support (all current ones).</li>
 </ul>

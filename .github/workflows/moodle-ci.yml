@@ -52,6 +52,10 @@ jobs:
             php: '8.3'
             database: pgsql
             node: '22'
+          - moodle-branch: MOODLE_503_STABLE
+            php: '8.3'
+            database: pgsql
+            node: '22'
 
     steps:
       - name: Check out plugin code
