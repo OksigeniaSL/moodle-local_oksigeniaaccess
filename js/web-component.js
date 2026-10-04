@@ -230,29 +230,32 @@ function escapeAttr(s) {
 function positionRules(position) {
   switch (position) {
     case "top-left":
-      return { wrap: "top: 20px; left: 20px;", panel: "top: 80px; left: 20px;" };
+      return { wrap: "top: 20px; left: 20px;", panel: "top: 80px; left: 20px;", reserve: 100 };
     case "top-center":
-      return { wrap: "top: 20px; left: 50%; transform: translateX(-50%);", panel: "top: 80px; left: 50%; transform: translateX(-50%);" };
+      return { wrap: "top: 20px; left: 50%; transform: translateX(-50%);", panel: "top: 80px; left: 50%; transform: translateX(-50%);", reserve: 100 };
     case "top-right":
-      return { wrap: "top: 20px; right: 20px;", panel: "top: 80px; right: 20px;" };
+      return { wrap: "top: 20px; right: 20px;", panel: "top: 80px; right: 20px;", reserve: 100 };
     case "mid-left":
-      return { wrap: "top: 50%; left: 20px; transform: translateY(-50%);", panel: "top: 50%; left: 90px; transform: translateY(-50%);" };
+      return { wrap: "top: 50%; left: 20px; transform: translateY(-50%);", panel: "top: 50%; left: 90px; transform: translateY(-50%);", reserve: 40 };
     case "mid-center":
-      return { wrap: "top: 50%; left: 50%; transform: translate(-50%, -50%);", panel: "top: 50%; left: 50%; transform: translate(-50%, -50%);" };
+      return { wrap: "top: 50%; left: 50%; transform: translate(-50%, -50%);", panel: "top: 50%; left: 50%; transform: translate(-50%, -50%);", reserve: 40 };
     case "mid-right":
-      return { wrap: "top: 50%; right: 20px; transform: translateY(-50%);", panel: "top: 50%; right: 90px; transform: translateY(-50%);" };
+      return { wrap: "top: 50%; right: 20px; transform: translateY(-50%);", panel: "top: 50%; right: 90px; transform: translateY(-50%);", reserve: 40 };
     case "bottom-left":
-      return { wrap: "bottom: 20px; left: 20px;", panel: "bottom: 100px; left: 20px;" };
+      return { wrap: "bottom: 20px; left: 20px;", panel: "bottom: 100px; left: 20px;", reserve: 120 };
     case "bottom-center":
-      return { wrap: "bottom: 20px; left: 50%; transform: translateX(-50%);", panel: "bottom: 100px; left: 50%; transform: translateX(-50%);" };
+      return { wrap: "bottom: 20px; left: 50%; transform: translateX(-50%);", panel: "bottom: 100px; left: 50%; transform: translateX(-50%);", reserve: 120 };
     case "bottom-right":
-      return { wrap: "bottom: 20px; right: 20px;", panel: "bottom: 100px; right: 20px;" };
+      return { wrap: "bottom: 20px; right: 20px;", panel: "bottom: 100px; right: 20px;", reserve: 120 };
   }
+}
+function panelMaxHeight(reserve) {
+  return `max-height: calc(100vh - ${reserve}px); max-height: calc(100dvh - ${reserve}px);`;
 }
 function positionCss(position, mobile) {
   const d = positionRules(position);
   let css = `.oks-access-wrapper { ${d.wrap} }`;
-  css += `@media (min-width: 769px) { .oks-access-panel { ${d.panel} } }`;
+  css += `@media (min-width: 769px) { .oks-access-panel { ${d.panel} ${panelMaxHeight(d.reserve)} } }`;
   if (mobile && mobile !== position) {
     const m = positionRules(mobile);
     css += `@media (max-width: 768px) { .oks-access-wrapper { top: auto; right: auto; bottom: auto; left: auto; transform: none; ${m.wrap} } }`;
@@ -281,8 +284,8 @@ var DEFAULT_STATE = Object.freeze({
   bigTargets: false
 });
 function loadState(key) {
-  if (typeof localStorage === "undefined") return { ...DEFAULT_STATE };
   try {
+    if (typeof localStorage === "undefined") return { ...DEFAULT_STATE };
     const raw = localStorage.getItem(key);
     if (!raw) return { ...DEFAULT_STATE };
     const parsed = JSON.parse(raw);
@@ -293,8 +296,8 @@ function loadState(key) {
   }
 }
 function saveState(key, state) {
-  if (typeof localStorage === "undefined") return;
   try {
+    if (typeof localStorage === "undefined") return;
     const out = {};
     for (const [k, v] of Object.entries(state)) {
       if (typeof v === "number" && v > 0) out[k] = v;
@@ -1076,6 +1079,7 @@ var PANEL_CSS = `
   .oks-access-reset { padding: 14px; font-size: 14px; }
 }
 `;
+var NOT_ICON_FONT = ':not(.fa, [class*="fa-"], .icon, [class^="icon-"], [class*=" icon-"], .dashicons, [class*="dashicons-"], .material-icons, [class^="material-symbols"], .glyphicon, [class^="bi-"], [class*=" bi-"])';
 var EFFECT_CSS = `
 html.oks-colorblind-1 { filter: url('#oks-filter-protanopia'); }
 html.oks-colorblind-2 { filter: url('#oks-filter-deuteranopia'); }
@@ -1103,7 +1107,7 @@ body.oks-lh-3 * { line-height: 2.2 !important; }
 
 body.oks-a11y-font { font-family: Arial, sans-serif !important; }
 
-body.oks-dyslexia * {
+body.oks-dyslexia *${NOT_ICON_FONT} {
   font-family: 'Comic Sans MS', 'Verdana', sans-serif !important;
   letter-spacing: 0.05em !important;
   word-spacing: 0.1em !important;
@@ -1250,9 +1254,9 @@ ${s}.oks-lh-1 * { line-height: 1.6 !important; }
 ${s}.oks-lh-2 * { line-height: 1.9 !important; }
 ${s}.oks-lh-3 * { line-height: 2.2 !important; }
 
-${s}.oks-a11y-font, ${s}.oks-a11y-font * { font-family: Arial, sans-serif !important; }
+${s}.oks-a11y-font, ${s}.oks-a11y-font *${NOT_ICON_FONT} { font-family: Arial, sans-serif !important; }
 
-${s}.oks-dyslexia * {
+${s}.oks-dyslexia *${NOT_ICON_FONT} {
   font-family: 'Comic Sans MS', 'Verdana', sans-serif !important;
   letter-spacing: 0.05em !important;
   word-spacing: 0.1em !important;

@@ -5,6 +5,14 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.5.4] - 2026-10-04
+
+### Fixed
+- Re-vendors [`@oksigenia/access-panel@0.7.3`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.7.3), which brings three fixes:
+  - **Moodle icons survive the dyslexia font.** The dyslexia font was forced on every element, icon elements included, so with that mode on every Font Awesome icon in Moodle's interface turned into an empty box. The reading fonts now skip icon fonts.
+  - **The open panel fits short desktop screens.** On a 1366×768 laptop or at 1280×720 the panel ran past the top of the screen and hid the close button. Its height is now capped to the room left by its position, and the content scrolls inside.
+  - **Blocked storage no longer disables the panel.** With all cookies blocked, the trigger did nothing; the panel now works and simply doesn't remember the settings.
+
 ## [0.5.3] - 2026-06-27
 
 ### Fixed
