@@ -1,12 +1,11 @@
 # Moodle Plugin CI — runs the same suite that moodle.org/plugins reviewers
 # expect (validate, lint, codechecker, phpdoc, savepoints, mustache, grunt)
-# across the currently supported Moodle branches.
+# plus the plugin's own PHPUnit and Behat tests, on every Moodle branch from
+# 4.1 to 5.3. 4.1–4.3 get the panel through the legacy before_footer callback
+# (lib.php), 4.4+ through the hook, so both paths are exercised.
 #
 # The main job tracks the next Moodle release (6.0dev). It is allowed to
 # fail so upstream breakage shows up early without turning the run red.
-#
-# Behat and PHPUnit are not enabled yet because the plugin has no tests of
-# its own; add them as separate steps when the test files exist.
 #
 # Reference template: https://github.com/moodlehq/moodle-plugin-ci
 name: Moodle Plugin CI
@@ -40,6 +39,26 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - moodle-branch: MOODLE_401_STABLE
+            php: '7.4'
+            database: pgsql
+            node: '22'
+          - moodle-branch: MOODLE_401_STABLE
+            php: '8.1'
+            database: pgsql
+            node: '22'
+          - moodle-branch: MOODLE_402_STABLE
+            php: '8.2'
+            database: pgsql
+            node: '20'
+          - moodle-branch: MOODLE_403_STABLE
+            php: '8.2'
+            database: pgsql
+            node: '22'
+          - moodle-branch: MOODLE_404_STABLE
+            php: '8.3'
+            database: pgsql
+            node: '22'
           - moodle-branch: MOODLE_405_STABLE
             php: '8.1'
             database: pgsql
@@ -140,3 +159,11 @@ jobs:
       - name: grunt
         if: always()
         run: moodle-plugin-ci grunt --max-lint-warnings 0
+
+      - name: phpunit
+        if: always()
+        run: moodle-plugin-ci phpunit --fail-on-warning
+
+      - name: behat
+        if: always()
+        run: moodle-plugin-ci behat --profile chrome
