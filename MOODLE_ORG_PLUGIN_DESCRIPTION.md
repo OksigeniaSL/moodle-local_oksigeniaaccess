@@ -1,11 +1,11 @@
-<p>Oksigenia Access adds a small floating button to every Moodle page. The visitor clicks it and gets 17 real controls to adapt the site to their needs: text size (4 levels), line height, alignment, readable font, dyslexia font, letter spacing, high contrast, grayscale, hide images, highlight links, color-blind filters (3 types), reading guide, reading mask, big cursor, big targets, pause animations, and focus outlines. Four profile presets (Low Vision, Dyslexia, Motor, No Distractions) apply a sensible bundle of those controls in one click, and the visitor can fine-tune from there.</p>
+<p>Accessibility panel for Moodle: Oksigenia Access adds a small floating button to every Moodle page. The visitor clicks it and gets 17 real controls to adapt the site to their needs: text size (4 levels), line height, alignment, readable font, dyslexia font, letter spacing, high contrast, grayscale, hide images, highlight links, color-blind filters (3 types), reading guide, reading mask, big cursor, big targets, pause animations, and focus outlines. Four profile presets (Low Vision, Dyslexia, Motor, No Distractions) apply a sensible bundle of those controls in one click, and the visitor can fine-tune from there.</p>
 <p>Preferences live in the visitor's localStorage only. Nothing is sent to your server. No cookies, no telemetry, no external CDNs, no account required.</p>
 <h3>Scope</h3>
 <p>The panel gives visitors a familiar, predictable set of adaptation controls. WCAG / EAA 2025 / EU Directive 2016/2102 / Spanish RD 1112/2018 compliance is achieved with editorial work on your courses: alt text, transcripts, contrast, semantic HTML, labelled forms, keyboard navigation.</p>
 <h3>Theme-agnostic</h3>
 <p>The panel renders inside a Shadow DOM, so its CSS doesn't collide with Boost, Boost Union, Classic, or any custom theme. The only thing it injects into <code>document.head</code> is a single scoped <code>&lt;style id="oksigenia-access-effects"&gt;</code> for body-level effects (zoom, contrast, dyslexia font…).</p>
 <h3>Configuration</h3>
-<p>The settings page under <em>Site administration → Plugins → Local plugins → Oksigenia Access</em> gives you:</p>
+<p>The settings page under <em>Site administration → Plugins → Local plugins → Accessibility panel (Oksigenia Access)</em> gives you:</p>
 <ul>
 <li>Master enable toggle.</li>
 <li>Scope: all pages, or all pages except login/signup.</li>
@@ -31,9 +31,9 @@
 <p>Details at <a href="https://sponsor.oksigenia.com">sponsor.oksigenia.com</a>.</p>
 <h3>Requirements</h3>
 <ul>
-<li>Moodle 4.5 LTS or later (uses the Hook API stabilized in 4.5).</li>
-<li>Tested on Moodle 4.5 LTS, 5.0, 5.1, 5.2 and 5.3.</li>
-<li>PHP 8.1+.</li>
+<li>Moodle 4.1 or later: the Hook API on 4.4+, the classic footer callback on 4.1–4.3.</li>
+<li>Tested on Moodle 4.1 to 5.3. PHPUnit and Behat tests run on every branch in CI.</li>
+<li>PHP 7.4+ (whatever your Moodle requires).</li>
 <li>Any modern browser with Custom Elements v1 support (all current ones).</li>
 </ul>
 <h3>License</h3>

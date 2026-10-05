@@ -5,6 +5,15 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-05
+
+### Added
+- **Moodle 4.1 to 4.4.** The plugin now installs and works on Moodle 4.1, 4.2, 4.3 and 4.4, besides 4.5 LTS and 5.x. Those versions predate the footer hook, so a classic `before_footer` callback in `lib.php` injects the same markup; Moodle 4.4+ keeps using the hook and ignores the old callback, without notices. The PHP code runs on PHP 7.4, the minimum of Moodle 4.1.
+- **Automated tests.** PHPUnit covers the injection rules (master toggle, capability, page scope, admin pages, excluded courses, attributes and CSS variables from the settings, both the hook and the legacy callback) and the privacy provider. Behat checks the panel on the front page for visitors, inside a course for students, and its absence when the plugin is disabled. CI runs them on every Moodle branch from 4.1 to 5.3.
+
+### Changed
+- **Visible name: "Accessibility panel (Oksigenia Access)".** It says what the plugin is in the plugins list and the settings menu. The component name, `local_oksigeniaaccess`, and every setting stay the same.
+
 ## [0.5.4] - 2026-10-04
 
 ### Fixed
