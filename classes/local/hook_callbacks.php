@@ -37,34 +37,46 @@ class hook_callbacks {
     ];
 
     /**
-     * Append the panel markup just before the footer is generated.
+     * Append the panel markup just before the footer is generated (Moodle 4.4+).
      *
      * @param before_footer_html_generation $hook Hook instance carrying the buffer.
      * @return void
      */
     public static function before_footer_html_generation(before_footer_html_generation $hook): void {
+        $hook->add_html(self::get_footer_html());
+    }
+
+    /**
+     * Build the panel markup for the current page, or '' when it must not show.
+     *
+     * Shared by the 4.4+ hook above and by the legacy before_footer callback
+     * in lib.php, which Moodle 4.1–4.3 call instead.
+     *
+     * @return string HTML fragment to add before the footer.
+     */
+    public static function get_footer_html(): string {
         global $CFG, $PAGE;
 
         $config = get_config('local_oksigeniaaccess');
 
         if (empty($config->enabled)) {
-            return;
+            return '';
         }
 
         if (!self::current_user_can_view()) {
-            return;
+            return '';
         }
 
         if (self::should_skip_for_scope($config, $PAGE)) {
-            return;
+            return '';
         }
 
         if (self::should_skip_for_admin($config, $PAGE)) {
-            return;
+            return '';
         }
 
         if (self::should_skip_for_course($config, $PAGE)) {
-            return;
+            return '';
         }
 
         $version = (int) get_config('local_oksigeniaaccess', 'version');
@@ -99,7 +111,7 @@ class hook_callbacks {
 
         $cssvars = self::build_css_vars($config);
 
-        $hook->add_html(self::render($script, $attrs, $cssvars));
+        return self::render($script, $attrs, $cssvars);
     }
 
     /**
@@ -144,7 +156,7 @@ class hook_callbacks {
         }
         // Login, signup and forgot-password live under /login/ in the URL.
         $url = $page->url->out_as_local_url(false);
-        return str_starts_with($url, '/login/');
+        return strpos($url, '/login/') === 0;
     }
 
     /**
@@ -161,7 +173,7 @@ class hook_callbacks {
         $url = $page->url->out_as_local_url(false);
         // Moodle 4.x lays admin under /admin/. Moodle 5.x served webroot moved
         // to /public/ but the URL path the browser sees is still /admin/...
-        return str_starts_with($url, '/admin/');
+        return strpos($url, '/admin/') === 0;
     }
 
     /**

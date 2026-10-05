@@ -15,18 +15,22 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Version metadata for local_oksigeniaaccess.
+ * Legacy callbacks for local_oksigeniaaccess.
+ *
+ * Moodle 4.4+ injects the panel through the before_footer_html_generation hook
+ * (db/hooks.php) and skips this callback because the hook replaces it. It is
+ * only here so Moodle 4.1–4.3, which predate the hook, get the panel too.
  *
  * @package    local_oksigeniaaccess
  * @copyright  2026 Oksigenia <dev@oksigenia.cc>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'local_oksigeniaaccess';
-$plugin->version   = 2026100500;
-$plugin->release   = '0.6.0';
-$plugin->maturity  = MATURITY_RC;
-$plugin->requires  = 2022112800; // Moodle 4.1 LTS.
-$plugin->supported = [401, 503];
+/**
+ * Add the accessibility panel before the page footer (Moodle 4.1–4.3).
+ *
+ * @return string HTML fragment, or an empty string when the panel must not show.
+ */
+function local_oksigeniaaccess_before_footer(): string {
+    return \local_oksigeniaaccess\local\hook_callbacks::get_footer_html();
+}
