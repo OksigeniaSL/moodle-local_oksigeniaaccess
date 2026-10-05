@@ -5,7 +5,7 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-10-06
+## [1.1.0] - 2026-10-05
 
 ### Added
 - **Settings that follow the user.** Signed-in users now get their panel settings on any device: each change is saved in their Moodle account as well as in the browser, and the next page they open, anywhere, starts from it. Guests keep theirs in the browser only. A new setting, *Keep the panel settings in the user's account*, on by default, turns it off for everyone. An admin using "Log in as" never writes someone else's settings.
