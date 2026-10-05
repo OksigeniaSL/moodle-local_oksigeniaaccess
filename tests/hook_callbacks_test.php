@@ -26,6 +26,7 @@ use local_oksigeniaaccess\local\hook_callbacks;
  * @copyright  2026 Oksigenia <dev@oksigenia.cc>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \local_oksigeniaaccess\local\hook_callbacks
+ * @covers     ::local_oksigeniaaccess_before_footer
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(hook_callbacks::class)]
 #[\PHPUnit\Framework\Attributes\CoversFunction('local_oksigeniaaccess_before_footer')]
@@ -212,7 +213,6 @@ final class hook_callbacks_test extends \advanced_testcase {
     /**
      * The legacy before_footer callback (Moodle 4.1–4.3) returns the same markup.
      *
-     * @covers ::local_oksigeniaaccess_before_footer
      * @return void
      */
     public function test_legacy_callback(): void {
