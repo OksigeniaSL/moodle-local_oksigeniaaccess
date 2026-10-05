@@ -23,7 +23,9 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        # 5.3+ needs PostgreSQL 17 (the Behat install runs the environment check);
+        # the older branches stay on 16.
+        image: postgres:${{ matrix.pg || '16' }}
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -79,10 +81,12 @@ jobs:
             php: '8.3'
             database: pgsql
             node: '22'
+            pg: '17'
           - moodle-branch: main
             php: '8.4'
             database: pgsql
             node: '22'
+            pg: '17'
             experimental: true
 
     steps:

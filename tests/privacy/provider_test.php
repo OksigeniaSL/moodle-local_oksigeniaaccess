@@ -26,7 +26,6 @@ namespace local_oksigeniaaccess\privacy;
  * @covers     \local_oksigeniaaccess\privacy\provider
  */
 final class provider_test extends \advanced_testcase {
-
     /**
      * The provider is a null provider.
      *
