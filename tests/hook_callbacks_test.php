@@ -28,7 +28,6 @@ use local_oksigeniaaccess\local\hook_callbacks;
  * @covers     \local_oksigeniaaccess\local\hook_callbacks
  */
 final class hook_callbacks_test extends \advanced_testcase {
-
     /**
      * Fresh page on the front page, plugin enabled, logged in as a plain user.
      *
@@ -79,8 +78,13 @@ final class hook_callbacks_test extends \advanced_testcase {
     public function test_nothing_without_capability(): void {
         global $CFG;
 
-        assign_capability('local/oksigeniaaccess:view', CAP_PROHIBIT, $CFG->defaultuserroleid,
-            \context_system::instance()->id, true);
+        assign_capability(
+            'local/oksigeniaaccess:view',
+            CAP_PROHIBIT,
+            $CFG->defaultuserroleid,
+            \context_system::instance()->id,
+            true
+        );
         accesslib_clear_all_caches_for_unit_testing();
 
         $this->assertSame('', hook_callbacks::get_footer_html());
