@@ -6,7 +6,7 @@
 ![Moodle](https://img.shields.io/badge/Moodle-4.1%E2%80%935.3-orange)
 ![Status](https://img.shields.io/badge/status-alpha-yellow)
 [![Bundled web component](https://img.shields.io/npm/v/@oksigenia/access-panel?label=%40oksigenia%2Faccess-panel&color=6d4aff)](https://www.npmjs.com/package/@oksigenia/access-panel)
-[![Sponsor](https://img.shields.io/badge/sponsor-Oksigenia-00d4ff)](https://sponsor.oksigenia.com)
+[![Sponsor](https://img.shields.io/badge/sponsor-Oksigenia-00d4ff)](https://oksigenia.com/en/open-source#sponsor)
 [![Roadmap](https://img.shields.io/badge/roadmap-public-00f5d4)](https://github.com/orgs/OksigeniaSL/projects/4)
 
 Accessibility panel for Moodle, privacy-first. Floating button with 17 atomic
@@ -176,11 +176,11 @@ The bundled web component under `js/web-component.js` is MIT-licensed; see
 This plugin is FOSS and will stay FOSS without crippleware. If your
 institution relies on it for accessibility compliance (EAA 2025, EU
 Directive 2016/2102, Spanish RD 1112/2018, etc.), consider sponsoring its
-development at <https://sponsor.oksigenia.com>.
+development at <https://oksigenia.com/en/open-source#sponsor>.
 
 ### What sponsorship gets you
 
-- Logo and link in the README and on `sponsor.oksigenia.com`.
+- Logo and link in the README and on oksigenia.com.
 - Priority in issue triage.
 - Weight in the roadmap (the plugin stays general, but feature requests
   from sponsors are evaluated first).
@@ -188,19 +188,13 @@ development at <https://sponsor.oksigenia.com>.
 
 ### Technical accessibility evaluation (separate, contractable)
 
-For Moodle installations that want a first technical screening of their
-accessibility status, we offer a one-off evaluation: automated checks
-(axe-core, Lighthouse, WAVE) plus manual review of the typical pain points
-(text alternatives, heading structure, contrast, keyboard navigation,
-forms), and a written report with findings prioritised by impact and a
-concrete remediation plan. Delivered as PDF signed by Oksigenia SL.
+For Moodle installations that want a technical reading of their
+accessibility, we offer a one-off evaluation against WCAG 2.2 level AA:
+automated and manual testing of the key pages and journeys (keyboard,
+contrast, forms, structure, text alternatives), and a written report with
+findings prioritised by impact and a concrete remediation plan.
 
-This service covers the technical operational layer: detect,
-prioritise, remediate. Formal accreditation for inspection dossiers
-under EAA 2025 / RD 1112/2018 is handled separately by ENAC-accredited
-bodies.
-
-See the sponsor page for details.
+Details at <https://oksigenia.com/en/services/moodle>.
 
 ### What this plugin does NOT do
 

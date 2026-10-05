@@ -61,7 +61,7 @@ browser console helps.
   use, at least one tagged release with zero critical open issues, validation
   against Moodle 4.1 to 5.3 via `moodle-plugin-ci`.
 - Post-1.0 — feature requests prioritised by sponsors (see
-  <https://sponsor.oksigenia.com>).
+  <https://oksigenia.com/en/open-source#sponsor>).
 
 ## License
 

@@ -10,8 +10,8 @@ public GitHub issue**. Use one of these instead:
    This sends the report straight to the maintainer with no public exposure.
 
 2. **Email**: `dev@oksigenia.cc` (PGP key
-   [fingerprint `4D0E 67BD 1935 3CE2 A8E8  267F 8290 9111 546B AD97`](https://sponsor.oksigenia.com),
-   public key on [oksigenia.com](https://oksigenia.com/wp-content/uploads/2026/02/contacto_publickey.asc)).
+   [fingerprint `4D0E 67BD 1935 3CE2 A8E8  267F 8290 9111 546B AD97`](https://oksigenia.com/contacto_publickey.asc),
+   public key on [oksigenia.com](https://oksigenia.com/contacto_publickey.asc)).
 
 Please include:
 

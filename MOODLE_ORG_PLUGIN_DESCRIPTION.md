@@ -25,10 +25,10 @@
 <h3>Also in Docker</h3>
 <p>The <a href="https://hub.docker.com/r/oksigenia/moodle">oksigenia/moodle</a> Docker image (<a href="https://github.com/OksigeniaSL/docker-moodle">source</a>, GPL-3.0), a drop-in replacement for Bitnami's Moodle image, ships this plugin ready to use and off by default. Setting <code>OKSIGENIA_ACCESS=on</code> installs and enables it, and the image keeps it updated.</p>
 <h3>Sponsorship</h3>
-<p>The plugin is FOSS and stays FOSS. If your institution depends on it for accessibility, sponsor its development at <a href="https://sponsor.oksigenia.com">sponsor.oksigenia.com</a>. Sponsorship gets you logo placement, priority issue triage and weight in the public roadmap.</p>
+<p>The plugin is FOSS and stays FOSS. If your institution depends on it for accessibility, sponsor its development at <a href="https://oksigenia.com/en/open-source#sponsor">oksigenia.com/en/open-source</a>. Sponsorship gets you logo placement, priority issue triage and weight in the public roadmap.</p>
 <h3>Accessibility evaluation service</h3>
-<p>Optional one-off service for institutions that want a technical reading of their Moodle's accessibility status: automated checks (axe-core, Lighthouse, WAVE), manual review of the typical pain points (text alternatives, heading structure, contrast, keyboard navigation, forms), and a written report with prioritised findings and a concrete remediation plan. The service covers the technical operational layer; formal accreditation for inspection dossiers under EAA 2025 / RD 1112/2018 is handled separately by ENAC-accredited bodies.</p>
-<p>Details at <a href="https://sponsor.oksigenia.com">sponsor.oksigenia.com</a>.</p>
+<p>Optional one-off service for institutions that want a technical reading of their Moodle's accessibility: an evaluation against WCAG 2.2 level AA with automated and manual testing of the key pages and journeys (keyboard, contrast, forms, structure, text alternatives), and a written report with prioritised findings and a concrete remediation plan.</p>
+<p>Details at <a href="https://oksigenia.com/en/services/moodle">oksigenia.com/en/services/moodle</a>.</p>
 <h3>Requirements</h3>
 <ul>
 <li>Moodle 4.1 or later: the Hook API on 4.4+, the classic footer callback on 4.1–4.3.</li>
