@@ -35,11 +35,11 @@ class behat_local_oksigeniaaccess extends behat_base {
      * @return void
      */
     protected function wait_for_panel(): void {
-        $this->getSession()->wait(10000,
-            "(function() {
-                var el = document.querySelector('oksigenia-access-panel');
-                return !!(el && el.shadowRoot && el.shadowRoot.getElementById('oks-panel'));
-            })()");
+        $ready = "(function() {
+            var el = document.querySelector('oksigenia-access-panel');
+            return !!(el && el.shadowRoot && el.shadowRoot.getElementById('oks-panel'));
+        })()";
+        $this->getSession()->wait(10000, $ready);
     }
 
     /**
@@ -149,8 +149,11 @@ class behat_local_oksigeniaaccess extends behat_base {
     public function the_accessibility_panel_settings_should_be(string $username, string $json): void {
         global $DB;
         $userid = $DB->get_field('user', 'id', ['username' => $username], MUST_EXIST);
-        $value = $DB->get_field('user_preferences', 'value',
-            ['userid' => $userid, 'name' => 'local_oksigeniaaccess_state']);
+        $value = $DB->get_field(
+            'user_preferences',
+            'value',
+            ['userid' => $userid, 'name' => 'local_oksigeniaaccess_state']
+        );
         if ($value !== $json) {
             throw new ExpectationException(
                 "Expected the account to hold '$json', found '" . var_export($value, true) . "'",
