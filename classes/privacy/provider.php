@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Privacy provider — null implementation.
+ * Privacy provider.
  *
- * The plugin does not store any personal data on the server. Visitor
- * preferences for the accessibility panel are persisted in the browser's
- * localStorage only and never transmitted.
+ * Guests' panel settings stay in their browser. For signed-in users, when the
+ * admin keeps "Keep the panel settings in the user's account" on, the settings
+ * are also stored as a user preference so they follow the user across devices.
+ * Core deletes user preferences along with the user.
  *
  * @package    local_oksigeniaaccess
  * @copyright  2026 Oksigenia <dev@oksigenia.cc>
@@ -28,16 +29,42 @@
 
 namespace local_oksigeniaaccess\privacy;
 
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\writer;
+use local_oksigeniaaccess\local\state_sync;
+
 /**
- * Privacy null provider for local_oksigeniaaccess.
+ * Privacy provider for local_oksigeniaaccess.
  */
-class provider implements \core_privacy\local\metadata\null_provider {
+class provider implements
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\user_preference_provider {
     /**
-     * Return the language string explaining why this plugin stores no personal data.
+     * Describe the user preference this plugin keeps.
      *
-     * @return string The lang string identifier.
+     * @param collection $collection The collection to add to.
+     * @return collection The updated collection.
      */
-    public static function get_reason(): string {
-        return 'privacy:metadata';
+    public static function get_metadata(collection $collection): collection {
+        $collection->add_user_preference(state_sync::PREFERENCE, 'privacy:metadata:preference:state');
+        return $collection;
+    }
+
+    /**
+     * Export the panel settings kept in the user's account, if any.
+     *
+     * @param int $userid The user whose preferences are exported.
+     * @return void
+     */
+    public static function export_user_preferences(int $userid) {
+        $value = get_user_preferences(state_sync::PREFERENCE, null, $userid);
+        if ($value !== null) {
+            writer::export_user_preference(
+                'local_oksigeniaaccess',
+                state_sync::PREFERENCE,
+                $value,
+                get_string('privacy:preference:state', 'local_oksigeniaaccess')
+            );
+        }
     }
 }

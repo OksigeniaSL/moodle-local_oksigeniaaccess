@@ -1,5 +1,5 @@
 <p>Accessibility panel for Moodle: Oksigenia Access adds a small floating button to every Moodle page. The visitor clicks it and gets 17 real controls to adapt the site to their needs: text size (4 levels), line height, alignment, readable font, dyslexia font, letter spacing, high contrast, grayscale, hide images, highlight links, color-blind filters (3 types), reading guide, reading mask, big cursor, big targets, pause animations, and focus outlines. Four profile presets (Low Vision, Dyslexia, Motor, No Distractions) apply a sensible bundle of those controls in one click, and the visitor can fine-tune from there.</p>
-<p>Preferences live in the visitor's localStorage only. Nothing is sent to your server. No cookies, no telemetry, no external CDNs, no account required.</p>
+<p>Signed-in users find their settings on any device: they are kept in their Moodle account (you can turn that off). Guests keep theirs in the browser only. No cookies, no telemetry, no external CDNs.</p>
 <h3>Scope</h3>
 <p>The panel gives visitors a familiar, predictable set of adaptation controls. WCAG / EAA 2025 / EU Directive 2016/2102 / Spanish RD 1112/2018 compliance is achieved with editorial work on your courses: alt text, transcripts, contrast, semantic HTML, labelled forms, keyboard navigation.</p>
 <h3>Theme-agnostic</h3>
@@ -15,6 +15,7 @@
 <li>Which of the 17 controls the panel offers (all by default), and whether to show the profile shortcuts.</li>
 <li>Let visitors move the button within bounds, by dragging it or with the arrow keys.</li>
 <li>Five appearance fields (button size + idle/hover background + idle/hover icon color) for matching your Moodle theme.</li>
+<li>Keep the panel settings in the user's account, so they follow signed-in users across devices (on by default).</li>
 <li>Locale source: auto-follow Moodle's current language, or force a specific locale.</li>
 </ul>
 <p>Visibility is gated by the capability <code>local/oksigeniaaccess:view</code>, permissive by default for every archetype. Override it from <em>Site administration → Users → Permissions → Define roles</em> if you want to restrict the panel to specific roles.</p>
