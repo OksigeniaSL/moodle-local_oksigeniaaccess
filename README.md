@@ -92,6 +92,7 @@ With `on`, the image installs and enables the plugin and keeps it updated; setti
 | Let visitors move the button | Off | When on, visitors reposition the trigger within bounds (drag or arrow keys), persisted in their browser, never lost off-screen. |
 | Controls shown to visitors | All 17 | Tick which controls the panel offers. Unticked controls are hidden; unticking all resets to all. |
 | Show profile shortcuts | On | Hides the one-tap profile row. A profile also self-hides if curation leaves it with fewer than two of its controls. |
+| Keep the panel settings in the user's account | On | Signed-in users get their settings on any device: they are saved in their Moodle account as well as in the browser. Guests keep theirs in the browser only. |
 | Locale source | Auto | Auto follows Moodle's current language; Force lets you pin one. |
 | Forced locale | Spanish | Only used when Locale source = Force. |
 
@@ -110,24 +111,31 @@ Visibility of the panel is gated by the capability
 
 ## Privacy
 
-The plugin does not store or transmit any personal data. Visitor preferences
-for the panel (which controls are on, at what level) are persisted in their
-browser's `localStorage` under the `oksiacSettings` key and never reach the
-server. The plugin does not phone home and does not load anything from CDNs
-or third-party origins — the web component bundle is vendored under
-`js/web-component.js` and served from your Moodle.
+Guests and visitors who are not signed in keep their panel settings (which
+controls are on, at what level) in their browser's `localStorage`, under the
+`oksiacSettings` key; nothing reaches the server.
 
-**Cookie banners and consent**: storing user preferences in `localStorage`
-for the very feature the user is asking for ("make this page readable for
-me") falls under "strictly necessary" processing per ePrivacy / GDPR
-guidance from European data-protection authorities. No consent banner is
-required for the plugin itself. If your Moodle uses a cookie-management
-plugin, you can safely leave Oksigenia Access outside of it.
+For signed-in users, with *Keep the panel settings in the user's account* on
+(the default), the settings are also saved as a Moodle user preference,
+`local_oksigeniaaccess_state`, so they follow the user across devices. Only
+the user can change it, through Moodle's own AJAX layer; an admin using
+"Log in as" never writes it. Turn the setting off and everyone's settings
+stay in the browser alone.
 
-A formal Moodle Privacy provider statement is implemented under
-`classes/privacy/provider.php` (`null_provider` — no personal data
-collected). It shows up at *Site administration → Users → Privacy and
-policies → Data registry* and is what auditors typically check.
+The plugin does not phone home and does not load anything from CDNs or
+third-party origins: the web component bundle is vendored under
+`js/web-component.js` and served from your Moodle. No cookies, no telemetry.
+
+**Cookie banners and consent**: storing the settings for the very feature the
+user is asking for ("make this page readable for me") falls under "strictly
+necessary" processing per ePrivacy / GDPR guidance from European
+data-protection authorities. No consent banner is required for the plugin
+itself.
+
+The Moodle Privacy API is implemented under `classes/privacy/provider.php`:
+it declares the user preference and exports it with the user's data. It
+shows up at *Site administration → Users → Privacy and policies → Data
+registry*. Moodle deletes user preferences along with the user.
 
 ## Limitations
 

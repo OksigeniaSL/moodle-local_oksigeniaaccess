@@ -283,14 +283,42 @@ var DEFAULT_STATE = Object.freeze({
   readingMask: false,
   bigTargets: false
 });
+var LEVEL_MAX = Object.freeze({
+  zoom: 4,
+  lh: 3,
+  align: 3,
+  ls: 3,
+  colorblind: 3
+});
+function sanitizeState(input) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return null;
+  const src = input;
+  const out = { ...DEFAULT_STATE };
+  for (const key of Object.keys(DEFAULT_STATE)) {
+    const v = src[key];
+    if (v === void 0) continue;
+    if (key in LEVEL_MAX) {
+      if (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= LEVEL_MAX[key]) {
+        out[key] = v;
+      }
+    } else if (v === true || v === 1) {
+      out[key] = true;
+    }
+  }
+  return out;
+}
+function parseState(json) {
+  if (json == null || json.trim() === "") return null;
+  try {
+    return sanitizeState(JSON.parse(json));
+  } catch {
+    return null;
+  }
+}
 function loadState(key) {
   try {
     if (typeof localStorage === "undefined") return { ...DEFAULT_STATE };
-    const raw = localStorage.getItem(key);
-    if (!raw) return { ...DEFAULT_STATE };
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") return { ...DEFAULT_STATE };
-    return { ...DEFAULT_STATE, ...parsed };
+    return parseState(localStorage.getItem(key)) ?? { ...DEFAULT_STATE };
   } catch {
     return { ...DEFAULT_STATE };
   }
@@ -385,7 +413,19 @@ function bindPanelBehavior(root, opts = {}) {
   if (!panel || !closeBtn || !resetBtn) {
     return noopController();
   }
-  let state = loadState(storageKey);
+  let state;
+  if (opts.initialState) {
+    state = { ...opts.initialState };
+    saveState(storageKey, state);
+  } else {
+    state = loadState(storageKey);
+  }
+  const emitChange = () => {
+    const host = root.host;
+    if (!host) return;
+    const detail = { state: { ...state } };
+    host.dispatchEvent(new CustomEvent("oksiac:change", { bubbles: true, composed: true, detail }));
+  };
   const scoped = opts.scopeEl !== void 0;
   const GLOBAL_KEY = "oksiac::global";
   const GLOBAL_MAP = [
@@ -561,11 +601,13 @@ function bindPanelBehavior(root, opts = {}) {
     }
     applyState();
     saveState(storageKey, state);
+    emitChange();
   };
   const onReset = () => {
     state = { ...DEFAULT_STATE };
     applyState();
     saveState(storageKey, state);
+    emitChange();
     if (scoped) {
       const cleared = { bigCursor: false, readingGuide: false, readingMask: false };
       saveGlobal(cleared);
@@ -1383,6 +1425,9 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
     return OBSERVED;
   }
   _controller = null;
+  /** `initial-state` is read on the first render only: later re-renders
+   *  (another attribute changing) must not undo what the visitor did since. */
+  _initialStateRead = false;
   _fxId = `oks-access-fx-${++fxSeq}`;
   _scopeId = `oks-access-scope-${this._fxId.split("-").pop()}`;
   constructor() {
@@ -1498,12 +1543,15 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
     });
     shadow.innerHTML = `<style>${PANEL_CSS}${positionCss(position, positionMobile)}</style>${html}`;
     const scopeEl = scope ? document.querySelector(scope) : void 0;
+    const initialState = this._initialStateRead ? null : parseState(this.getAttribute("initial-state"));
+    this._initialStateRead = true;
     this._controller = bindPanelBehavior(shadow, {
       storageKey: this.getAttribute("storage-key") ?? void 0,
       locale: this.getLocale(),
       enabled,
       nudgeMax: this.getNudgeMax(),
-      scopeEl
+      scopeEl,
+      initialState
     });
     this.updateScopeStyle(scope);
     this.updateEffectsExclude(scope ?? "body");

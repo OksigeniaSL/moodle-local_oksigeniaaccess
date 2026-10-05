@@ -5,6 +5,16 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-06
+
+### Added
+- **Settings that follow the user.** Signed-in users now get their panel settings on any device: each change is saved in their Moodle account as well as in the browser, and the next page they open, anywhere, starts from it. Guests keep theirs in the browser only. A new setting, *Keep the panel settings in the user's account*, on by default, turns it off for everyone. An admin using "Log in as" never writes someone else's settings.
+- The settings are a regular user preference, `local_oksigeniaaccess_state`, declared in `lib.php` so only its owner can change it, saved through Moodle's own AJAX layer and cleaned again before it is ever rendered.
+
+### Changed
+- **Privacy API.** The provider now declares that user preference and exports it with the user's data, instead of reporting no personal data.
+- Re-vendors [`@oksigenia/access-panel@0.8.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.8.0), which adds the `oksiac:change` event and the `initial-state` attribute this release builds on. Nothing else changes in the panel.
+
 ## [1.0.0] - 2026-10-05
 
 First stable release. The code is the same as 0.6.0; what changes is the maturity, from release candidate to stable, after almost five months running in production, no critical issues open and the automated tests passing on every Moodle branch from 4.1 to 5.3.

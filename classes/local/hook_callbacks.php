@@ -55,7 +55,7 @@ class hook_callbacks {
      * @return string HTML fragment to add before the footer.
      */
     public static function get_footer_html(): string {
-        global $CFG, $PAGE;
+        global $CFG, $PAGE, $USER;
 
         $config = get_config('local_oksigeniaaccess');
 
@@ -107,6 +107,16 @@ class hook_callbacks {
         // Let visitors reposition the trigger within bounds (drag / arrow keys).
         if (!empty($config->allow_nudge)) {
             $attrs['nudge'] = '';
+        }
+
+        // Signed-in users: start from the copy in their account and save each
+        // change back to it, so the settings follow them across devices.
+        if (state_sync::is_active($config)) {
+            $state = state_sync::initial_state();
+            if ($state !== null) {
+                $attrs['initial-state'] = $state;
+            }
+            state_sync::require_js($PAGE, (int) $USER->id);
         }
 
         $cssvars = self::build_css_vars($config);

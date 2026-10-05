@@ -34,3 +34,25 @@
 function local_oksigeniaaccess_before_footer(): string {
     return \local_oksigeniaaccess\local\hook_callbacks::get_footer_html();
 }
+
+/**
+ * User preferences this plugin keeps.
+ *
+ * The panel settings of a signed-in user, as JSON, so they follow the user
+ * across devices. Only the user themselves can change them, and the value is
+ * cleaned again before it is ever rendered (see state_sync::clean()).
+ *
+ * @return array Preference definitions keyed by name.
+ */
+function local_oksigeniaaccess_user_preferences(): array {
+    return [
+        \local_oksigeniaaccess\local\state_sync::PREFERENCE => [
+            'type' => PARAM_RAW,
+            'null' => NULL_ALLOWED,
+            'default' => null,
+            'permissioncallback' => function ($user, $preferencename) {
+                return \local_oksigeniaaccess\local\state_sync::can_edit($user);
+            },
+        ],
+    ];
+}

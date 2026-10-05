@@ -253,6 +253,13 @@ $settings->add(new admin_setting_heading(
     ''
 ));
 
+$settings->add(new admin_setting_configcheckbox(
+    'local_oksigeniaaccess/syncprefs',
+    new lang_string('syncprefs', 'local_oksigeniaaccess'),
+    new lang_string('syncprefs_desc', 'local_oksigeniaaccess'),
+    1
+));
+
 $localemodeoptions = [
     'auto'  => new lang_string('locale_mode_auto', 'local_oksigeniaaccess'),
     'force' => new lang_string('locale_mode_force', 'local_oksigeniaaccess'),
