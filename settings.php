@@ -34,14 +34,14 @@ $settings = new admin_settingpage(
 );
 $ADMIN->add('localplugins', $settings);
 
-// --- Compliance disclaimer (always at the top) ---
+// Compliance disclaimer (always at the top).
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/disclaimer',
     new lang_string('disclaimer_heading', 'local_oksigeniaaccess'),
     new lang_string('disclaimer_html', 'local_oksigeniaaccess')
 ));
 
-// --- General ---
+// General.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_general',
     new lang_string('settings_general', 'local_oksigeniaaccess'),
@@ -55,7 +55,7 @@ $settings->add(new admin_setting_configcheckbox(
     1
 ));
 
-// --- Visibility & scope ---
+// Visibility & scope.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_scope',
     new lang_string('settings_scope', 'local_oksigeniaaccess'),
@@ -97,7 +97,7 @@ $settings->add(new admin_setting_configtext(
     PARAM_RAW_TRIMMED
 ));
 
-// --- Trigger appearance ---
+// Trigger appearance.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_colors',
     new lang_string('settings_colors', 'local_oksigeniaaccess'),
@@ -140,7 +140,7 @@ $settings->add(new admin_setting_configcolourpicker(
     ''
 ));
 
-// --- Appearance ---
+// Appearance.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_appearance',
     new lang_string('settings_appearance', 'local_oksigeniaaccess'),
@@ -197,7 +197,7 @@ $settings->add(new admin_setting_configcheckbox(
     0
 ));
 
-// --- Controls & profiles ---
+// Controls & profiles.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_controls',
     new lang_string('settings_controls', 'local_oksigeniaaccess'),
@@ -246,7 +246,7 @@ $settings->add(new admin_setting_configcheckbox(
     1
 ));
 
-// --- Behaviour ---
+// Behaviour.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_behaviour',
     new lang_string('settings_behaviour', 'local_oksigeniaaccess'),
