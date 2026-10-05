@@ -5,6 +5,14 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-05
+
+### Fixed
+- **The notice at the top of the settings page told the truth about 1.0, not 1.1.** It still said preferences never leave the browser. It now says that guests' settings stay in their browser and signed-in users' settings are also kept in their Moodle account, unless the new setting is off.
+
+### Changed
+- **Spanish strings reviewed** against Moodle's own Spanish: formal address, "extensión" for plugin and the names of the controls aligned with the panel.
+
 ## [1.1.0] - 2026-10-05
 
 ### Added
