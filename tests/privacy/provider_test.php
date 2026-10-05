@@ -25,6 +25,7 @@ namespace local_oksigeniaaccess\privacy;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \local_oksigeniaaccess\privacy\provider
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(provider::class)]
 final class provider_test extends \advanced_testcase {
     /**
      * The provider is a null provider.

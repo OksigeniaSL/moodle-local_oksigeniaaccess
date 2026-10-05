@@ -27,6 +27,8 @@ use local_oksigeniaaccess\local\hook_callbacks;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \local_oksigeniaaccess\local\hook_callbacks
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(hook_callbacks::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('local_oksigeniaaccess_before_footer')]
 final class hook_callbacks_test extends \advanced_testcase {
     /**
      * Fresh page on the front page, plugin enabled, logged in as a plain user.
