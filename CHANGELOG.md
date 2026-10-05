@@ -5,6 +5,18 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-05
+
+First stable release. The code is the same as 0.6.0; what changes is the maturity, from release candidate to stable, after almost five months running in production, no critical issues open and the automated tests passing on every Moodle branch from 4.1 to 5.3.
+
+### Added
+- **Moodle 4.1 to 4.4.** The plugin now installs and works on Moodle 4.1, 4.2, 4.3 and 4.4, besides 4.5 LTS and 5.x. Older versions get the panel through the classic `before_footer` callback; Moodle 4.4+ keeps using the footer hook.
+- **Automated tests.** PHPUnit and Behat cover when the panel shows and when it doesn't, its settings and the privacy provider, on every Moodle branch from 4.1 to 5.3.
+
+### Changed
+- **Stable maturity.**
+- **Visible name: "Accessibility panel (Oksigenia Access)".** The component name, `local_oksigeniaaccess`, and every setting stay the same.
+
 ## [0.6.0] - 2026-10-05
 
 ### Added

@@ -55,11 +55,12 @@ browser console helps.
 
 ## Roadmap (high level)
 
-- **v0.x (alpha)** — feature parity with the WordPress and npm variants of
-  Oksigenia Access. Dogfooded on `campus.oksigenia.com`.
-- **v1.0** — submission to `moodle.org/plugins`. Gate: 2–3 months of real
-  use, at least one tagged release with zero critical open issues, validation
-  against Moodle 4.1 to 5.3 via `moodle-plugin-ci`.
+- **v0.x** — feature parity with the WordPress and npm variants of
+  Oksigenia Access, dogfooded on `campus.oksigenia.com`, published on the
+  Moodle plugins directory.
+- **v1.0 (stable, 2026-10-05)** — after months of real use, with zero
+  critical open issues and `moodle-plugin-ci` (PHPUnit and Behat included)
+  passing on Moodle 4.1 to 5.3.
 - Post-1.0 — feature requests prioritised by sponsors (see
   <https://oksigenia.com/en/open-source#sponsor>).
 

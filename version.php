@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_oksigeniaaccess';
-$plugin->version   = 2026100500;
-$plugin->release   = '0.6.0';
-$plugin->maturity  = MATURITY_RC;
+$plugin->version   = 2026100501;
+$plugin->release   = '1.0.0';
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2022112800; // Moodle 4.1 LTS.
 $plugin->supported = [401, 503];
