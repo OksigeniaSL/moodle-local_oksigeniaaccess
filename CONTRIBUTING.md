@@ -59,7 +59,7 @@ browser console helps.
   Oksigenia Access. Dogfooded on `campus.oksigenia.com`.
 - **v1.0** — submission to `moodle.org/plugins`. Gate: 2–3 months of real
   use, at least one tagged release with zero critical open issues, validation
-  against Moodle 4.5 LTS / 5.0 / 5.1 / 5.2 via `moodle-plugin-ci`.
+  against Moodle 4.1 to 5.3 via `moodle-plugin-ci`.
 - Post-1.0 — feature requests prioritised by sponsors (see
   <https://sponsor.oksigenia.com>).
 

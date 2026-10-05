@@ -1,15 +1,15 @@
-# Oksigenia Access for Moodle
+# Accessibility panel for Moodle (Oksigenia Access)
 
 [![Moodle Plugin CI](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/actions/workflows/moodle-ci.yml)
 [![Moodle Plugins directory](https://img.shields.io/badge/Moodle-Plugins_directory-orange?logo=moodle&logoColor=white)](https://moodle.org/plugins/local_oksigeniaaccess)
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3+-blue.svg)](LICENSE)
-![Moodle](https://img.shields.io/badge/Moodle-4.5%20LTS%20%7C%205.x-orange)
+![Moodle](https://img.shields.io/badge/Moodle-4.1%E2%80%935.3-orange)
 ![Status](https://img.shields.io/badge/status-alpha-yellow)
 [![Bundled web component](https://img.shields.io/npm/v/@oksigenia/access-panel?label=%40oksigenia%2Faccess-panel&color=6d4aff)](https://www.npmjs.com/package/@oksigenia/access-panel)
 [![Sponsor](https://img.shields.io/badge/sponsor-Oksigenia-00d4ff)](https://sponsor.oksigenia.com)
 [![Roadmap](https://img.shields.io/badge/roadmap-public-00f5d4)](https://github.com/orgs/OksigeniaSL/projects/4)
 
-A privacy-first accessibility panel for Moodle. Floating button with 17 atomic
+Accessibility panel for Moodle, privacy-first. Floating button with 17 atomic
 controls — text size, line height, dyslexia font, contrast, colorblind filters,
 reading guide, reading mask, big cursor, big targets (44×44 WCAG 2.5.5), pause
 animations and more — plus 4 profile presets (Low Vision, Dyslexia, Motor, No
@@ -34,9 +34,10 @@ The same product also ships as:
 
 ## Requirements
 
-- Moodle 4.5 LTS or later (uses the Hook API introduced in 4.4 and stabilised in 4.5).
-- Tested on Moodle 4.5 LTS, 5.0, 5.1, 5.2 and 5.3.
-- PHP 8.1+ (whatever your Moodle requires).
+- Moodle 4.1 or later. On 4.4+ the panel goes in through the Hook API; on 4.1–4.3
+  through the classic `before_footer` callback. Same markup either way.
+- Tested on Moodle 4.1 to 5.3 (4.1, 4.2, 4.3, 4.4, 4.5 LTS, 5.0, 5.1, 5.2 and 5.3).
+- PHP 7.4+ (whatever your Moodle requires).
 - Any theme. The panel renders inside Shadow DOM and only injects a single
   scoped `<style id="oksigenia-access-effects">` into the document head for the
   body-level effects (zoom, contrast, etc.). It will not collide with your theme CSS.
@@ -71,7 +72,7 @@ With `on`, the image installs and enables the plugin and keeps it updated; setti
 
 ## Configuration
 
-*Site administration → Plugins → Local plugins → Oksigenia Access*
+*Site administration → Plugins → Local plugins → Accessibility panel (Oksigenia Access)*
 
 | Setting | Default | Notes |
 |---|---|---|
@@ -214,7 +215,7 @@ labelled forms.
 - **How-to questions, theming help, general feedback**: [Discussions](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/discussions).
 - **Security vulnerabilities**: report privately — see [`SECURITY.md`](SECURITY.md).
 - **Roadmap**: public board at [github.com/orgs/OksigeniaSL/projects/4](https://github.com/orgs/OksigeniaSL/projects/4). Sponsors influence the order; see the project readme for how.
-- **Code contributions**: read [`CONTRIBUTING.md`](CONTRIBUTING.md) for code style, translation policy and PR conventions. The CI workflow at [`.github/workflows/moodle-ci.yml`](.github/workflows/moodle-ci.yml) runs `moodle-plugin-ci` across Moodle 4.5 LTS / 5.0 / 5.1 / 5.2 / 5.3 on every push and PR, so contributors get the same feedback as the maintainer.
+- **Code contributions**: read [`CONTRIBUTING.md`](CONTRIBUTING.md) for code style, translation policy and PR conventions. The CI workflow at [`.github/workflows/moodle-ci.yml`](.github/workflows/moodle-ci.yml) runs `moodle-plugin-ci`, including the plugin's PHPUnit and Behat tests, across every Moodle branch from 4.1 to 5.3 on every push and PR, so contributors get the same feedback as the maintainer.
 - **Code of Conduct**: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) (Contributor Covenant 2.1).
 
 ## Credits
