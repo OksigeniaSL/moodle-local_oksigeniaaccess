@@ -28,8 +28,6 @@
 
 namespace local_oksigeniaaccess\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy null provider for local_oksigeniaaccess.
  */
