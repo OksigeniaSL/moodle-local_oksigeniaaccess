@@ -2,6 +2,9 @@
 # expect (validate, lint, codechecker, phpdoc, savepoints, mustache, grunt)
 # across the currently supported Moodle branches.
 #
+# The main job tracks the next Moodle release (6.0dev). It is allowed to
+# fail so upstream breakage shows up early without turning the run red.
+#
 # Behat and PHPUnit are not enabled yet because the plugin has no tests of
 # its own; add them as separate steps when the test files exist.
 #
@@ -17,6 +20,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-22.04
+    continue-on-error: ${{ matrix.experimental || false }}
 
     services:
       postgres:
@@ -56,6 +60,11 @@ jobs:
             php: '8.3'
             database: pgsql
             node: '22'
+          - moodle-branch: main
+            php: '8.4'
+            database: pgsql
+            node: '22'
+            experimental: true
 
     steps:
       - name: Check out plugin code
