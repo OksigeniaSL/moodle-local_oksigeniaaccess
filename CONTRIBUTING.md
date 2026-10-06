@@ -21,23 +21,19 @@ We accept new translations as pull requests. To add a locale:
    `disclaimer_html` string intact.
 3. Open a PR with a single commit titled `Add <Language> translation`.
 
-When the plugin is approved on **moodle.org/plugins** (planned once it has
-2–3 months of real use, see roadmap below) translations will additionally be
-picked up by **AMOS**, Moodle's translation tooling, automatically. Until
-then, GitHub PRs are the canonical way.
+The plugin is on the [Moodle Marketplace](https://marketplace.moodle.com/plugins/local_oksigeniaaccess),
+so translations into other languages go through **AMOS**, Moodle's translation
+tool, at <https://lang.moodle.org>: they reach every Moodle site with the
+language packs. GitHub PRs are for the English strings and for fixes.
 
 ## Tests
 
-Local validation runs through `moodle-plugin-ci` on a docker stack — see
-the project's internal docs. CI on GitHub Actions will be added when we
-publish on moodle.org. Until then, please run at minimum:
-
-```bash
-docker exec moodle-app php -l <changed_file.php>
-```
-
-for syntax checks. Behat scenarios under `tests/behat/` (when present) must
-all pass.
+GitHub Actions runs `moodle-plugin-ci` on every push and pull request, on
+every supported Moodle branch from 4.1 to 5.3 (plus `main` as an
+allowed-failure job): validate, lint, code checker, PHPDoc, Mustache,
+Grunt, PHPUnit and Behat. A PR is ready when that run is green. New
+behaviour comes with its PHPUnit test, and a Behat scenario when it shows
+in the browser.
 
 ## Pull requests
 

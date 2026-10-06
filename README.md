@@ -1,7 +1,7 @@
 # Accessibility panel for Moodle (Oksigenia Access)
 
 [![Moodle Plugin CI](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/OksigeniaSL/moodle-local_oksigeniaaccess/actions/workflows/moodle-ci.yml)
-[![Moodle Plugins directory](https://img.shields.io/badge/Moodle-Plugins_directory-orange?logo=moodle&logoColor=white)](https://moodle.org/plugins/local_oksigeniaaccess)
+[![Moodle Marketplace](https://img.shields.io/badge/Moodle-Marketplace-orange?logo=moodle&logoColor=white)](https://marketplace.moodle.com/plugins/local_oksigeniaaccess)
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3+-blue.svg)](LICENSE)
 ![Moodle](https://img.shields.io/badge/Moodle-4.1%E2%80%935.3-orange)
 ![Status](https://img.shields.io/badge/status-alpha-yellow)

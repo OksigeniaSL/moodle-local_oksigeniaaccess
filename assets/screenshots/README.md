@@ -1,6 +1,6 @@
 # Screenshots
 
-PNGs used in the moodle.org/plugins listing carousel, in display order.
+PNGs used in the Moodle Marketplace listing carousel, in display order.
 
 | # | File | What it shows | Why it's here |
 |---|---|---|---|
