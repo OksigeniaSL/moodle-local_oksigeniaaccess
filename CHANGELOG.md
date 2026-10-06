@@ -5,6 +5,14 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-06
+
+### Fixed
+- **Readable on Moodle's dark mode.** With Moodle 5.3's dark colour mode on, the keyboard focus ring drew at 2.7:1 on the dark background, under WCAG's 3:1. On dark pages it now uses a lighter blue (6.7:1). The section titles inside the panel (Profiles, Text…) go from 3.5:1 to 7:1 in every mode. Re-vendors [`@oksigenia/access-panel@0.8.1`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.8.1).
+
+### Changed
+- **New screenshots**, taken on Moodle 5.3 in light and dark mode, on a phone and on the settings page.
+
 ## [1.1.1] - 2026-10-05
 
 ### Fixed
