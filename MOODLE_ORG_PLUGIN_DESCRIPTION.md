@@ -3,7 +3,7 @@
 <h3>Scope</h3>
 <p>The panel gives visitors a familiar, predictable set of adaptation controls. WCAG / EAA 2025 / EU Directive 2016/2102 / Spanish RD 1112/2018 compliance is achieved with editorial work on your courses: alt text, transcripts, contrast, semantic HTML, labelled forms, keyboard navigation.</p>
 <h3>Theme-agnostic</h3>
-<p>The panel renders inside a Shadow DOM, so its CSS doesn't collide with Boost, Boost Union, Classic, or any custom theme. The only thing it injects into <code>document.head</code> is a single scoped <code>&lt;style id="oksigenia-access-effects"&gt;</code> for body-level effects (zoom, contrast, dyslexia font…).</p>
+<p>The panel renders inside a Shadow DOM, so its CSS doesn't collide with Boost, Boost Union, Classic, or any custom theme. The only thing it adds to <code>document.head</code> is one scoped style element, with the id <code>oksigenia-access-effects</code>, for the body-level effects (zoom, contrast, dyslexia font…).</p>
 <h3>Configuration</h3>
 <p>The settings page under <em>Site administration → Plugins → Local plugins → Accessibility panel (Oksigenia Access)</em> gives you:</p>
 <ul>
