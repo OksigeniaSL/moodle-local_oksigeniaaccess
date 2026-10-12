@@ -193,6 +193,29 @@ final class hook_callbacks_test extends \advanced_testcase {
     }
 
     /**
+     * Pages drawn inside another one (embedded layout) and print pages get no panel.
+     *
+     * @return void
+     */
+    public function test_not_in_embedded_or_print_pages(): void {
+        global $PAGE;
+
+        foreach (['embedded', 'print'] as $layout) {
+            $PAGE = new \moodle_page();
+            $PAGE->set_url(new \moodle_url('/h5p/embed.php'));
+            $PAGE->set_context(\context_system::instance());
+            $PAGE->set_pagelayout($layout);
+            $this->assertSame('', hook_callbacks::get_footer_html(), $layout);
+        }
+
+        $PAGE = new \moodle_page();
+        $PAGE->set_url(new \moodle_url('/'));
+        $PAGE->set_context(\context_system::instance());
+        $PAGE->set_pagelayout('popup');
+        $this->assertStringContainsString('<oksigenia-access-panel', hook_callbacks::get_footer_html());
+    }
+
+    /**
      * The "all pages except login" scope hides the panel under /login/.
      *
      * @return void

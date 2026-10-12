@@ -63,6 +63,10 @@ class hook_callbacks {
             return '';
         }
 
+        if (self::should_skip_for_layout($PAGE)) {
+            return '';
+        }
+
         if (!self::current_user_can_view()) {
             return '';
         }
@@ -167,6 +171,21 @@ class hook_callbacks {
         // Login, signup and forgot-password live under /login/ in the URL.
         $url = $page->url->out_as_local_url(false);
         return strpos($url, '/login/') === 0;
+    }
+
+    /**
+     * Decide whether the page is drawn inside another one or meant for paper.
+     *
+     * The H5P player, LTI launches and other pages loaded in an iframe use the
+     * embedded layout. The page around them already shows the panel, so a
+     * second trigger would sit inside the activity. Print pages have no use
+     * for a floating button.
+     *
+     * @param \moodle_page $page Current Moodle page being rendered.
+     * @return bool True if the panel must be skipped on this page.
+     */
+    private static function should_skip_for_layout(\moodle_page $page): bool {
+        return in_array($page->pagelayout, ['embedded', 'print'], true);
     }
 
     /**
