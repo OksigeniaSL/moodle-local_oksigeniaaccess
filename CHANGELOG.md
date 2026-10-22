@@ -3,7 +3,7 @@
 All notable changes to this plugin will be documented here.
 Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.1.3] - 2026-10-22
 
 ### Fixed
 - **No second button inside H5P activities.** Pages that Moodle draws inside another page (the H5P player, LTI tools and anything else on the embedded layout) no longer add their own panel: the page around them already has one. Print pages leave it out too.
