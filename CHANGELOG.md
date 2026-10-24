@@ -3,6 +3,11 @@
 All notable changes to this plugin will be documented here.
 Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.1] - 2026-10-24
+
+### Fixed
+- **The panel's footer buttons read naturally in every language.** They carried English title case into languages that don't use it: Spanish showed *Restablecer Todo* and *Ocultar Botón*, French *Masquer le Bouton*, and the same in Italian, Dutch, Swedish, German and Guaraní. They now read *Restablecer todo*, *Ocultar botón*, *Masquer le bouton*, and so on. Re-vendors [`@oksigenia/access-panel@0.10.1`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.10.1).
+
 ## [1.2.0] - 2026-10-24
 
 ### Added
