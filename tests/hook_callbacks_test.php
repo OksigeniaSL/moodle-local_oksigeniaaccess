@@ -104,6 +104,7 @@ final class hook_callbacks_test extends \advanced_testcase {
         $this->assertStringNotContainsString(' controls="', $html);
         $this->assertStringNotContainsString(' presets="', $html);
         $this->assertStringNotContainsString(' nudge=', $html);
+        $this->assertStringNotContainsString(' fold=', $html);
         $this->assertStringContainsString(' locale="en"', $html);
     }
 
@@ -119,6 +120,7 @@ final class hook_callbacks_test extends \advanced_testcase {
         set_config('controls', 'text-size,contrast', 'local_oksigeniaaccess');
         set_config('show_presets', 0, 'local_oksigeniaaccess');
         set_config('allow_nudge', 1, 'local_oksigeniaaccess');
+        set_config('allow_fold', 0, 'local_oksigeniaaccess');
         set_config('locale_mode', 'force', 'local_oksigeniaaccess');
         set_config('locale_override', 'fr', 'local_oksigeniaaccess');
         set_config('btn_bg', '#123456', 'local_oksigeniaaccess');
@@ -132,6 +134,7 @@ final class hook_callbacks_test extends \advanced_testcase {
         $this->assertStringContainsString(' controls="text-size,contrast"', $html);
         $this->assertStringContainsString(' presets="none"', $html);
         $this->assertStringContainsString(' nudge=""', $html);
+        $this->assertStringContainsString(' fold="none"', $html);
         $this->assertStringContainsString(' locale="fr"', $html);
         $this->assertStringContainsString('--oks-bg:#123456;', $html);
         $this->assertStringContainsString('--oks-btn-size:60px;', $html);

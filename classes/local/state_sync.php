@@ -42,6 +42,7 @@ class state_sync {
     private const TOGGLES = [
         'font', 'dyslexia', 'contrast', 'hideImages', 'highlightLinks', 'bigCursor',
         'pauseAnim', 'focusOutline', 'grayOverlay', 'readingGuide', 'readingMask', 'bigTargets',
+        'folded',
     ];
 
     /**

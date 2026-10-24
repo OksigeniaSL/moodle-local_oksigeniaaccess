@@ -197,6 +197,13 @@ $settings->add(new admin_setting_configcheckbox(
     0
 ));
 
+$settings->add(new admin_setting_configcheckbox(
+    'local_oksigeniaaccess/allow_fold',
+    new lang_string('allow_fold', 'local_oksigeniaaccess'),
+    new lang_string('allow_fold_desc', 'local_oksigeniaaccess'),
+    1
+));
+
 // Controls & profiles.
 $settings->add(new admin_setting_heading(
     'local_oksigeniaaccess/heading_controls',

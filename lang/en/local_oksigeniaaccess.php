@@ -29,6 +29,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['allow_fold'] = 'Let visitors hide the button';
+$string['allow_fold_desc'] = 'A <em>Hide button</em> in the panel folds the round button into a slim tab on the edge of the screen, for visitors who find it in the way. The tab still opens the panel, where the same button brings it back. The choice is remembered like the other settings, in the browser and, if enabled below, in the user\'s account.';
 $string['allow_nudge'] = 'Let visitors move the button';
 $string['allow_nudge_desc'] = 'Visitors can reposition the floating trigger within bounds — by dragging it, or with the arrow keys while it is focused. The position is remembered in their browser and the button can never be lost off-screen. An accessibility aid for reduced visual fields, screen magnifiers or one-handed reach.';
 $string['btn_bg'] = 'Idle background';

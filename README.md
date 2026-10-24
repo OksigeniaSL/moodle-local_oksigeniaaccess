@@ -90,6 +90,7 @@ With `on`, the image installs and enables the plugin and keeps it updated; setti
 | Trigger position (mobile) | Inherit | Optional override for ≤768 px viewports. |
 | Trigger icon | Vitruvian man | 5 icons (Vitruvian, Wheelchair, Eye, Universal access, Porthole). |
 | Let visitors move the button | Off | When on, visitors reposition the trigger within bounds (drag or arrow keys), persisted in their browser, never lost off-screen. |
+| Let visitors hide the button | On | A *Hide button* in the panel folds the trigger into a slim tab on the screen edge; the tab still opens the panel, where the same button brings it back. Remembered with the other settings. |
 | Controls shown to visitors | All 17 | Tick which controls the panel offers. Unticked controls are hidden; unticking all resets to all. |
 | Show profile shortcuts | On | Hides the one-tap profile row. A profile also self-hides if curation leaves it with fewer than two of its controls. |
 | Keep the panel settings in the user's account | On | Signed-in users get their settings on any device: they are saved in their Moodle account as well as in the browser. Guests keep theirs in the browser only. |
