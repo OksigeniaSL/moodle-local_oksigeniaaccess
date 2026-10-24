@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['allow_fold'] = 'Permitir que los visitantes oculten el botón';
+$string['allow_fold_desc'] = 'Un botón <em>Ocultar botón</em> en el panel pliega el botón redondo en una pestaña estrecha en el borde de la pantalla, para quien lo encuentre molesto. La pestaña sigue abriendo el panel, donde el mismo botón lo vuelve a mostrar. La elección se recuerda como el resto de ajustes, en el navegador y, si está activado más abajo, en la cuenta del usuario.';
 $string['allow_nudge'] = 'Permitir que los visitantes muevan el botón';
 $string['allow_nudge_desc'] = 'Los visitantes pueden recolocar el botón flotante dentro de unos límites, arrastrándolo o con las teclas de flecha cuando tiene el foco. La posición se recuerda en su navegador y el botón nunca puede quedar fuera de la pantalla. Una ayuda de accesibilidad para campos visuales reducidos, lupas de pantalla o uso con una sola mano.';
 $string['btn_bg'] = 'Fondo en reposo';

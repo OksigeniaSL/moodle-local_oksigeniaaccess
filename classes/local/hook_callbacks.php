@@ -113,6 +113,12 @@ class hook_callbacks {
             $attrs['nudge'] = '';
         }
 
+        // Visitors may fold the button into a tab on its edge unless the admin
+        // turned that off. Unset (not saved yet after an upgrade) means on.
+        if (isset($config->allow_fold) && (int) $config->allow_fold === 0) {
+            $attrs['fold'] = 'none';
+        }
+
         // Signed-in users: start from the copy in their account and save each
         // change back to it, so the settings follow them across devices.
         if (state_sync::is_active($config)) {

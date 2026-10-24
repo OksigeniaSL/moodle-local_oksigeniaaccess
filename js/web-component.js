@@ -119,6 +119,7 @@ function buildPanelHtml(opts) {
   const showTrigger = opts.showTrigger ?? true;
   const showPresets = opts.showPresets ?? true;
   const flatLayout = opts.flatLayout ?? false;
+  const showFold = (opts.showFold ?? true) && showTrigger;
   const trig = TRIGGER_ICONS[triggerIcon];
   const multi = (id, prefix, levels, label, icon, full = false) => {
     if (!enabled.has(id)) return "";
@@ -210,7 +211,10 @@ function buildPanelHtml(opts) {
     ${controlsHtml}
   </div>
   <div class="oks-access-footer">
-    <button class="oks-access-reset" id="oks-reset" type="button">${escapeHtml(t.reset)}</button>
+    <div class="oks-access-actions">
+      <button class="oks-access-reset" id="oks-reset" type="button">${escapeHtml(t.reset)}</button>
+      ${showFold ? `<button class="oks-access-fold" id="oks-fold" type="button">${escapeHtml(t.fold)}</button>` : ""}
+    </div>
     <div class="oks-access-branding">${escapeHtml(t.dev)} <a href="https://oksigenia.com" target="_blank" rel="noopener noreferrer">Oksigenia</a></div>
   </div>
 </div>
@@ -250,17 +254,40 @@ function positionRules(position) {
       return { wrap: `bottom: calc(20px + ${LIFT}); right: 20px;`, panel: `bottom: calc(100px + ${LIFT}); right: 20px;`, reserve: 120, lift: true };
   }
 }
+function foldRules(position) {
+  const side = (edge) => `width: 24px; height: 48px; border-${edge}: 0; border-radius: ${edge === "left" ? "0 10px 10px 0" : "10px 0 0 10px"};`;
+  switch (position) {
+    case "top-left":
+    case "mid-left":
+    case "bottom-left":
+      return { wrap: "left: 0;", btn: side("left") };
+    case "top-right":
+    case "mid-right":
+    case "bottom-right":
+      return { wrap: "right: 0;", btn: side("right") };
+    case "mid-center":
+      return { wrap: "left: auto; right: 0; transform: translateY(-50%);", btn: side("right") };
+    case "top-center":
+      return { wrap: "top: 0;", btn: "width: 48px; height: 24px; border-top: 0; border-radius: 0 0 10px 10px;" };
+    case "bottom-center":
+      return { wrap: `bottom: ${LIFT};`, btn: "width: 48px; height: 24px; border-bottom: 0; border-radius: 10px 10px 0 0;" };
+  }
+}
 function panelMaxHeight(reserve, lift = false) {
   const room = lift ? `${reserve}px - ${LIFT}` : `${reserve}px`;
   return `max-height: calc(100vh - ${room}); max-height: calc(100dvh - ${room});`;
 }
 function positionCss(position, mobile) {
   const d = positionRules(position);
+  const f = foldRules(position);
   let css = `.oks-access-wrapper { ${d.wrap} }`;
+  css += `.oks-access-wrapper.is-folded { ${f.wrap} } .oks-access-wrapper.is-folded .oks-access-btn { ${f.btn} }`;
   css += `@media (min-width: 769px) { .oks-access-panel { ${d.panel} ${panelMaxHeight(d.reserve, d.lift)} } }`;
   if (mobile && mobile !== position) {
     const m = positionRules(mobile);
-    css += `@media (max-width: 768px) { .oks-access-wrapper { top: auto; right: auto; bottom: auto; left: auto; transform: none; ${m.wrap} } }`;
+    const mf = foldRules(mobile);
+    const reset = "top: auto; right: auto; bottom: auto; left: auto; transform: none;";
+    css += `@media (max-width: 768px) { .oks-access-wrapper { ${reset} ${m.wrap} } .oks-access-wrapper.is-folded { ${reset} ${m.wrap} ${mf.wrap} } .oks-access-wrapper.is-folded .oks-access-btn { border: 2px solid #fff; ${mf.btn} } }`;
   }
   return css;
 }
@@ -283,7 +310,8 @@ var DEFAULT_STATE = Object.freeze({
   grayOverlay: false,
   readingGuide: false,
   readingMask: false,
-  bigTargets: false
+  bigTargets: false,
+  folded: false
 });
 var LEVEL_MAX = Object.freeze({
   zoom: 4,
@@ -347,14 +375,14 @@ function isStateEmpty(state) {
 
 // src/translations.ts
 var DICT = {
-  es: { title: "Accesibilidad", close: "Cerrar", txt: "Texto", size: "Tama\xF1o", lh: "Interlineado", align: "Alineaci\xF3n", font: "Legible", dyslexia: "Fuente Dislexia", vis: "Visual", contrast: "Contraste", gray: "Grises", hide: "Ocultar Img", links: "Links", ori: "Orientaci\xF3n", guide: "Gu\xEDa", mask: "M\xE1scara", targets: "\xC1reas Grandes", cursor: "Cursor Grande", pause: "Parar Animac.", reset: "Restablecer Todo", dev: "Desarrollado por", ls: "Espaciado", cb: "Daltonismo", focus: "Foco", presets: "Perfiles", pLow: "Baja Visi\xF3n", pDys: "Dislexia", pMot: "Motor", pCalm: "Sin Distrac.", level: (l, n, m) => `${l}, nivel ${n} de ${m}` },
-  en: { title: "Accessibility", close: "Close", txt: "Text", size: "Size", lh: "Line Height", align: "Align", font: "Readable Font", dyslexia: "Dyslexia Font", vis: "Visual", contrast: "Contrast", gray: "Grayscale", hide: "Hide Images", links: "Highlight Links", ori: "Orientation", guide: "Reading Guide", mask: "Reading Mask", targets: "Big Targets", cursor: "Big Cursor", pause: "Pause Anim.", reset: "Reset All", dev: "Developed by", ls: "Letter Spacing", cb: "Color Blind", focus: "Focus", presets: "Profiles", pLow: "Low Vision", pDys: "Dyslexia", pMot: "Motor", pCalm: "No Distract.", level: (l, n, m) => `${l}, level ${n} of ${m}` },
-  gn: { title: "Oikeha (Accesibilidad)", close: "Mboty", txt: "Mo\xF1e'\u1EBDr\xE3", size: "Tuichakue", lh: "Jei", align: "Mbojoja", font: "Letra Por\xE3", dyslexia: "Dislexia", vis: "Hechapy", contrast: "Sa'y", gray: "H\u0169 ha T\u0129", hide: "Moka\xF1y Ta'anga", links: "Joajuha", ori: "S\xE3mbyhy", guide: "S\xE3mbyhyha", mask: "Mbohov\xE1i", targets: "Tenda Guasu", cursor: "Cursor Guasu", pause: "Mboopyta", reset: "Mbojevy", dev: "Apojare", ls: "Rapykue", cb: "Sa'yvy", focus: "\xD1emoha", presets: "Tekor\xE3", pLow: "Hechapy Vai", pDys: "Dislexia", pMot: "Po-rehegua", pCalm: "Py\u02BCa Guapy", level: (l, n, m) => `${l}, ${n}/${m}` },
-  fr: { title: "Accessibilit\xE9", close: "Fermer", txt: "Texte", size: "Taille", lh: "Interligne", align: "Alignement", font: "Police Lisible", dyslexia: "Police Dyslexie", vis: "Visuel", contrast: "Contraste", gray: "Niveaux Gris", hide: "Masquer Img", links: "Liens", ori: "Orientation", guide: "Guide Lecture", mask: "Masque Lecture", targets: "Grandes Cibles", cursor: "Grand Curseur", pause: "Pause Anim.", reset: "R\xE9initialiser", dev: "D\xE9velopp\xE9 par", ls: "Espacement", cb: "Daltonisme", focus: "Focus", presets: "Profils", pLow: "Basse Vision", pDys: "Dyslexie", pMot: "Moteur", pCalm: "Sans Distrac.", level: (l, n, m) => `${l}, niveau ${n} sur ${m}` },
-  it: { title: "Accessibilit\xE0", close: "Chiudi", txt: "Testo", size: "Dimensione", lh: "Interlinea", align: "Allineamento", font: "Leggibile", dyslexia: "Font Dislessia", vis: "Visivo", contrast: "Contrasto", gray: "Scala Grig.", hide: "Nascondi Img", links: "Link", ori: "Orientamento", guide: "Guida", mask: "Maschera", targets: "Aree Grandi", cursor: "Cursore Grande", pause: "Pausa Anim.", reset: "Reimposta", dev: "Sviluppato da", ls: "Spaziatura", cb: "Daltonismo", focus: "Focus", presets: "Profili", pLow: "Ipovisione", pDys: "Dislessia", pMot: "Motorio", pCalm: "No Distraz.", level: (l, n, m) => `${l}, livello ${n} di ${m}` },
-  de: { title: "Barrierefreiheit", close: "Schlie\xDFen", txt: "Text", size: "Gr\xF6\xDFe", lh: "Zeilenh\xF6he", align: "Ausrichtung", font: "Lesbar", dyslexia: "Dyslexie", vis: "Visuell", contrast: "Kontrast", gray: "Graustufen", hide: "Bilder Aus", links: "Links", ori: "Orientierung", guide: "Lesehilfe", mask: "Lesemaske", targets: "Gro\xDFe Ziele", cursor: "Gro\xDFer Cursor", pause: "Anim. Stopp", reset: "Zur\xFCcksetzen", dev: "Entwickelt von", ls: "Buchst.abst.", cb: "Farbblindheit", focus: "Fokus", presets: "Profile", pLow: "Sehschw\xE4che", pDys: "Dyslexie", pMot: "Motorik", pCalm: "Ohne Ablenk.", level: (l, n, m) => `${l}, Stufe ${n} von ${m}` },
-  nl: { title: "Toegankelijkheid", close: "Sluiten", txt: "Tekst", size: "Grootte", lh: "Regelhoogte", align: "Uitlijning", font: "Leesbaar", dyslexia: "Dyslexie", vis: "Visueel", contrast: "Contrast", gray: "Grijstinten", hide: "Verberg Afb.", links: "Links", ori: "Ori\xEBntatie", guide: "Leesgids", mask: "Leesmasker", targets: "Grote Doelen", cursor: "Grote Cursor", pause: "Anim. Pauze", reset: "Resetten", dev: "Ontwikkeld door", ls: "Letterspatie", cb: "Kleurenblind", focus: "Focus", presets: "Profielen", pLow: "Slechtziend", pDys: "Dyslexie", pMot: "Motoriek", pCalm: "Geen Afleid.", level: (l, n, m) => `${l}, niveau ${n} van ${m}` },
-  sv: { title: "Tillg\xE4nglighet", close: "St\xE4ng", txt: "Text", size: "Storlek", lh: "Radh\xF6jd", align: "Justering", font: "L\xE4sbar", dyslexia: "Dyslexi", vis: "Visuell", contrast: "Kontrast", gray: "Gr\xE5skala", hide: "D\xF6lj Bilder", links: "L\xE4nkar", ori: "Orientering", guide: "L\xE4slinjal", mask: "L\xE4smask", targets: "Stora Ytor", cursor: "Stor Mark\xF6r", pause: "Pausa Anim.", reset: "\xC5terst\xE4ll", dev: "Utvecklad av", ls: "Bokstavsavst.", cb: "F\xE4rgblindhet", focus: "Fokus", presets: "Profiler", pLow: "Synneds\xE4tt.", pDys: "Dyslexi", pMot: "Motorik", pCalm: "Inga Distrak.", level: (l, n, m) => `${l}, niv\xE5 ${n} av ${m}` }
+  es: { title: "Accesibilidad", close: "Cerrar", txt: "Texto", size: "Tama\xF1o", lh: "Interlineado", align: "Alineaci\xF3n", font: "Legible", dyslexia: "Fuente Dislexia", vis: "Visual", contrast: "Contraste", gray: "Grises", hide: "Ocultar Img", links: "Links", ori: "Orientaci\xF3n", guide: "Gu\xEDa", mask: "M\xE1scara", targets: "\xC1reas Grandes", cursor: "Cursor Grande", pause: "Parar Animac.", reset: "Restablecer Todo", dev: "Desarrollado por", ls: "Espaciado", cb: "Daltonismo", focus: "Foco", presets: "Perfiles", pLow: "Baja Visi\xF3n", pDys: "Dislexia", pMot: "Motor", pCalm: "Sin Distrac.", fold: "Ocultar Bot\xF3n", unfold: "Mostrar Bot\xF3n", level: (l, n, m) => `${l}, nivel ${n} de ${m}` },
+  en: { title: "Accessibility", close: "Close", txt: "Text", size: "Size", lh: "Line Height", align: "Align", font: "Readable Font", dyslexia: "Dyslexia Font", vis: "Visual", contrast: "Contrast", gray: "Grayscale", hide: "Hide Images", links: "Highlight Links", ori: "Orientation", guide: "Reading Guide", mask: "Reading Mask", targets: "Big Targets", cursor: "Big Cursor", pause: "Pause Anim.", reset: "Reset All", dev: "Developed by", ls: "Letter Spacing", cb: "Color Blind", focus: "Focus", presets: "Profiles", pLow: "Low Vision", pDys: "Dyslexia", pMot: "Motor", pCalm: "No Distract.", fold: "Hide Button", unfold: "Show Button", level: (l, n, m) => `${l}, level ${n} of ${m}` },
+  gn: { title: "Oikeha (Accesibilidad)", close: "Mboty", txt: "Mo\xF1e'\u1EBDr\xE3", size: "Tuichakue", lh: "Jei", align: "Mbojoja", font: "Letra Por\xE3", dyslexia: "Dislexia", vis: "Hechapy", contrast: "Sa'y", gray: "H\u0169 ha T\u0129", hide: "Moka\xF1y Ta'anga", links: "Joajuha", ori: "S\xE3mbyhy", guide: "S\xE3mbyhyha", mask: "Mbohov\xE1i", targets: "Tenda Guasu", cursor: "Cursor Guasu", pause: "Mboopyta", reset: "Mbojevy", dev: "Apojare", ls: "Rapykue", cb: "Sa'yvy", focus: "\xD1emoha", presets: "Tekor\xE3", pLow: "Hechapy Vai", pDys: "Dislexia", pMot: "Po-rehegua", pCalm: "Py\u02BCa Guapy", fold: "Moka\xF1y Vot\xF5", unfold: "Hechauka Vot\xF5", level: (l, n, m) => `${l}, ${n}/${m}` },
+  fr: { title: "Accessibilit\xE9", close: "Fermer", txt: "Texte", size: "Taille", lh: "Interligne", align: "Alignement", font: "Police Lisible", dyslexia: "Police Dyslexie", vis: "Visuel", contrast: "Contraste", gray: "Niveaux Gris", hide: "Masquer Img", links: "Liens", ori: "Orientation", guide: "Guide Lecture", mask: "Masque Lecture", targets: "Grandes Cibles", cursor: "Grand Curseur", pause: "Pause Anim.", reset: "R\xE9initialiser", dev: "D\xE9velopp\xE9 par", ls: "Espacement", cb: "Daltonisme", focus: "Focus", presets: "Profils", pLow: "Basse Vision", pDys: "Dyslexie", pMot: "Moteur", pCalm: "Sans Distrac.", fold: "Masquer le Bouton", unfold: "Afficher le Bouton", level: (l, n, m) => `${l}, niveau ${n} sur ${m}` },
+  it: { title: "Accessibilit\xE0", close: "Chiudi", txt: "Testo", size: "Dimensione", lh: "Interlinea", align: "Allineamento", font: "Leggibile", dyslexia: "Font Dislessia", vis: "Visivo", contrast: "Contrasto", gray: "Scala Grig.", hide: "Nascondi Img", links: "Link", ori: "Orientamento", guide: "Guida", mask: "Maschera", targets: "Aree Grandi", cursor: "Cursore Grande", pause: "Pausa Anim.", reset: "Reimposta", dev: "Sviluppato da", ls: "Spaziatura", cb: "Daltonismo", focus: "Focus", presets: "Profili", pLow: "Ipovisione", pDys: "Dislessia", pMot: "Motorio", pCalm: "No Distraz.", fold: "Nascondi Pulsante", unfold: "Mostra Pulsante", level: (l, n, m) => `${l}, livello ${n} di ${m}` },
+  de: { title: "Barrierefreiheit", close: "Schlie\xDFen", txt: "Text", size: "Gr\xF6\xDFe", lh: "Zeilenh\xF6he", align: "Ausrichtung", font: "Lesbar", dyslexia: "Dyslexie", vis: "Visuell", contrast: "Kontrast", gray: "Graustufen", hide: "Bilder Aus", links: "Links", ori: "Orientierung", guide: "Lesehilfe", mask: "Lesemaske", targets: "Gro\xDFe Ziele", cursor: "Gro\xDFer Cursor", pause: "Anim. Stopp", reset: "Zur\xFCcksetzen", dev: "Entwickelt von", ls: "Buchst.abst.", cb: "Farbblindheit", focus: "Fokus", presets: "Profile", pLow: "Sehschw\xE4che", pDys: "Dyslexie", pMot: "Motorik", pCalm: "Ohne Ablenk.", fold: "Schaltfl\xE4che Ausblenden", unfold: "Schaltfl\xE4che Einblenden", level: (l, n, m) => `${l}, Stufe ${n} von ${m}` },
+  nl: { title: "Toegankelijkheid", close: "Sluiten", txt: "Tekst", size: "Grootte", lh: "Regelhoogte", align: "Uitlijning", font: "Leesbaar", dyslexia: "Dyslexie", vis: "Visueel", contrast: "Contrast", gray: "Grijstinten", hide: "Verberg Afb.", links: "Links", ori: "Ori\xEBntatie", guide: "Leesgids", mask: "Leesmasker", targets: "Grote Doelen", cursor: "Grote Cursor", pause: "Anim. Pauze", reset: "Resetten", dev: "Ontwikkeld door", ls: "Letterspatie", cb: "Kleurenblind", focus: "Focus", presets: "Profielen", pLow: "Slechtziend", pDys: "Dyslexie", pMot: "Motoriek", pCalm: "Geen Afleid.", fold: "Knop Verbergen", unfold: "Knop Tonen", level: (l, n, m) => `${l}, niveau ${n} van ${m}` },
+  sv: { title: "Tillg\xE4nglighet", close: "St\xE4ng", txt: "Text", size: "Storlek", lh: "Radh\xF6jd", align: "Justering", font: "L\xE4sbar", dyslexia: "Dyslexi", vis: "Visuell", contrast: "Kontrast", gray: "Gr\xE5skala", hide: "D\xF6lj Bilder", links: "L\xE4nkar", ori: "Orientering", guide: "L\xE4slinjal", mask: "L\xE4smask", targets: "Stora Ytor", cursor: "Stor Mark\xF6r", pause: "Pausa Anim.", reset: "\xC5terst\xE4ll", dev: "Utvecklad av", ls: "Bokstavsavst.", cb: "F\xE4rgblindhet", focus: "Fokus", presets: "Profiler", pLow: "Synneds\xE4tt.", pDys: "Dyslexi", pMot: "Motorik", pCalm: "Inga Distrak.", fold: "D\xF6lj Knappen", unfold: "Visa Knappen", level: (l, n, m) => `${l}, niv\xE5 ${n} av ${m}` }
 };
 function getTranslation(locale) {
   const lc = locale.toLowerCase();
@@ -410,6 +438,7 @@ function bindPanelBehavior(root, opts = {}) {
   const panel = root.getElementById("oks-panel");
   const closeBtn = root.getElementById("oks-close");
   const resetBtn = root.getElementById("oks-reset");
+  const foldBtn = root.getElementById("oks-fold");
   const wrapper = root.getElementById("oks-wrapper");
   const opts$ = Array.from(root.querySelectorAll(".oks-access-opt, .oks-preset"));
   if (!panel || !closeBtn || !resetBtn) {
@@ -606,7 +635,7 @@ function bindPanelBehavior(root, opts = {}) {
     emitChange();
   };
   const onReset = () => {
-    state = { ...DEFAULT_STATE };
+    state = { ...DEFAULT_STATE, folded: state.folded };
     applyState();
     saveState(storageKey, state);
     emitChange();
@@ -657,6 +686,21 @@ function bindPanelBehavior(root, opts = {}) {
   const togglePanel = () => {
     if (panel.classList.contains("is-open")) closePanel();
     else openPanel();
+  };
+  const canFold = foldBtn != null && wrapper != null;
+  const isFolded = () => canFold && state.folded;
+  const applyFold = () => {
+    if (!canFold) return;
+    wrapper.classList.toggle("is-folded", state.folded);
+    foldBtn.textContent = state.folded ? t.unfold : t.fold;
+    if (nudgeMax > 0) applyNudge();
+  };
+  const onFoldClick = () => {
+    state.folded = !state.folded;
+    applyFold();
+    saveState(storageKey, state);
+    emitChange();
+    if (state.folded) closePanel();
   };
   let suppressClick = false;
   const onTriggerClick = (e) => {
@@ -723,7 +767,7 @@ function bindPanelBehavior(root, opts = {}) {
     }
   };
   const applyNudge = () => {
-    if (wrapper) wrapper.style.translate = `${nudge.x}px ${nudge.y}px`;
+    if (wrapper) wrapper.style.translate = isFolded() ? "" : `${nudge.x}px ${nudge.y}px`;
   };
   const clampOffset = (x, y) => {
     x = clampMax(x);
@@ -744,7 +788,7 @@ function bindPanelBehavior(root, opts = {}) {
   let didDrag = false;
   const DRAG_THRESHOLD = 4;
   const onPointerDown = (e) => {
-    if (nudgeMax <= 0 || e.button !== 0) return;
+    if (nudgeMax <= 0 || e.button !== 0 || isFolded()) return;
     dragStart = { px: e.clientX, py: e.clientY, ox: nudge.x, oy: nudge.y };
     didDrag = false;
     trigger?.setPointerCapture?.(e.pointerId);
@@ -768,7 +812,7 @@ function bindPanelBehavior(root, opts = {}) {
     }
   };
   const onTriggerKey = (e) => {
-    if (nudgeMax <= 0) return;
+    if (nudgeMax <= 0 || isFolded()) return;
     const step = e.shiftKey ? 1 : 10;
     let dx = 0;
     let dy = 0;
@@ -800,6 +844,7 @@ function bindPanelBehavior(root, opts = {}) {
   trigger?.addEventListener("click", onTriggerClick);
   closeBtn.addEventListener("click", closePanel);
   resetBtn.addEventListener("click", onReset);
+  foldBtn?.addEventListener("click", onFoldClick);
   for (const btn of opts$) btn.addEventListener("click", onOptClick);
   document.addEventListener("click", onDocClick);
   document.addEventListener("keydown", onKeyDown);
@@ -829,11 +874,13 @@ function bindPanelBehavior(root, opts = {}) {
     trigger.addEventListener("keydown", onTriggerKey);
   }
   applyState();
+  applyFold();
   refreshGlobal();
   const dispose = () => {
     trigger?.removeEventListener("click", onTriggerClick);
     closeBtn.removeEventListener("click", closePanel);
     resetBtn.removeEventListener("click", onReset);
+    foldBtn?.removeEventListener("click", onFoldClick);
     for (const btn of opts$) btn.removeEventListener("click", onOptClick);
     document.removeEventListener("click", onDocClick);
     document.removeEventListener("keydown", onKeyDown);
@@ -930,6 +977,14 @@ var PANEL_CSS = `
 }
 .oks-active-badge svg { width: 12px; height: 12px; }
 .oks-access-wrapper.has-active .oks-active-badge { opacity: 1; }
+/* Folded: the edge and the tab's shape come from positionCss. */
+.oks-access-wrapper.is-folded .oks-access-btn,
+.oks-access-wrapper.is-folded .oks-access-btn[data-trigger-icon="porthole"] {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.oks-access-wrapper.is-folded .oks-access-btn:hover { transform: none; }
+.oks-access-wrapper.is-folded .oks-access-btn svg { width: 18px; height: 18px; }
+.oks-access-wrapper.is-folded .oks-active-badge { display: none; }
 
 .oks-access-panel {
   position: fixed;
@@ -1084,8 +1139,9 @@ var PANEL_CSS = `
   border-top: 1px solid #eee;
   text-align: center;
 }
+.oks-access-actions { display: flex; gap: 8px; }
 .oks-access-reset {
-  width: 100%;
+  flex: 1 1 0;
   padding: 8px;
   border: 2px solid #000;
   color: #000;
@@ -1096,6 +1152,18 @@ var PANEL_CSS = `
   font-size: 12px;
 }
 .oks-access-reset:hover { background: #000; color: #fff; }
+.oks-access-fold {
+  flex: 1 1 0;
+  padding: 8px;
+  border: 1px solid #000;
+  color: #000;
+  background: #f2f2f2;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.oks-access-fold:hover { background: #000; color: #fff; }
 .oks-access-branding { margin-top: 12px; font-size: 12px; color: #000; font-weight: 700; }
 .oks-access-branding a { color: #000; text-decoration: none; border-bottom: 1px dotted #000; }
 
@@ -1121,7 +1189,7 @@ var PANEL_CSS = `
      de la secci\xF3n ocupando 2 columnas para no romper la grilla par. */
   .oks-access-opt[data-class="oks-big-cursor"] { display: none; }
   .oks-access-opt[data-class="oks-a11y-focus"] { grid-column: span 2; }
-  .oks-access-reset { padding: 14px; font-size: 14px; }
+  .oks-access-reset, .oks-access-fold { padding: 14px; font-size: 14px; }
 }
 `;
 var NOT_ICON_FONT = ':not(.fa, [class*="fa-"], .icon, [class^="icon-"], [class*=" icon-"], .dashicons, [class*="dashicons-"], .material-icons, [class^="material-symbols"], .glyphicon, [class^="bi-"], [class*=" bi-"])';
@@ -1383,7 +1451,8 @@ var OBSERVED = [
   "effects-exclude",
   "nudge",
   "presets",
-  "scope"
+  "scope",
+  "fold"
 ];
 var STYLE_ID = "oksigenia-access-effects";
 var FILTERS_ID = "oksigenia-access-filters";
@@ -1541,6 +1610,7 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
     if (scope) enabled = scopedControls(enabled);
     const showTrigger = this.getAttribute("trigger") !== "none";
     const showPresets = (this.getAttribute("presets") ?? "").trim().toLowerCase() !== "none";
+    const showFold = (this.getAttribute("fold") ?? "").trim().toLowerCase() !== "none";
     const html = buildPanelHtml({
       t: getTranslation(this.getLocale()),
       triggerIcon: this.getTriggerIcon(),
@@ -1548,6 +1618,7 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
       enabled,
       showTrigger,
       showPresets,
+      showFold,
       flatLayout: scope != null
       // scoped panels use the flat (no-category) layout
     });

@@ -175,6 +175,8 @@ final class state_sync_test extends \advanced_testcase {
         );
         $this->assertSame('{}', state_sync::clean('{}'));
         $this->assertSame('{"font":true}', state_sync::clean('{"font":1}'));
+        // The visitor folded the button: kept, so it stays folded on every page.
+        $this->assertSame('{"folded":true}', state_sync::clean('{"folded":true}'));
     }
 
     /**

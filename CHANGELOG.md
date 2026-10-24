@@ -3,6 +3,11 @@
 All notable changes to this plugin will be documented here.
 Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-10-24
+
+### Added
+- **Visitors can hide the button.** A *Hide button* next to *Reset all* in the panel folds the round button into a slim tab on the edge of the screen, for those who find it covering what they read. The tab still opens the panel, and the same button brings the round one back, so it can't get lost. The choice is remembered like the other settings: in the browser and, with *Keep the panel settings in the user's account* on, across devices. On by default; the new *Let visitors hide the button* setting turns it off. Re-vendors [`@oksigenia/access-panel@0.10.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.10.0).
+
 ## [1.1.4] - 2026-10-24
 
 ### Fixed

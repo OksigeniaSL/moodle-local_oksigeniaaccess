@@ -14,6 +14,7 @@
 <li>Trigger z-index, position (desktop and mobile, 9 anchors each), and icon (Vitruvian, Wheelchair, Eye, Universal Access, Porthole).</li>
 <li>Which of the 17 controls the panel offers (all by default), and whether to show the profile shortcuts.</li>
 <li>Let visitors move the button within bounds, by dragging it or with the arrow keys.</li>
+<li>Let visitors fold the button into a slim tab on the edge of the screen when it gets in the way; the tab still opens the panel.</li>
 <li>Five appearance fields (button size + idle/hover background + idle/hover icon color) for matching your Moodle theme.</li>
 <li>Keep the panel settings in the user's account, so they follow signed-in users across devices (on by default).</li>
 <li>Locale source: auto-follow Moodle's current language, or force a specific locale.</li>
