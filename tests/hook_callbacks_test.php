@@ -138,6 +138,41 @@ final class hook_callbacks_test extends \advanced_testcase {
     }
 
     /**
+     * The bottom positions always move up while Boost's sticky footer is showing.
+     *
+     * @return void
+     */
+    public function test_lifts_above_sticky_footer(): void {
+        $html = hook_callbacks::get_footer_html();
+
+        $this->assertStringContainsString(
+            'body.hasstickyfooter oksigenia-access-panel{--oks-bottom-offset:var(--sticky-footer-total-height,80px);}',
+            $html
+        );
+        $this->assertStringNotContainsString('drawer-left-toggle', $html);
+    }
+
+    /**
+     * On phones, a bottom corner trigger also clears the drawer toggle of its side.
+     *
+     * @return void
+     */
+    public function test_clears_drawer_toggle_on_phones(): void {
+        set_config('position', 'mid-left', 'local_oksigeniaaccess');
+        set_config('position_mobile', 'bottom-right', 'local_oksigeniaaccess');
+
+        $html = hook_callbacks::get_footer_html();
+
+        $this->assertStringContainsString(':not(.show-drawer-right) .drawer-right-toggle)', $html);
+        $this->assertStringNotContainsString('drawer-left-toggle', $html);
+
+        set_config('position_mobile', 'inherit', 'local_oksigeniaaccess');
+        set_config('position', 'bottom-left', 'local_oksigeniaaccess');
+
+        $this->assertStringContainsString(':not(.show-drawer-left) .drawer-left-toggle)', hook_callbacks::get_footer_html());
+    }
+
+    /**
      * Values that are not valid CSS never reach the inline style.
      *
      * @return void
