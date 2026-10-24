@@ -6,7 +6,7 @@ Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ## [1.1.4] - 2026-10-24
 
 ### Fixed
-- **The button no longer covers Moodle's sticky footer.** In a bottom position, the button sat on the bar that Moodle fixes to the bottom of activities and some reports, and on phones it covered «Previous». While the bar is showing, the button and the panel now move up by the bar's height, and back down when it hides. Re-vendors [`@oksigenia/access-panel@0.9.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.9.0).
+- **The button no longer covers Moodle's sticky footer.** In a bottom position, the button sat on the bar that Moodle fixes to the bottom of activities and some reports, and on phones it covered «Previous». While the bar is showing, the button and the panel now move up by the bar's height, and back down when it hides. On phones, where Moodle floats the course index and blocks buttons just above the bar, a button in the same corner goes above them instead. Moodle's own layout is left as it is. Re-vendors [`@oksigenia/access-panel@0.9.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.9.0).
 
 ## [1.1.3] - 2026-10-22
 
