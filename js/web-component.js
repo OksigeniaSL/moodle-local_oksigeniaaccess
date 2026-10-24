@@ -227,6 +227,7 @@ function escapeHtml(s) {
 function escapeAttr(s) {
   return escapeHtml(s).replace(/'/g, "&#39;");
 }
+var LIFT = "var(--oks-bottom-offset, 0px)";
 function positionRules(position) {
   switch (position) {
     case "top-left":
@@ -242,20 +243,21 @@ function positionRules(position) {
     case "mid-right":
       return { wrap: "top: 50%; right: 20px; transform: translateY(-50%);", panel: "top: 50%; right: 90px; transform: translateY(-50%);", reserve: 40 };
     case "bottom-left":
-      return { wrap: "bottom: 20px; left: 20px;", panel: "bottom: 100px; left: 20px;", reserve: 120 };
+      return { wrap: `bottom: calc(20px + ${LIFT}); left: 20px;`, panel: `bottom: calc(100px + ${LIFT}); left: 20px;`, reserve: 120, lift: true };
     case "bottom-center":
-      return { wrap: "bottom: 20px; left: 50%; transform: translateX(-50%);", panel: "bottom: 100px; left: 50%; transform: translateX(-50%);", reserve: 120 };
+      return { wrap: `bottom: calc(20px + ${LIFT}); left: 50%; transform: translateX(-50%);`, panel: `bottom: calc(100px + ${LIFT}); left: 50%; transform: translateX(-50%);`, reserve: 120, lift: true };
     case "bottom-right":
-      return { wrap: "bottom: 20px; right: 20px;", panel: "bottom: 100px; right: 20px;", reserve: 120 };
+      return { wrap: `bottom: calc(20px + ${LIFT}); right: 20px;`, panel: `bottom: calc(100px + ${LIFT}); right: 20px;`, reserve: 120, lift: true };
   }
 }
-function panelMaxHeight(reserve) {
-  return `max-height: calc(100vh - ${reserve}px); max-height: calc(100dvh - ${reserve}px);`;
+function panelMaxHeight(reserve, lift = false) {
+  const room = lift ? `${reserve}px - ${LIFT}` : `${reserve}px`;
+  return `max-height: calc(100vh - ${room}); max-height: calc(100dvh - ${room});`;
 }
 function positionCss(position, mobile) {
   const d = positionRules(position);
   let css = `.oks-access-wrapper { ${d.wrap} }`;
-  css += `@media (min-width: 769px) { .oks-access-panel { ${d.panel} ${panelMaxHeight(d.reserve)} } }`;
+  css += `@media (min-width: 769px) { .oks-access-panel { ${d.panel} ${panelMaxHeight(d.reserve, d.lift)} } }`;
   if (mobile && mobile !== position) {
     const m = positionRules(mobile);
     css += `@media (max-width: 768px) { .oks-access-wrapper { top: auto; right: auto; bottom: auto; left: auto; transform: none; ${m.wrap} } }`;
@@ -875,6 +877,7 @@ var PANEL_CSS = `
   position: fixed;
   z-index: var(--oks-z);
   line-height: 1;
+  transition: bottom 0.3s;
 }
 .oks-access-btn {
   width: var(--oks-btn-size);
@@ -1098,7 +1101,7 @@ var PANEL_CSS = `
 
 @media (prefers-reduced-motion: reduce) {
   .oks-access-btn, .oks-access-panel, .oks-access-close,
-  .oks-preset, .oks-access-opt { transition: none; }
+  .oks-preset, .oks-access-opt, .oks-access-wrapper { transition: none; }
   .oks-access-btn:hover { transform: scale(1); }
   .oks-preset.is-flashing { transform: none; }
 }

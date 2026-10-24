@@ -380,6 +380,31 @@ class hook_callbacks {
     }
 
     /**
+     * Rules that move a bottom trigger out of the way of Boost's sticky footer.
+     *
+     * While the bar is showing, Boost puts hasstickyfooter on the body, and the
+     * trigger (--oks-bottom-offset, access-panel 0.9.0+) goes up by the bar's
+     * height: Moodle 5.3 gives it in --sticky-footer-total-height, earlier
+     * versions draw it 61px (4.1-4.3) or 80px (4.4-5.2) tall, hence the 80px
+     * fallback. On phones Boost also floats the drawer toggles at the edges,
+     * their top at 99vh - 150px, just above the bar; a trigger in the same
+     * corner goes over the toggle instead, while it is there.
+     *
+     * @param string $mobileposition The trigger's position on phones.
+     * @return string CSS rules.
+     */
+    private static function sticky_footer_css(string $mobileposition): string {
+        $css = 'body.hasstickyfooter oksigenia-access-panel{--oks-bottom-offset:var(--sticky-footer-total-height,80px);}';
+        $side = ['bottom-left' => 'left', 'bottom-right' => 'right'][$mobileposition] ?? '';
+        if ($side !== '') {
+            $css .= '@media (max-width:767.98px){body.hasstickyfooter:has(#page.drawers:not(.scroll-down)'
+                  . ":not(.show-drawer-{$side}) .drawer-{$side}-toggle) oksigenia-access-panel"
+                  . '{--oks-bottom-offset:calc(1vh + 142px);}}';
+        }
+        return $css;
+    }
+
+    /**
      * Build the markup injected before the closing body tag.
      *
      * CSS custom properties are applied via an inline <style> on the host
@@ -387,6 +412,9 @@ class hook_callbacks {
      * exposes --oks-z, --oks-btn-size, --oks-bg, --oks-icon, --oks-h-bg and
      * --oks-h-icon, these propagate through the Shadow DOM boundary and
      * change the trigger's z-index, size and colors deterministically.
+     *
+     * The same block lifts the bottom positions above Boost's sticky footer
+     * (see sticky_footer_css()).
      *
      * @param string $scripturl Absolute URL of the vendored web component script.
      * @param array  $attrs     Attributes (name => value) to render on <oksigenia-access-panel>.
@@ -399,7 +427,7 @@ class hook_callbacks {
             $attrhtml .= ' ' . $name . '="' . s($value) . '"';
         }
 
-        $style = '';
+        $rules = self::sticky_footer_css($attrs['position-mobile'] ?? $attrs['position']);
         if (!empty($cssvars)) {
             $decls = '';
             foreach ($cssvars as $name => $value) {
@@ -407,8 +435,9 @@ class hook_callbacks {
                 // for HTML context (no quotes break <style>).
                 $decls .= $name . ':' . $value . ';';
             }
-            $style = '<style id="oks-access-vars">oksigenia-access-panel{' . $decls . '}</style>';
+            $rules = 'oksigenia-access-panel{' . $decls . '}' . $rules;
         }
+        $style = '<style id="oks-access-vars">' . $rules . '</style>';
 
         return "\n" . $style
              . "\n<script type=\"module\" src=\"" . s($scripturl) . "\"></script>"
