@@ -201,7 +201,7 @@ function buildPanelHtml(opts) {
   <span class="oks-active-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></span>
 </div>` : "";
   return `${triggerBlock}
-<div class="oks-access-panel" id="oks-panel" role="dialog" aria-modal="true" aria-labelledby="oks-panel-title" inert>
+<div class="oks-access-panel" id="oks-panel" role="dialog" aria-modal="true" aria-labelledby="oks-panel-title"${opts.lang ? ` lang="${escapeAttr(opts.lang)}"` : ""} inert>
   <div class="oks-access-header">
     <h3 id="oks-panel-title">${escapeHtml(t.title)}</h3>
     <button class="oks-access-close" id="oks-close" aria-label="${escapeAttr(t.close)}" type="button">${ICON_CLOSE}</button>
@@ -375,20 +375,26 @@ function isStateEmpty(state) {
 
 // src/translations.ts
 var DICT = {
-  es: { title: "Accesibilidad", close: "Cerrar", txt: "Texto", size: "Tama\xF1o", lh: "Interlineado", align: "Alineaci\xF3n", font: "Legible", dyslexia: "Fuente Dislexia", vis: "Visual", contrast: "Contraste", gray: "Grises", hide: "Ocultar Img", links: "Links", ori: "Orientaci\xF3n", guide: "Gu\xEDa", mask: "M\xE1scara", targets: "\xC1reas Grandes", cursor: "Cursor Grande", pause: "Parar Animac.", reset: "Restablecer todo", dev: "Desarrollado por", ls: "Espaciado", cb: "Daltonismo", focus: "Foco", presets: "Perfiles", pLow: "Baja Visi\xF3n", pDys: "Dislexia", pMot: "Motor", pCalm: "Sin Distrac.", fold: "Ocultar bot\xF3n", unfold: "Mostrar bot\xF3n", level: (l, n, m) => `${l}, nivel ${n} de ${m}` },
+  es: { title: "Accesibilidad", close: "Cerrar", txt: "Texto", size: "Tama\xF1o", lh: "Interlineado", align: "Alineaci\xF3n", font: "Letra legible", dyslexia: "Letra para dislexia", vis: "Visual", contrast: "Contraste", gray: "Escala de grises", hide: "Ocultar im\xE1genes", links: "Resaltar enlaces", ori: "Orientaci\xF3n", guide: "Gu\xEDa de lectura", mask: "M\xE1scara de lectura", targets: "\xC1reas grandes", cursor: "Cursor grande", pause: "Parar animaciones", reset: "Restablecer todo", dev: "Desarrollado por", ls: "Espaciado", cb: "Daltonismo", focus: "Foco visible", presets: "Perfiles", pLow: "Baja visi\xF3n", pDys: "Dislexia", pMot: "Motor", pCalm: "Sin distracciones", fold: "Ocultar bot\xF3n", unfold: "Mostrar bot\xF3n", level: (l, n, m) => `${l}, nivel ${n} de ${m}` },
   en: { title: "Accessibility", close: "Close", txt: "Text", size: "Size", lh: "Line Height", align: "Align", font: "Readable Font", dyslexia: "Dyslexia Font", vis: "Visual", contrast: "Contrast", gray: "Grayscale", hide: "Hide Images", links: "Highlight Links", ori: "Orientation", guide: "Reading Guide", mask: "Reading Mask", targets: "Big Targets", cursor: "Big Cursor", pause: "Pause Anim.", reset: "Reset All", dev: "Developed by", ls: "Letter Spacing", cb: "Color Blind", focus: "Focus", presets: "Profiles", pLow: "Low Vision", pDys: "Dyslexia", pMot: "Motor", pCalm: "No Distract.", fold: "Hide Button", unfold: "Show Button", level: (l, n, m) => `${l}, level ${n} of ${m}` },
-  gn: { title: "Oikeha (Accesibilidad)", close: "Mboty", txt: "Mo\xF1e'\u1EBDr\xE3", size: "Tuichakue", lh: "Jei", align: "Mbojoja", font: "Letra Por\xE3", dyslexia: "Dislexia", vis: "Hechapy", contrast: "Sa'y", gray: "H\u0169 ha T\u0129", hide: "Moka\xF1y Ta'anga", links: "Joajuha", ori: "S\xE3mbyhy", guide: "S\xE3mbyhyha", mask: "Mbohov\xE1i", targets: "Tenda Guasu", cursor: "Cursor Guasu", pause: "Mboopyta", reset: "Mbojevy", dev: "Apojare", ls: "Rapykue", cb: "Sa'yvy", focus: "\xD1emoha", presets: "Tekor\xE3", pLow: "Hechapy Vai", pDys: "Dislexia", pMot: "Po-rehegua", pCalm: "Py\u02BCa Guapy", fold: "Moka\xF1y vot\xF5", unfold: "Hechauka vot\xF5", level: (l, n, m) => `${l}, ${n}/${m}` },
-  fr: { title: "Accessibilit\xE9", close: "Fermer", txt: "Texte", size: "Taille", lh: "Interligne", align: "Alignement", font: "Police Lisible", dyslexia: "Police Dyslexie", vis: "Visuel", contrast: "Contraste", gray: "Niveaux Gris", hide: "Masquer Img", links: "Liens", ori: "Orientation", guide: "Guide Lecture", mask: "Masque Lecture", targets: "Grandes Cibles", cursor: "Grand Curseur", pause: "Pause Anim.", reset: "R\xE9initialiser", dev: "D\xE9velopp\xE9 par", ls: "Espacement", cb: "Daltonisme", focus: "Focus", presets: "Profils", pLow: "Basse Vision", pDys: "Dyslexie", pMot: "Moteur", pCalm: "Sans Distrac.", fold: "Masquer le bouton", unfold: "Afficher le bouton", level: (l, n, m) => `${l}, niveau ${n} sur ${m}` },
-  it: { title: "Accessibilit\xE0", close: "Chiudi", txt: "Testo", size: "Dimensione", lh: "Interlinea", align: "Allineamento", font: "Leggibile", dyslexia: "Font Dislessia", vis: "Visivo", contrast: "Contrasto", gray: "Scala Grig.", hide: "Nascondi Img", links: "Link", ori: "Orientamento", guide: "Guida", mask: "Maschera", targets: "Aree Grandi", cursor: "Cursore Grande", pause: "Pausa Anim.", reset: "Reimposta", dev: "Sviluppato da", ls: "Spaziatura", cb: "Daltonismo", focus: "Focus", presets: "Profili", pLow: "Ipovisione", pDys: "Dislessia", pMot: "Motorio", pCalm: "No Distraz.", fold: "Nascondi pulsante", unfold: "Mostra pulsante", level: (l, n, m) => `${l}, livello ${n} di ${m}` },
-  de: { title: "Barrierefreiheit", close: "Schlie\xDFen", txt: "Text", size: "Gr\xF6\xDFe", lh: "Zeilenh\xF6he", align: "Ausrichtung", font: "Lesbar", dyslexia: "Dyslexie", vis: "Visuell", contrast: "Kontrast", gray: "Graustufen", hide: "Bilder Aus", links: "Links", ori: "Orientierung", guide: "Lesehilfe", mask: "Lesemaske", targets: "Gro\xDFe Ziele", cursor: "Gro\xDFer Cursor", pause: "Anim. Stopp", reset: "Zur\xFCcksetzen", dev: "Entwickelt von", ls: "Buchst.abst.", cb: "Farbblindheit", focus: "Fokus", presets: "Profile", pLow: "Sehschw\xE4che", pDys: "Dyslexie", pMot: "Motorik", pCalm: "Ohne Ablenk.", fold: "Schaltfl\xE4che ausblenden", unfold: "Schaltfl\xE4che einblenden", level: (l, n, m) => `${l}, Stufe ${n} von ${m}` },
-  nl: { title: "Toegankelijkheid", close: "Sluiten", txt: "Tekst", size: "Grootte", lh: "Regelhoogte", align: "Uitlijning", font: "Leesbaar", dyslexia: "Dyslexie", vis: "Visueel", contrast: "Contrast", gray: "Grijstinten", hide: "Verberg Afb.", links: "Links", ori: "Ori\xEBntatie", guide: "Leesgids", mask: "Leesmasker", targets: "Grote Doelen", cursor: "Grote Cursor", pause: "Anim. Pauze", reset: "Resetten", dev: "Ontwikkeld door", ls: "Letterspatie", cb: "Kleurenblind", focus: "Focus", presets: "Profielen", pLow: "Slechtziend", pDys: "Dyslexie", pMot: "Motoriek", pCalm: "Geen Afleid.", fold: "Knop verbergen", unfold: "Knop tonen", level: (l, n, m) => `${l}, niveau ${n} van ${m}` },
-  sv: { title: "Tillg\xE4nglighet", close: "St\xE4ng", txt: "Text", size: "Storlek", lh: "Radh\xF6jd", align: "Justering", font: "L\xE4sbar", dyslexia: "Dyslexi", vis: "Visuell", contrast: "Kontrast", gray: "Gr\xE5skala", hide: "D\xF6lj Bilder", links: "L\xE4nkar", ori: "Orientering", guide: "L\xE4slinjal", mask: "L\xE4smask", targets: "Stora Ytor", cursor: "Stor Mark\xF6r", pause: "Pausa Anim.", reset: "\xC5terst\xE4ll", dev: "Utvecklad av", ls: "Bokstavsavst.", cb: "F\xE4rgblindhet", focus: "Fokus", presets: "Profiler", pLow: "Synneds\xE4tt.", pDys: "Dyslexi", pMot: "Motorik", pCalm: "Inga Distrak.", fold: "D\xF6lj knappen", unfold: "Visa knappen", level: (l, n, m) => `${l}, niv\xE5 ${n} av ${m}` }
+  gn: { title: "Oikeha (Accesibilidad)", close: "Mboty", txt: "Mo\xF1e'\u1EBDr\xE3", size: "Tuichakue", lh: "Jei", align: "Mbojoja", font: "Letra por\xE3", dyslexia: "Dislexia", vis: "Hechapy", contrast: "Sa'y", gray: "H\u0169 ha t\u0129", hide: "Moka\xF1y ta'anga", links: "Joajuha", ori: "S\xE3mbyhy", guide: "S\xE3mbyhyha", mask: "Mbohov\xE1i", targets: "Tenda guasu", cursor: "Cursor guasu", pause: "Mboopyta", reset: "Mbojevy", dev: "Apojare", ls: "Rapykue", cb: "Sa'yvy", focus: "\xD1emoha", presets: "Tekor\xE3", pLow: "Hechapy vai", pDys: "Dislexia", pMot: "Po-rehegua", pCalm: "Py\u02BCa guapy", fold: "Moka\xF1y vot\xF5", unfold: "Hechauka vot\xF5", level: (l, n, m) => `${l}, ${n}/${m}` },
+  fr: { title: "Accessibilit\xE9", close: "Fermer", txt: "Texte", size: "Taille", lh: "Interligne", align: "Alignement", font: "Police lisible", dyslexia: "Police dyslexie", vis: "Visuel", contrast: "Contraste", gray: "Niveaux de gris", hide: "Masquer les images", links: "Liens", ori: "Orientation", guide: "Guide de lecture", mask: "Masque de lecture", targets: "Grandes cibles", cursor: "Grand curseur", pause: "Pause animations", reset: "R\xE9initialiser", dev: "D\xE9velopp\xE9 par", ls: "Espacement", cb: "Daltonisme", focus: "Focus", presets: "Profils", pLow: "Basse vision", pDys: "Dyslexie", pMot: "Moteur", pCalm: "Sans distractions", fold: "Masquer le bouton", unfold: "Afficher le bouton", level: (l, n, m) => `${l}, niveau ${n} sur ${m}` },
+  it: { title: "Accessibilit\xE0", close: "Chiudi", txt: "Testo", size: "Dimensione", lh: "Interlinea", align: "Allineamento", font: "Leggibile", dyslexia: "Font per dislessia", vis: "Visivo", contrast: "Contrasto", gray: "Scala di grigi", hide: "Nascondi immagini", links: "Link", ori: "Orientamento", guide: "Guida", mask: "Maschera", targets: "Aree grandi", cursor: "Cursore grande", pause: "Pausa animazioni", reset: "Reimposta", dev: "Sviluppato da", ls: "Spaziatura", cb: "Daltonismo", focus: "Focus", presets: "Profili", pLow: "Ipovisione", pDys: "Dislessia", pMot: "Motorio", pCalm: "Senza distrazioni", fold: "Nascondi pulsante", unfold: "Mostra pulsante", level: (l, n, m) => `${l}, livello ${n} di ${m}` },
+  de: { title: "Barrierefreiheit", close: "Schlie\xDFen", txt: "Text", size: "Gr\xF6\xDFe", lh: "Zeilenh\xF6he", align: "Ausrichtung", font: "Lesbar", dyslexia: "Dyslexie", vis: "Visuell", contrast: "Kontrast", gray: "Graustufen", hide: "Bilder aus", links: "Links", ori: "Orientierung", guide: "Lesehilfe", mask: "Lesemaske", targets: "Gro\xDFe Ziele", cursor: "Gro\xDFer Cursor", pause: "Animationen stoppen", reset: "Zur\xFCcksetzen", dev: "Entwickelt von", ls: "Buchstabenabstand", cb: "Farbblindheit", focus: "Fokus", presets: "Profile", pLow: "Sehschw\xE4che", pDys: "Dyslexie", pMot: "Motorik", pCalm: "Ohne Ablenkung", fold: "Schaltfl\xE4che ausblenden", unfold: "Schaltfl\xE4che einblenden", level: (l, n, m) => `${l}, Stufe ${n} von ${m}` },
+  nl: { title: "Toegankelijkheid", close: "Sluiten", txt: "Tekst", size: "Grootte", lh: "Regelhoogte", align: "Uitlijning", font: "Leesbaar", dyslexia: "Dyslexie", vis: "Visueel", contrast: "Contrast", gray: "Grijstinten", hide: "Afbeeldingen verbergen", links: "Links", ori: "Ori\xEBntatie", guide: "Leesgids", mask: "Leesmasker", targets: "Grote doelen", cursor: "Grote cursor", pause: "Animaties pauzeren", reset: "Resetten", dev: "Ontwikkeld door", ls: "Letterspatie", cb: "Kleurenblind", focus: "Focus", presets: "Profielen", pLow: "Slechtziend", pDys: "Dyslexie", pMot: "Motoriek", pCalm: "Geen afleiding", fold: "Knop verbergen", unfold: "Knop tonen", level: (l, n, m) => `${l}, niveau ${n} van ${m}` },
+  sv: { title: "Tillg\xE4nglighet", close: "St\xE4ng", txt: "Text", size: "Storlek", lh: "Radh\xF6jd", align: "Justering", font: "L\xE4sbar", dyslexia: "Dyslexi", vis: "Visuell", contrast: "Kontrast", gray: "Gr\xE5skala", hide: "D\xF6lj bilder", links: "L\xE4nkar", ori: "Orientering", guide: "L\xE4slinjal", mask: "L\xE4smask", targets: "Stora ytor", cursor: "Stor mark\xF6r", pause: "Pausa animationer", reset: "\xC5terst\xE4ll", dev: "Utvecklad av", ls: "Bokstavsavst\xE5nd", cb: "F\xE4rgblindhet", focus: "Fokus", presets: "Profiler", pLow: "Synneds\xE4ttning", pDys: "Dyslexi", pMot: "Motorik", pCalm: "Inga distraktioner", fold: "D\xF6lj knappen", unfold: "Visa knappen", level: (l, n, m) => `${l}, niv\xE5 ${n} av ${m}` }
 };
 function getTranslation(locale) {
   const lc = locale.toLowerCase();
   if (lc === "gn" || lc.startsWith("gn-") || lc.startsWith("gn_")) return DICT.gn;
   const base = lc.split(/[-_]/)[0];
   return DICT[base] ?? DICT.en;
+}
+function getTranslationLang(locale) {
+  const lc = locale.toLowerCase();
+  if (lc === "gn" || lc.startsWith("gn-") || lc.startsWith("gn_")) return "gn";
+  const base = lc.split(/[-_]/)[0];
+  return base in DICT ? base : "en";
 }
 
 // src/behavior.ts
@@ -1055,15 +1061,18 @@ var PANEL_CSS = `
   border: 0;
 }
 .oks-access-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
-.oks-access-presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+/* Two per row, icon beside the label: four across left about 75px each, too narrow for whole words
+   (Sin distracciones, Sehschw\xE4che) without abbreviating or splitting them. */
+.oks-access-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .oks-preset {
   background: #f0f4f8;
   border: 2px solid transparent;
   border-radius: 8px;
-  padding: 8px 4px;
+  padding: 8px 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  gap: 8px;
   cursor: pointer;
   font: inherit;
   color: #333;
@@ -1080,17 +1089,15 @@ var PANEL_CSS = `
   color: #fff;
   transform: scale(0.96);
 }
-.oks-preset .oks-icon { font-size: 22px; margin-bottom: 4px; }
+.oks-preset .oks-icon { font-size: 22px; flex: 0 0 auto; }
 .oks-preset .oks-icon svg { width: 20px; height: 20px; }
 .oks-preset .oks-label {
   font-size: 10px; font-weight: 700; text-transform: uppercase;
-  text-align: center; line-height: 1.15;
-  overflow-wrap: anywhere; word-break: break-word;
-  /* Reserve room for 2 lines so 1-line labels (DISLEXIA, MOTOR) and
-     2-line labels (BAJA VISI\xD3N, SIN DISTRAC.) end up the same height,
-     centred. Without this the row looks ragged. */
+  text-align: left; line-height: 1.15;
+  overflow-wrap: break-word; hyphens: auto;
+  /* Two lines' room, so a short label and one that wraps keep the same height. */
   min-height: 2.3em;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center;
 }
 .oks-access-opt {
   background: #f9f9f9;
@@ -1123,8 +1130,8 @@ var PANEL_CSS = `
   text-transform: uppercase;
   text-align: center;
   line-height: 1.2;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .oks-levels { display: flex; gap: 3px; height: 5px; width: 50%; margin-top: 5px; }
 .oks-levels span { flex: 1; background: #ddd; border-radius: 3px; }
@@ -1619,6 +1626,7 @@ var OksigeniaAccessPanelElement = class extends HTMLElement {
       showTrigger,
       showPresets,
       showFold,
+      lang: getTranslationLang(this.getLocale()),
       flatLayout: scope != null
       // scoped panels use the flat (no-category) layout
     });
