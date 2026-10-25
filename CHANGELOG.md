@@ -3,6 +3,11 @@
 All notable changes to this plugin will be documented here.
 Format loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.2] - 2026-10-25
+
+### Fixed
+- **The panel reads naturally in every language.** Outside English, the labels carried English capitals and were cut to fit: Spanish showed *Ocultar Img*, *Parar Animac.*, *Sin Distrac.* and *Links*, and other languages did the same. They now read in full and in each language's case (*Ocultar imágenes*, *Parar animaciones*, *Sin distracciones*, *Resaltar enlaces*…). The profiles go two per row with the icon beside the label, so no word is split on a phone, and the panel declares its language, so screen readers pronounce it right when the site is in another language. Re-vendors [`@oksigenia/access-panel@0.11.0`](https://www.npmjs.com/package/@oksigenia/access-panel/v/0.11.0).
+
 ## [1.2.1] - 2026-10-24
 
 ### Fixed
